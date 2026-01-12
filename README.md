@@ -149,8 +149,8 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 ## Roadmap
 
 - [ ] Design the Application
-	- [ ] Walk Through The Project
-	- [ ] Open Up The Requirements
+	- [x] Walk Through The Project
+	- [x] Open Up The Requirements
 	- [ ] User Interface Design
 	- [ ] Logic Design
 	- [ ] Data Design
