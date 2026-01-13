@@ -148,12 +148,12 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 <!-- ROADMAP -->
 ## Roadmap
 
-- [ ] Design the Application
+- [x] Design the Application
 	- [x] Walk Through The Project
 	- [x] Open Up The Requirements
 	- [x] User Interface Design
 	- [x] Logic Design
-	- [ ] Data Design
+	- [x] Data Design
 - [ ] Create the Project Scaffolding
 	- [ ] SQL Server Database
 	- [ ] Class Library

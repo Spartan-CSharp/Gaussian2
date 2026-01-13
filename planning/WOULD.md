@@ -394,3 +394,220 @@ Data access will be via stored procedures to encapsulate the SQL logic and impro
 
 ## Data Design
 
+### Experiments Table
+Id
+Name
+PurposeRtf
+PurposeText
+ResultsRtf
+ResultsText
+CreatedDate
+LastUpdatedDate
+Archived
+
+### Calculations Table
+Id
+ExperimentId -- Links to Experiments.Id
+Name
+DescritionRtf
+DescriptionText
+CalculationTypeId -- Links to CalculationTypes.Id
+ONIOMId -- Links to ONIOMs.Id
+MoleculeId -- Links to Molecules.Id
+TerminationDateTime
+ElapsedTime
+Success
+RouteSection
+ArchiveEntry
+ResultsRtf
+ResultsText
+CreatedDate
+LastUpdatedDate
+Archived
+
+### CalculationTypes Table
+Id
+Name
+Keyword
+DescriptionRtf
+DescriptionText
+CreatedDate
+LastUpdatedDate
+Archived
+
+### ONIOMs Table
+Id
+LayerOneId -- Links to ModelChemistries.Id
+LayerTwoId -- Links to ModelChemistries.Id
+LayerThreeId -- Links to ModelChemistries.Id
+Keyword
+DescriptionRtf
+DescriptionText
+CreatedDate
+LastUpdatedDate
+Archived
+
+### ModelChemistries Table
+Id
+FullMethodId -- Links to FullMethods.Id
+BasisSetId -- Links to BasisSets.Id
+DensityFittingSetId -- Links to DensityFittingSets.Id
+Keyword
+DescriptionRtf
+DescriptionText
+CreatedDate
+LastUpdatedDate
+Archived
+
+### FullMethods Table
+Id
+SpinStateElectronicStateMethodFamilyId -- Links to SpinStateElectronicStateMethodFamilies.Id
+BaseMethodId -- Links to BaseMethods.Id
+Keyword
+DescriptionRtf
+DescriptionText
+CreatedDate
+LastUpdatedDate
+Archived
+
+### BaseMethod Table
+Id
+MethodFamilyId -- Links to MethodFamilies.Id
+Keyword
+DescriptionRtf
+DescriptionText
+CreatedDate
+LastUpdatedDate
+Archived
+
+### SpinStateElectronicStateMethodFamilies Table
+Id
+ElectronicStateMethodFamilyId -- Links to ElectronicStateMethodFamilies.Id
+SpinStateId -- Links to SpinStates.Id
+Keyword
+DescriptionRtf
+DescriptionText
+CreatedDate
+LastUpdatedDate
+Archived
+
+### ElectronicStateMethodFamilies Table
+Id
+ElectronicStateId -- Links to ElectronicStates.Id
+MethodFamilyId -- Links to MethodFamilies.Id
+Keyword
+DescriptionRtf
+DescriptionText
+CreatedDate
+LastUpdatedDate
+Archived
+
+### SpinStates Table
+Id
+Keyword
+DescriptionRtf
+DescriptionText
+CreatedDate
+LastUpdatedDate
+Archived
+
+### ElectronicStates Table
+Id
+Keyword
+DescriptionRtf
+DescriptionText
+CreatedDate
+LastUpdatedDate
+Archived
+
+### MethodFamilies Table
+Id
+Keyword
+DescriptionRtf
+DescriptionText
+CreatedDate
+LastUpdatedDate
+Archived
+
+### BasisSets Table
+Id
+Keyword
+DescriptionRtf
+DescriptionText
+CreatedDate
+LastUpdatedDate
+Archived
+
+### DensityFittingSets Table
+Id
+Keyword
+DescriptionRtf
+DescriptionText
+CreatedDate
+LastUpdatedDate
+Archived
+
+### Molecules Table
+Id
+CommonName
+IUPACName
+Synonyms
+EmpiricalFormula
+SpeciesTypeId -- Links to SpeciesTypes.Id
+ElectricCharge
+SpinMultiplicity
+ImageFileId -- Links to Files.Id
+SMILES
+InChI
+CreatedDate
+LastUpdatedDate
+Archived
+
+### SpeciesTypes Table
+Id
+Name
+DescriptionRtf
+DescriptionText
+CreatedDate
+LastUpdatedDate
+Archived
+
+### Files Table
+Id
+FilePath
+FileTypeId -- Links to FileTypes.Id
+CreatedDate
+LastUpdatedDate
+Archived
+
+### FileTypes Table
+Id
+Type
+CommandLine
+CreatedDate
+LastUpdatedDate
+Archived
+
+### FileExtensions Table
+Id
+Extension
+FileTypeId -- Links to FileTypes.Id
+CreatedDate
+LastUpdatedDate
+Archived
+
+### CalculationFiles Table
+Id
+CalculationId -- Links to Calculations.Id
+FileId -- Links to Files.Id
+CreatedDate
+LastUpdatedDate
+Archived
+
+### ExperimentFiles Table
+Id
+ExperimentId -- Links to Experiments.Id
+FileId -- Links to Files.Id
+CreatedDate
+LastUpdatedDate
+Archived
