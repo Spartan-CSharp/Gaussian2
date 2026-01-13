@@ -1,0 +1,7 @@
+# For more info on HTTP files go to https://aka.ms/vs/httpfile
+@GaussianMVC_HostAddress = http://localhost:5017
+
+GET {{GaussianMVC_HostAddress}}/api/weatherforecast/
+Accept: application/json
+
+###

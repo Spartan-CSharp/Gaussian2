@@ -154,11 +154,11 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 	- [x] User Interface Design
 	- [x] Logic Design
 	- [x] Data Design
-- [ ] Create the Project Scaffolding
+- [x] Create the Project Scaffolding
 	- [x] SQL Server Database
 	- [x] Class Library
 	- [x] Windows Presentation Foundation Desktop Application
-	- [ ] ASP.NET MVC Web Application with API
+	- [x] ASP.NET MVC Web Application with API
 - [ ] Implement the Data Access Code using [Dapper](https://github.com/DapperLib/Dapper)
 - [ ] Implement the database code, library code, and user interface code, for the first table, corresponding to the Job Type options in Gaussian.
 	- [ ] Database Table & Stored Procedures
