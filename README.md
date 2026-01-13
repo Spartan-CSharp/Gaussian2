@@ -78,7 +78,7 @@ The application will consist of a SQL database to store and index the results, a
 
 * [![Visual Studio](https://custom-icon-badges.demolab.com/badge/Visual%20Studio-5C2D91.svg?&logo=visualstudio&logoColor=white)](https://visualstudio.microsoft.com/)
 * [![Markdown](https://img.shields.io/badge/Markdown-%23000000.svg?logo=markdown&logoColor=white)](https://www.markdownguide.org/)
-<!--* [![Microsoft SQL Server](https://custom-icon-badges.demolab.com/badge/Microsoft%20SQL%20Server-CC2927?logo=mssqlserver-white&logoColor=white)](https://www.microsoft.com/en-us/sql-server/)
+* [![Microsoft SQL Server](https://custom-icon-badges.demolab.com/badge/Microsoft%20SQL%20Server-CC2927?logo=mssqlserver-white&logoColor=white)](https://www.microsoft.com/en-us/sql-server/)
 * [![.NET](https://img.shields.io/badge/.NET-512BD4?logo=dotnet&logoColor=fff)](https://dotnet.microsoft.com/en-us/)
 * [![Bootstrap](https://img.shields.io/badge/Bootstrap-7952B3?logo=bootstrap&logoColor=fff)](#)
 * [![JQuery][JQuery.com]][JQuery-url]
@@ -87,7 +87,7 @@ The application will consist of a SQL database to store and index the results, a
 * [![CSS](https://img.shields.io/badge/CSS-639?logo=css&logoColor=fff)](#)
 * [![HTML](https://img.shields.io/badge/HTML-%23E34F26.svg?logo=html5&logoColor=white)](#)
 * [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=000)](#)
-* [![JSON](https://img.shields.io/badge/JSON-000?logo=json&logoColor=fff)](#)-->
+* [![JSON](https://img.shields.io/badge/JSON-000?logo=json&logoColor=fff)](#)
 <!--* [![Next][Next.js]][Next-url]
 * [![React][React.js]][React-url]
 * [![Vue][Vue.js]][Vue-url]
@@ -155,9 +155,9 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 	- [x] Logic Design
 	- [x] Data Design
 - [ ] Create the Project Scaffolding
-	- [ ] SQL Server Database
-	- [ ] Class Library
-	- [ ] Windows Presentation Foundation Desktop Application
+	- [x] SQL Server Database
+	- [x] Class Library
+	- [x] Windows Presentation Foundation Desktop Application
 	- [ ] ASP.NET MVC Web Application with API
 - [ ] Implement the Data Access Code using [Dapper](https://github.com/DapperLib/Dapper)
 - [ ] Implement the database code, library code, and user interface code, for the first table, corresponding to the Job Type options in Gaussian.

@@ -1,0 +1,30 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".gitattributes" />
+    <File Path=".gitignore" />
+    <File Path="LICENSE" />
+    <File Path="README.md" />
+  </Folder>
+  <Folder Name="/Solution Items/.github/" />
+  <Folder Name="/Solution Items/.github/ISSUE_TEMPLATE/">
+    <File Path=".github/ISSUE_TEMPLATE/bug-report---.md" />
+    <File Path=".github/ISSUE_TEMPLATE/feature-request---.md" />
+  </Folder>
+  <Folder Name="/Solution Items/images/">
+    <File Path="images/gaussian_logo.png" />
+    <File Path="images/pjlplourde_logo.png" />
+    <File Path="images/spartan_csharp_logo.png" />
+  </Folder>
+  <Folder Name="/Solution Items/planning/">
+    <File Path="planning/WOULD.md" />
+  </Folder>
+  <Project Path="GaussianCommonLibrary/GaussianCommonLibrary.csproj" />
+  <Project Path="GaussianMVC/GaussianMVC.csproj" />
+  <Project Path="GaussianMVCLibrary/GaussianMVCLibrary.csproj" />
+  <Project Path="GaussianSQLDB/GaussianSQLDB.sqlproj">
+    <Build />
+    <Deploy />
+  </Project>
+  <Project Path="GaussianWPF/GaussianWPF.csproj" />
+  <Project Path="GaussianWPFLibrary/GaussianWPFLibrary.csproj" />
+</Solution>
