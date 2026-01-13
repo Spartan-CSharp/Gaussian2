@@ -356,6 +356,22 @@ The *must-have* features are those outlined in the requirements above. *Nice-to-
 
 ## User Interface Design
 
+### The Windows Presentation Foundation Desktop User Interface
+
+The WPF app will use a menu system to load user controls into the main window for the various screens. For each record type, there should be a screen to create a new one (with a "New" button), a screen to select an existing one to view or edit (including "delete"). There should also be a search screen to find calculations based on the input parameters.
+
+The WPF app will access the database using the API that will be part of the MVC web application. It will need to authenticate and authorize the user through the API, so a login page will be needed.
+
+The expected challenges will be around Rich Text Format fields, drop-down select fields, and scrolling, given the size of some of the pages and several one-to-many relationships (such as associated files).
+
+### The ASP.NET Core Model-View-Controller Web Application User Interface
+
+The ASP.NET Core web application will include Model-View-Controller (MVC) pages for each record type, as well as API routing for each record type. We will use the authenticastion model provided in the Microsoft template (using a separate identity database and Entity Framework). This can be eventually replaced with another authentication system such as Azure AD B2C.
+
+The ASP.NET Core app will have direct database access via a Class Library, using Dapper for the ORM.
+
+The expected challenges will be around Rich Text Format fields and drop-down select fields; scrolling should not be an issue since it will be handled by the browser.
+
 ## Logic Design
 
 ## Data Design

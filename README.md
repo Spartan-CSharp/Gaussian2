@@ -151,7 +151,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 - [ ] Design the Application
 	- [x] Walk Through The Project
 	- [x] Open Up The Requirements
-	- [ ] User Interface Design
+	- [x] User Interface Design
 	- [ ] Logic Design
 	- [ ] Data Design
 - [ ] Create the Project Scaffolding
