@@ -159,7 +159,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 	- [x] Class Library
 	- [x] Windows Presentation Foundation Desktop Application
 	- [x] ASP.NET MVC Web Application with API
-- [ ] Implement the Data Access Code using [Dapper](https://github.com/DapperLib/Dapper)
+- [x] Implement the Data Access Code using [Dapper](https://github.com/DapperLib/Dapper)
 - [ ] Implement the database code, library code, and user interface code, for the first table, corresponding to the Job Type options in Gaussian.
 	- [ ] Database Table & Stored Procedures
 	- [ ] Data Access Code

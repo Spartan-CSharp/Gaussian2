@@ -9,8 +9,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace GaussianWPF
-{
+namespace GaussianWPF;
+
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -21,4 +21,3 @@ namespace GaussianWPF
             InitializeComponent();
         }
     }
-}
