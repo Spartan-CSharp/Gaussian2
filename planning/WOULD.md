@@ -374,5 +374,23 @@ The expected challenges will be around Rich Text Format fields and drop-down sel
 
 ## Logic Design
 
+### UI Layer
+
+The UI layer (both UIs and the API) will have the logic for the user interaction, as well as basic data validation (ensuring required fields are filled in, data types are correct, etc.). UI-specific models will be used, mapped to the full models used in the Business Logic Layer.
+
+The desktop UI will have its own Class Library, and the Web application will also have its own Class Library; there will be a third Class Library for shared functionality between the two UIs.
+
+### Business Logic Layer
+
+The Business Logic Layer will contain the core functionality of the application, including the rules for how data can be created, read, updated, and deleted. For now, there will not be a separate Data Access Layer, so this layer will interact with the database.
+
+This layer will include authentication and authorization, as well as full data validation, including duplicate checking where necessary.
+
+### Database Layer
+
+The Database Layer will be a SQL Server database, accessed via Dapper in the Business Logic Layer. The database will include tables for each record type, with appropriate relationships and constraints to ensure data integrity.
+
+Data access will be via stored procedures to encapsulate the SQL logic and improve performance and security.
+
 ## Data Design
 

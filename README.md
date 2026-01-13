@@ -152,7 +152,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 	- [x] Walk Through The Project
 	- [x] Open Up The Requirements
 	- [x] User Interface Design
-	- [ ] Logic Design
+	- [x] Logic Design
 	- [ ] Data Design
 - [ ] Create the Project Scaffolding
 	- [ ] SQL Server Database
