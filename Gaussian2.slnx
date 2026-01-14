@@ -21,7 +21,7 @@
   <Project Path="GaussianCommonLibrary/GaussianCommonLibrary.csproj" />
   <Project Path="GaussianMVC/GaussianMVC.csproj" />
   <Project Path="GaussianMVCLibrary/GaussianMVCLibrary.csproj" />
-  <Project Path="GaussianSQLDB/GaussianSQLDB.sqlproj">
+  <Project Path="GaussianSQLDB/GaussianSQLDB.sqlproj" Id="0c4d541b-aa3c-4f58-89e7-9c3a0b49fa87">
     <Build />
     <Deploy />
   </Project>
