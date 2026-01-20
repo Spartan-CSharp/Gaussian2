@@ -1,0 +1,26 @@
+﻿<UserControl x:Class="GaussianWPF.Controls.HomeControl" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:GaussianWPF.Controls" mc:Ignorable="d" d:DesignWidth="1240" d:DesignHeight="648" Name="HomeUserControl" FontSize="18">
+	<Grid Name="HomeGrid">
+		<Grid.RowDefinitions>
+			<RowDefinition Name="Row0" Height="*" />
+			<RowDefinition Name="Row1" Height="Auto" />
+			<RowDefinition Name="Row2" Height="*" />
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Name="Column0" Width="*" />
+			<ColumnDefinition Name="Column1" Width="Auto" />
+			<ColumnDefinition Name="Column2" Width="*" />
+		</Grid.ColumnDefinitions>
+		<StackPanel Name="HomeStackPanel" Grid.Row="1" Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
+			<TextBlock Name="HomeHeaderTextBlock" HorizontalAlignment="Center" Margin="0 0 0 10" FontSize="24" FontWeight="Bold" Text="Welcome" />
+			<TextBlock Name="LearnAboutTextBlock" HorizontalAlignment="Center" Margin="0 0 0 20" TextWrapping="Wrap">
+				Learn about <Hyperlink Name="WPFLearnHyperlink" NavigateUri="https://learn.microsoft.com/en-us/dotnet/desktop/wpf/">building Desktop apps with WPF in .NET</Hyperlink>.
+			</TextBlock>
+			<StackPanel Name="LogoStackPanel" Orientation="Horizontal" HorizontalAlignment="Center">
+				<Image Name="PlourdeLogo" Width="200" Margin="20" Source="/pjlplourde_logo.png" />
+				<Image Name="GaussianLogo" Width="200" Margin="20" Source="/gaussian_logo.png" />
+				<Image Name="SpartanLogo" Width="200" Margin="20" Source="/spartan_csharp_logo.png" />
+			</StackPanel>
+			<TextBlock Name="HomeFooterTextBlock" HorizontalAlignment="Left" Margin="0 0 0 10" Text="© 2026 - Pierre J.-L. Plourde &amp; Spartan C#" />
+		</StackPanel>
+	</Grid>
+</UserControl>

@@ -1,0 +1,33 @@
+﻿<UserControl x:Class="GaussianWPF.Controls.LoginControl" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:GaussianWPF.Controls" mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=local:LoginControl}" d:DesignWidth="1240" d:DesignHeight="648" Name="LoginUserControl" FontSize="18">
+	<Grid Name="LoginGrid">
+		<Grid.RowDefinitions>
+			<RowDefinition Name="Row0" Height="Auto" />
+			<RowDefinition Name="Row1" Height="Auto" />
+			<RowDefinition Name="Row2" Height="Auto" />
+			<RowDefinition Name="Row3" Height="Auto" />
+			<RowDefinition Name="Row4" Height="Auto" />
+			<RowDefinition Name="Row5" Height="*" />
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Name="Column0" Width="Auto" />
+			<ColumnDefinition Name="Column1" Width="*" />
+		</Grid.ColumnDefinitions>
+
+		<!-- Row 0 -->
+		<TextBlock Name="LoginHeaderTextBlock" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="0 0 0 10" FontSize="24" FontWeight="Bold" Text="Login" />
+
+		<!-- Row 1 -->
+		<TextBlock Name="ErrorMessageTextBlock" Foreground="Red" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="0 0 0 20" MaxWidth="800" FontWeight="SemiBold" TextWrapping="Wrap" Visibility="{Binding IsErrorVisible, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" Text="{Binding ErrorMessage, UpdateSourceTrigger=PropertyChanged}" />
+
+		<!-- Row 2 -->
+		<TextBlock Name="EmailTextBlock" Grid.Row="2" Grid.Column="0" Margin="0 0 5 10" Text="Email:" />
+		<TextBox Name="EmailTextBox" Grid.Row="2" Grid.Column="1" HorizontalAlignment="Left" Margin="0 0 0 10" MinWidth="300" MaxWidth="800" Text="{Binding UserName, UpdateSourceTrigger=PropertyChanged}" />
+
+		<!-- Row 3 -->
+		<TextBlock Name="PasswordTextBlock" Grid.Row="3" Grid.Column="0" Margin="0 0 5 20" Text="Password:" />
+		<PasswordBox Name="PasswordBox" Grid.Row="3" Grid.Column="1" HorizontalAlignment="Left" Margin="0 0 0 20" MinWidth="300" MaxWidth="800" PasswordChanged="PasswordBox_PasswordChanged" />
+
+		<!-- Row 4 -->
+		<Button Name="LoginButton" Grid.Row="4" Grid.Column="1" HorizontalAlignment="Left" Margin="5" Padding="20 5" Content="Login" IsEnabled="{Binding CanLogIn}" Click="LoginButton_Click" />
+	</Grid>
+</UserControl>

@@ -1,5 +1,8 @@
-﻿<Application x:Class="GaussianWPF.App" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:GaussianWPF" StartupUri="MainWindow.xaml">
+﻿<Application x:Class="GaussianWPF.App" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:local="clr-namespace:GaussianWPF" x:Name="GaussianWPFApp">
 	<Application.Resources>
-
+		<!-- Data Templates for View-ViewModel binding can go here (optional, but good practice for MVVM) -->
+		<ResourceDictionary x:Name="GaussianResourceDictionary">
+			<BooleanToVisibilityConverter x:Name="GaussianBTVConverter" x:Key="BooleanToVisibilityConverter" />
+		</ResourceDictionary>
 	</Application.Resources>
 </Application>
