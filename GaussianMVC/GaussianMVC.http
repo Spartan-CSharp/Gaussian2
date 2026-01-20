@@ -1,7 +1,43 @@
 ﻿# For more info on HTTP files go to https://aka.ms/vs/httpfile
-@GaussianMVC_HostAddress = http://localhost:5017
+@GaussianMVC_HostAddress = https://localhost:7056
 
-GET {{GaussianMVC_HostAddress}}/api/v1/weatherforecast/
-Accept: application/json
+POST {{GaussianMVC_HostAddress}}/api/authentication/token
+Authorization: bearer {{$bearerToken}}
+Content-Type: application/json
+
+{
+  //TokenRequest
+}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v1/CalculationTypes
+Authorization: bearer {{$bearerToken}}
+
+###
+
+POST {{GaussianMVC_HostAddress}}/api/v1/CalculationTypes
+Authorization: bearer {{$bearerToken}}
+Content-Type: application/json
+
+{
+  //CalculationTypeFullModel
+}
+
+###
+
+@id=0
+DELETE {{GaussianMVC_HostAddress}}/api/v1/CalculationTypes/{{id}}
+Authorization: bearer {{$bearerToken}}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v1/CalculationTypes/{{id}}
+Authorization: bearer {{$bearerToken}}
+
+###
+
+PUT {{GaussianMVC_HostAddress}}/api/v1/CalculationTypes/{{id}}
+Authorization: bearer {{$bearerToken}}
 
 ###

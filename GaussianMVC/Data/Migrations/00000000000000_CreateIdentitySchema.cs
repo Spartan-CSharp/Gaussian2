@@ -8,6 +8,11 @@ public partial class CreateIdentitySchema : Migration
 	/// <inheritdoc/>
 	protected override void Up(MigrationBuilder migrationBuilder)
 	{
+		if (migrationBuilder is null)
+		{
+			throw new ArgumentNullException(nameof(migrationBuilder), $"The parameter {nameof(migrationBuilder)} cannot be null.");
+		}
+
 		_ = migrationBuilder.CreateTable(
 			name: "AspNetRoles",
 			columns: table => new
@@ -190,6 +195,11 @@ public partial class CreateIdentitySchema : Migration
 	/// <inheritdoc/>
 	protected override void Down(MigrationBuilder migrationBuilder)
 	{
+		if (migrationBuilder is null)
+		{
+			throw new ArgumentNullException(nameof(migrationBuilder), $"The parameter {nameof(migrationBuilder)} cannot be null.");
+		}
+
 		_ = migrationBuilder.DropTable(
 			name: "AspNetRoleClaims");
 

@@ -6,6 +6,8 @@
 			"dotnetRunMessages": true,
 			"launchBrowser": true,
 			"applicationUrl": "http://localhost:5017",
+			"launchUrl": "http://localhost:5017",
+			"sqlDebugging": true,
 			"environmentVariables": {
 				"ASPNETCORE_ENVIRONMENT": "Development"
 			}
@@ -15,6 +17,8 @@
 			"dotnetRunMessages": true,
 			"launchBrowser": true,
 			"applicationUrl": "https://localhost:7056;http://localhost:5017",
+			"launchUrl": "https://localhost:7056",
+			"sqlDebugging": true,
 			"environmentVariables": {
 				"ASPNETCORE_ENVIRONMENT": "Development"
 			}

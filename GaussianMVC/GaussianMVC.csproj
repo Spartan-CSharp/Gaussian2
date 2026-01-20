@@ -1,12 +1,70 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
+	<PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<TypeScriptTarget>ESNext</TypeScriptTarget>
+		<TypeScriptNoImplicitAny>True</TypeScriptNoImplicitAny>
+		<TypeScriptGeneratesDeclarations>True</TypeScriptGeneratesDeclarations>
+	</PropertyGroup>
+
+	<PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<TypeScriptTarget>ESNext</TypeScriptTarget>
+		<TypeScriptNoImplicitAny>True</TypeScriptNoImplicitAny>
+		<TypeScriptGeneratesDeclarations>True</TypeScriptGeneratesDeclarations>
+	</PropertyGroup>
+
 	<PropertyGroup>
 		<TargetFramework>net10.0</TargetFramework>
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<UserSecretsId>aspnet-GaussianMVC-df4adf5f-7f9f-44d9-912f-bab2e0d3b24d</UserSecretsId>
+		<AssemblyTitle>Gaussian Web Application</AssemblyTitle>
+		<ApplicationIcon>Spartan.ico</ApplicationIcon>
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<Title>Gaussian Web Application</Title>
+		<Description>This C# application &amp; SQL database allow storing and indexing of results of electronic structure calculations performed with the Gaussian series of programs.</Description>
+		<PackageProjectUrl>https://github.com/Spartan-CSharp/Gaussian2</PackageProjectUrl>
+		<PackageIcon>spartan.png</PackageIcon>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<RepositoryUrl>https://github.com/Spartan-CSharp/Gaussian2</RepositoryUrl>
+		<NeutralLanguage>en</NeutralLanguage>
+		<NeutralResourcesLanguage>en</NeutralResourcesLanguage>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<IncludeSymbols>True</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+		<AnalysisLevel>latest-all</AnalysisLevel>
 	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<WarningLevel>9999</WarningLevel>
+		<CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+		<NoWarn>1701;1702</NoWarn>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<WarningLevel>9999</WarningLevel>
+		<CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+		<NoWarn>1701;1702;1848</NoWarn>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Content Include="Spartan.ico" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\images\spartan.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\LICENSE">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Asp.Versioning.Mvc" Version="8.1.1" />
@@ -17,12 +75,14 @@
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="10.0.2" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.UI" Version="10.0.2" />
 		<PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="10.0.2" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="10.0.2" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="10.0.2" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="10.0.2">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
 		<PackageReference Include="Microsoft.IdentityModel.Tokens" Version="8.15.0" />
+		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="10.0.2" />
 		<PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.0" />
 		<PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.15.0" />
 	</ItemGroup>
@@ -30,6 +90,21 @@
 	<ItemGroup>
 		<ProjectReference Include="..\GaussianCommonLibrary\GaussianCommonLibrary.csproj" />
 		<ProjectReference Include="..\GaussianMVCLibrary\GaussianMVCLibrary.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="Properties\Resources.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Resources.resx</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Update="Properties\Resources.resx">
+			<Generator>ResXFileCodeGenerator</Generator>
+			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
 	</ItemGroup>
 
 </Project>

@@ -4,7 +4,52 @@
 		<TargetFramework>net10.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
+		<AssemblyTitle>Gaussian Web Library</AssemblyTitle>
+		<ApplicationIcon>Spartan.ico</ApplicationIcon>
+		<GenerateDocumentationFile>True</GenerateDocumentationFile>
+		<Title>Gaussian Web Library</Title>
+		<Description>This Class Library holds the library code for the ASP.NET Model-View-Controller Web Application.</Description>
+		<PackageProjectUrl>https://github.com/Spartan-CSharp/Gaussian2</PackageProjectUrl>
+		<PackageIcon>spartan.png</PackageIcon>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<RepositoryUrl>https://github.com/Spartan-CSharp/Gaussian2</RepositoryUrl>
+		<NeutralLanguage>en</NeutralLanguage>
+		<NeutralResourcesLanguage>en</NeutralResourcesLanguage>
+		<PackageLicenseFile>LICENSE</PackageLicenseFile>
+		<IncludeSymbols>True</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+		<EnforceCodeStyleInBuild>True</EnforceCodeStyleInBuild>
+		<AnalysisLevel>latest-all</AnalysisLevel>
 	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+		<WarningLevel>9999</WarningLevel>
+		<CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<WarningLevel>9999</WarningLevel>
+		<CheckForOverflowUnderflow>True</CheckForOverflowUnderflow>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<Content Include="Spartan.ico" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="..\images\spartan.png">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\LICENSE">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+		<None Include="..\README.md">
+			<Pack>True</Pack>
+			<PackagePath>\</PackagePath>
+		</None>
+	</ItemGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\GaussianCommonLibrary\GaussianCommonLibrary.csproj" />
@@ -14,6 +59,21 @@
 		<PackageReference Include="Dapper" Version="2.1.66" />
 		<PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.3" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="10.0.2" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="Properties\Resources.Designer.cs">
+			<DesignTime>True</DesignTime>
+			<AutoGen>True</AutoGen>
+			<DependentUpon>Resources.resx</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Update="Properties\Resources.resx">
+			<Generator>ResXFileCodeGenerator</Generator>
+			<LastGenOutput>Resources.Designer.cs</LastGenOutput>
+		</EmbeddedResource>
 	</ItemGroup>
 
 </Project>
