@@ -1,9 +1,14 @@
 <Solution>
   <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
     <File Path=".gitattributes" />
     <File Path=".gitignore" />
+    <File Path=".globalconfig" />
+    <File Path="Gaussian.ico" />
     <File Path="LICENSE" />
+    <File Path="PJLPlourde.ico" />
     <File Path="README.md" />
+    <File Path="Spartan.ico" />
   </Folder>
   <Folder Name="/Solution Items/.github/" />
   <Folder Name="/Solution Items/.github/ISSUE_TEMPLATE/">
@@ -13,6 +18,7 @@
   <Folder Name="/Solution Items/images/">
     <File Path="images/gaussian_logo.png" />
     <File Path="images/pjlplourde_logo.png" />
+    <File Path="images/spartan.png" />
     <File Path="images/spartan_csharp_logo.png" />
   </Folder>
   <Folder Name="/Solution Items/planning/">

@@ -76,25 +76,49 @@ The application will consist of a SQL database to store and index the results, a
 
 ### Built With
 
+<!-- Code Editor -->
 * [![Visual Studio](https://custom-icon-badges.demolab.com/badge/Visual%20Studio-5C2D91.svg?&logo=visualstudio&logoColor=white)](https://visualstudio.microsoft.com/)
-* [![Markdown](https://img.shields.io/badge/Markdown-%23000000.svg?logo=markdown&logoColor=white)](https://www.markdownguide.org/)
-* [![Microsoft SQL Server](https://custom-icon-badges.demolab.com/badge/Microsoft%20SQL%20Server-CC2927?logo=mssqlserver-white&logoColor=white)](https://www.microsoft.com/en-us/sql-server/)
-* [![.NET](https://img.shields.io/badge/.NET-512BD4?logo=dotnet&logoColor=fff)](https://dotnet.microsoft.com/en-us/)
-* [![Bootstrap](https://img.shields.io/badge/Bootstrap-7952B3?logo=bootstrap&logoColor=fff)](#)
-* [![JQuery][JQuery.com]][JQuery-url]
-* [![Windows](https://custom-icon-badges.demolab.com/badge/Windows-0078D6?logo=windows11&logoColor=white)](#)
+<!-- Programming Language -->
 * [![C#](https://custom-icon-badges.demolab.com/badge/C%23-%23239120.svg?logo=cshrp&logoColor=white)](https://dotnet.microsoft.com/en-us/languages/csharp)
-* [![CSS](https://img.shields.io/badge/CSS-639?logo=css&logoColor=fff)](#)
-* [![HTML](https://img.shields.io/badge/HTML-%23E34F26.svg?logo=html5&logoColor=white)](#)
-* [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=000)](#)
-* [![JSON](https://img.shields.io/badge/JSON-000?logo=json&logoColor=fff)](#)
+* [![CSS](https://img.shields.io/badge/CSS-639?logo=css&logoColor=fff)](https://www.w3.org/TR/css/#css)
+* [![HTML](https://img.shields.io/badge/HTML-%23E34F26.svg?logo=html5&logoColor=white)](https://html.spec.whatwg.org/)
+* [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=000)](https://ecma-international.org/publications-and-standards/standards/ecma-262/)
+* [![JSON](https://img.shields.io/badge/JSON-000?logo=json&logoColor=fff)](https://www.json.org/)
+* [![Markdown](https://img.shields.io/badge/Markdown-%23000000.svg?logo=markdown&logoColor=white)](https://www.markdownguide.org/)
+<!-- Framework -->
+* [![.NET](https://img.shields.io/badge/.NET-512BD4?logo=dotnet&logoColor=fff)](https://dotnet.microsoft.com/en-us/)
+* [![Bootstrap][Bootstrap.com]][Bootstrap-url]
+* [![JQuery][JQuery.com]][JQuery-url]
+<!-- Package Manager -->
+* [![NuGet](https://img.shields.io/badge/NuGet-004880?logo=nuget&logoColor=fff)](https://www.nuget.org/)
+<!-- API Development -->
+* [![OpenAPI](https://img.shields.io/badge/OpenAPI-6BA539?logo=openapiinitiative&logoColor=white)](https://www.openapis.org/)
+* [![Swagger](https://img.shields.io/badge/Swagger-85EA2D?logo=swagger&logoColor=173647)](https://swagger.io/)
+<!-- Database -->
+* [![Microsoft SQL Server](https://custom-icon-badges.demolab.com/badge/Microsoft%20SQL%20Server-CC2927?logo=mssqlserver-white&logoColor=white)](https://www.microsoft.com/en-us/sql-server/)
+<!-- ORM -->
+<!-- Browser -->
+* [![Firefox](https://img.shields.io/badge/Firefox-FF7139?logo=firefoxbrowser&logoColor=white)](https://www.firefox.com/)
+<!-- Operating System -->
+* [![Windows](https://custom-icon-badges.demolab.com/badge/Windows-0078D6?logo=windows11&logoColor=white)](https://www.microsoft.com/en-ca/windows)
+<!-- Version Control -->
+* [![Git](https://img.shields.io/badge/Git-F05032?logo=git&logoColor=fff)](https://git-scm.com/)
+<!-- CI -->
+* [![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?logo=github-actions&logoColor=white)](https://github.com/features/actions)
+<!-- Artificial Intelligence -->
+* [![GitHub Copilot](https://img.shields.io/badge/GitHub%20Copilot-000?logo=githubcopilot&logoColor=fff)](https://github.com/features/copilot)
+* [![ChatGPT](https://custom-icon-badges.demolab.com/badge/ChatGPT-74aa9c?logo=openai&logoColor=white)](https://chatgpt.com/)
+* [![Claude](https://img.shields.io/badge/Claude-D97757?logo=claude&logoColor=fff)](https://claude.ai/)
+<!-- Search Engines -->
+* [![Google](https://img.shields.io/badge/Google-4285F4?logo=google&logoColor=white)](https://google.com/)
+<!-- Social Media -->
+* [![GitHub](https://img.shields.io/badge/GitHub-%23121011.svg?logo=github&logoColor=white)](https://github.com/)
 <!--* [![Next][Next.js]][Next-url]
 * [![React][React.js]][React-url]
 * [![Vue][Vue.js]][Vue-url]
 * [![Angular][Angular.io]][Angular-url]
 * [![Svelte][Svelte.dev]][Svelte-url]
 * [![Laravel][Laravel.com]][Laravel-url]
-* [![Bootstrap][Bootstrap.com]][Bootstrap-url]
 -->
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
@@ -161,11 +185,36 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 	- [x] ASP.NET MVC Web Application with API
 - [x] Implement the Data Access Code using [Dapper](https://github.com/DapperLib/Dapper)
 - [ ] Implement the database code, library code, and user interface code, for the first table, corresponding to the Job Type options in Gaussian.
-	- [ ] Database Table & Stored Procedures
-	- [ ] Data Access Code
-	- [ ] Business Logic Code
+	- [x] Database Table & Stored Procedures
+	- [x] Data Access Code
+	- [x] Business Logic Code
 	- [ ] User Interface Code
 - [ ] Continue the above pattern for the other tables.
+	- [ ] Method Families
+	- [ ] Base Methods
+	- [ ] Electronic States
+	- [ ] Spin States
+	- [ ] Electronic State/Method Families
+	- [ ] Spin State/Electronic State/Method Families
+	- [ ] Full Methods
+	- [ ] Basis Sets
+	- [ ] Density Fitting Sets
+	- [ ] ONIOMs
+	- [ ] Species Types
+	- [ ] File Types
+	- [ ] File Extensions
+	- [ ] Files
+	- [ ] Molecules
+	- [ ] Experiments
+	- [ ] Calculations
+	- [ ] Calculation Files
+	- [ ] Experiment Files
+- [ ] Add Unit Tests
+- [ ] Add Health Checks to the API
+- [ ] Add logging to the Entity Framework-scaffolded Identity pages in the MVC App
+- [ ] Refactor and optimize the code
+- [ ] Remove the warning disables in .globalconfig and address each warning
+- [ ] Beef up API with additional response codes and document them
 
 See the [open issues](https://github.com/Spartan-CSharp/Gaussian2/issues) for a full list of proposed features (and known issues).
 
@@ -245,8 +294,8 @@ Project Link: [https://github.com/Spartan-CSharp/Gaussian2](https://github.com/S
 [Svelte.dev]: https://img.shields.io/badge/Svelte-4A4A55?style=for-the-badge&logo=svelte&logoColor=FF3E00
 [Svelte-url]: https://svelte.dev/
 [Laravel.com]: https://img.shields.io/badge/Laravel-FF2D20?style=for-the-badge&logo=laravel&logoColor=white
-[Laravel-url]: https://laravel.com
+[Laravel-url]: https://laravel.com/
 [Bootstrap.com]: https://img.shields.io/badge/Bootstrap-563D7C?style=for-the-badge&logo=bootstrap&logoColor=white
-[Bootstrap-url]: https://getbootstrap.com
+[Bootstrap-url]: https://getbootstrap.com/
 [JQuery.com]: https://img.shields.io/badge/jQuery-0769AD?style=for-the-badge&logo=jquery&logoColor=white
-[JQuery-url]: https://jquery.com
+[JQuery-url]: https://jquery.com/
