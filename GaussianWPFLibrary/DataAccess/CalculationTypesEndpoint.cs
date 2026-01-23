@@ -3,18 +3,18 @@ using System.Net.Http.Json;
 
 using GaussianCommonLibrary.Models;
 
+using GaussianWPFLibrary.Properties;
+
 using Microsoft.Extensions.Logging;
 
 namespace GaussianWPFLibrary.DataAccess;
 
-// TODO Catch the thrown errors in the UI to avoid crashing the app on API failures.
-
 /// <summary>
-/// Provides HTTP endpoint access for managing calculation types through the API.
+/// Provides HTTP endpoint access for managing Calculation Types through the API.
 /// </summary>
 /// <remarks>
-/// This class handles all CRUD operations for calculation types, including retrieving,
-/// creating, updating, and deleting calculation type records via HTTP requests.
+/// This class handles all CRUD operations for Calculation Types, including retrieving,
+/// creating, updating, and deleting Calculation Type records via HTTP requests.
 /// All methods include comprehensive logging and error handling.
 /// </remarks>
 /// <remarks>
@@ -28,7 +28,7 @@ public class CalculationTypesEndpoint(ILogger<CalculationTypesEndpoint> logger, 
 	private readonly IApiHelper _apiHelper = apiHelper;
 
 	/// <summary>
-	/// Retrieves all calculation types from the API.
+	/// Retrieves all Calculation Types from the API.
 	/// </summary>
 	/// <returns>
 	/// A task that represents the asynchronous operation. The task result contains
@@ -44,7 +44,7 @@ public class CalculationTypesEndpoint(ILogger<CalculationTypesEndpoint> logger, 
 			_logger.LogTrace("{Method} Called", nameof(GetAllAsync));
 		}
 
-		Uri apiEndpoint = new("api/v1/CalculationTypes", UriKind.Relative);
+		Uri apiEndpoint = new(Resources.CalculationTypesEndpoint, UriKind.Relative);
 
 		using HttpResponseMessage response = await _apiHelper.ApiClient.GetAsync(apiEndpoint).ConfigureAwait(false);
 
@@ -78,9 +78,9 @@ public class CalculationTypesEndpoint(ILogger<CalculationTypesEndpoint> logger, 
 	}
 
 	/// <summary>
-	/// Retrieves a specific calculation type by its unique identifier.
+	/// Retrieves a specific Calculation Type by its unique identifier.
 	/// </summary>
-	/// <param name="id">The unique identifier of the calculation type to retrieve.</param>
+	/// <param name="id">The unique identifier of the Calculation Type to retrieve.</param>
 	/// <returns>
 	/// A task that represents the asynchronous operation. The task result contains
 	/// the <see cref="CalculationTypeFullModel"/> if found, or <c>null</c> if not found.
@@ -95,7 +95,7 @@ public class CalculationTypesEndpoint(ILogger<CalculationTypesEndpoint> logger, 
 			_logger.LogTrace("{Method} Called with {Id}", nameof(GetByIdAsync), id);
 		}
 
-		Uri apiEndpoint = new($"api/v1/CalculationTypes/{id}", UriKind.Relative);
+		Uri apiEndpoint = new($"{Resources.CalculationTypesEndpoint}/{id}", UriKind.Relative);
 
 		using HttpResponseMessage response = await _apiHelper.ApiClient.GetAsync(apiEndpoint).ConfigureAwait(false);
 
@@ -129,9 +129,9 @@ public class CalculationTypesEndpoint(ILogger<CalculationTypesEndpoint> logger, 
 	}
 
 	/// <summary>
-	/// Creates a new calculation type via the API.
+	/// Creates a new Calculation Type via the API.
 	/// </summary>
-	/// <param name="model">The calculation type model containing the data for the new record.</param>
+	/// <param name="model">The Calculation Type model containing the data for the new record.</param>
 	/// <returns>
 	/// A task that represents the asynchronous operation. The task result contains
 	/// the created <see cref="CalculationTypeFullModel"/> with server-generated values, or <c>null</c>.
@@ -146,7 +146,7 @@ public class CalculationTypesEndpoint(ILogger<CalculationTypesEndpoint> logger, 
 			_logger.LogTrace("{Method} Called with {Model}", nameof(CreateAsync), model);
 		}
 
-		Uri apiEndpoint = new("api/v1/CalculationTypes", UriKind.Relative);
+		Uri apiEndpoint = new(Resources.CalculationTypesEndpoint, UriKind.Relative);
 
 		using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync(apiEndpoint, model).ConfigureAwait(false);
 
@@ -180,10 +180,10 @@ public class CalculationTypesEndpoint(ILogger<CalculationTypesEndpoint> logger, 
 	}
 
 	/// <summary>
-	/// Updates an existing calculation type via the API.
+	/// Updates an existing Calculation Type via the API.
 	/// </summary>
-	/// <param name="id">The unique identifier of the calculation type to update.</param>
-	/// <param name="model">The calculation type model containing the updated data.</param>
+	/// <param name="id">The unique identifier of the Calculation Type to update.</param>
+	/// <param name="model">The Calculation Type model containing the updated data.</param>
 	/// <returns>
 	/// A task that represents the asynchronous operation. The task result contains
 	/// the updated <see cref="CalculationTypeFullModel"/>, or <c>null</c>.
@@ -198,7 +198,7 @@ public class CalculationTypesEndpoint(ILogger<CalculationTypesEndpoint> logger, 
 			_logger.LogTrace("{Method} Called with {Id} and {Model}", nameof(UpdateAsync), id, model);
 		}
 
-		Uri apiEndpoint = new($"api/v1/CalculationTypes/{id}", UriKind.Relative);
+		Uri apiEndpoint = new($"{Resources.CalculationTypesEndpoint}/{id}", UriKind.Relative);
 
 		using HttpResponseMessage response = await _apiHelper.ApiClient.PutAsJsonAsync(apiEndpoint, model).ConfigureAwait(false);
 
@@ -232,9 +232,9 @@ public class CalculationTypesEndpoint(ILogger<CalculationTypesEndpoint> logger, 
 	}
 
 	/// <summary>
-	/// Deletes a calculation type from the API.
+	/// Deletes a Calculation Type from the API.
 	/// </summary>
-	/// <param name="id">The unique identifier of the calculation type to delete.</param>
+	/// <param name="id">The unique identifier of the Calculation Type to delete.</param>
 	/// <returns>
 	/// A task that represents the asynchronous operation.
 	/// </returns>
@@ -248,7 +248,7 @@ public class CalculationTypesEndpoint(ILogger<CalculationTypesEndpoint> logger, 
 			_logger.LogTrace("{Method} Called with {Id}", nameof(DeleteAsync), id);
 		}
 
-		Uri apiEndpoint = new($"api/v1/CalculationTypes/{id}", UriKind.Relative);
+		Uri apiEndpoint = new($"{Resources.CalculationTypesEndpoint}/{id}", UriKind.Relative);
 
 		using HttpResponseMessage response = await _apiHelper.ApiClient.DeleteAsync(apiEndpoint).ConfigureAwait(false);
 

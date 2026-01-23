@@ -113,5 +113,50 @@ namespace GaussianMVCLibrary.Properties {
                 return ResourceManager.GetString("DataDatabaseConnectionString", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to spMethodFamilies_Create.
+        /// </summary>
+        internal static string MethodFamiliesCreate {
+            get {
+                return ResourceManager.GetString("MethodFamiliesCreate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to spMethodFamilies_Delete.
+        /// </summary>
+        internal static string MethodFamiliesDelete {
+            get {
+                return ResourceManager.GetString("MethodFamiliesDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to spMethodFamilies_GetAll.
+        /// </summary>
+        internal static string MethodFamiliesGetAll {
+            get {
+                return ResourceManager.GetString("MethodFamiliesGetAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to spMethodFamilies_GetById.
+        /// </summary>
+        internal static string MethodFamiliesGetById {
+            get {
+                return ResourceManager.GetString("MethodFamiliesGetById", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to spMethodFamilies_Update.
+        /// </summary>
+        internal static string MethodFamiliesUpdate {
+            get {
+                return ResourceManager.GetString("MethodFamiliesUpdate", resourceCulture);
+            }
+        }
     }
 }

@@ -16,10 +16,13 @@
 			</MenuItem>
 			<MenuItem Name="SettingsMenu" Visibility="{Binding IsLoggedIn, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" Header="_Settings">
 				<MenuItem Name="CalculationTypes" Header="Calculation _Types" Click="CalculationTypes_Click" />
+				<MenuItem Name="MethodFamilies" Header="Method _Families" Click="MethodFamilies_Click" />
 			</MenuItem>
 			<MenuItem Name="HelpMenu" Header="_Help">
 				<MenuItem Name="About" Header="_About" Click="About_Click" />
 				<MenuItem Name="Privacy" Header="_Privacy" Click="Privacy_Click" />
+				<MenuItem Name="Contact" Header="_Contact" Click="Contact_Click" />
+				<MenuItem Name="Error" Header="_Error" Click="Error_Click" />
 			</MenuItem>
 		</Menu>
 		<ContentControl Name="MainContent" Grid.Row="1" Grid.Column="0" Margin="20 0 20 20" />

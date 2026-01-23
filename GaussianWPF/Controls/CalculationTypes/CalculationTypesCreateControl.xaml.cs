@@ -1,14 +1,13 @@
 ﻿using System.ComponentModel;
-using System.IO;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
 
 using GaussianCommonLibrary.Models;
 
 using GaussianWPF.Models;
+using GaussianWPF.WPFHelpers;
 
 using GaussianWPFLibrary.DataAccess;
 using GaussianWPFLibrary.EventModels;
@@ -20,7 +19,7 @@ namespace GaussianWPF.Controls.CalculationTypes;
 
 /// <summary>
 /// Interaction logic for CalculationTypesCreateControl.xaml
-/// A user control that provides functionality for creating new calculation types.
+/// A user control that provides functionality for creating new Calculation Types.
 /// Implements INotifyPropertyChanged to support data binding with the XAML view.
 /// </summary>
 public partial class CalculationTypesCreateControl : UserControl, INotifyPropertyChanged
@@ -36,7 +35,7 @@ public partial class CalculationTypesCreateControl : UserControl, INotifyPropert
 	/// <param name="logger">The logger instance for logging control operations.</param>
 	/// <param name="loggedInUser">The currently logged-in user model.</param>
 	/// <param name="apiHelper">The API helper for making HTTP requests.</param>
-	/// <param name="endpoint">The endpoint for calculation types API operations.</param>
+	/// <param name="endpoint">The endpoint for Calculation Types API operations.</param>
 	public CalculationTypesCreateControl(ILogger<CalculationTypesCreateControl> logger, ILoggedInUserModel loggedInUser, IApiHelper apiHelper, ICalculationTypesEndpoint endpoint)
 	{
 		_logger = logger;
@@ -60,7 +59,7 @@ public partial class CalculationTypesCreateControl : UserControl, INotifyPropert
 	public event EventHandler<ChildControlEventArgs<CalculationTypesCreateControl>>? ChildControlEvent;
 
 	/// <summary>
-	/// Gets or sets the calculation type view model being created.
+	/// Gets or sets the Calculation Type view model being created.
 	/// </summary>
 	public CalculationTypeViewModel? CalculationType
 	{
@@ -73,7 +72,7 @@ public partial class CalculationTypesCreateControl : UserControl, INotifyPropert
 	}
 
 	/// <summary>
-	/// Gets or sets the name of the calculation type.
+	/// Gets or sets the name of the Calculation Type.
 	/// This property is bound to the UI and triggers validation when changed.
 	/// </summary>
 	public string CalculationTypeName
@@ -87,7 +86,7 @@ public partial class CalculationTypesCreateControl : UserControl, INotifyPropert
 	} = string.Empty;
 
 	/// <summary>
-	/// Gets or sets the keyword associated with the calculation type.
+	/// Gets or sets the keyword associated with the Calculation Type.
 	/// This property is bound to the UI and triggers validation when changed.
 	/// </summary>
 	public string Keyword
@@ -195,8 +194,8 @@ public partial class CalculationTypesCreateControl : UserControl, INotifyPropert
 
 			ErrorMessage = string.Empty;
 
-			string descriptionRtf = GetRtfText(DescriptionRichTextBox);
-			string descriptionText = GetPlainText(DescriptionRichTextBox);
+			string descriptionRtf = DescriptionRichTextBox.GetRtfText();
+			string descriptionText = DescriptionRichTextBox.GetPlainText();
 			CalculationType = new CalculationTypeViewModel
 			{
 				Name = CalculationTypeName,
@@ -262,21 +261,80 @@ public partial class CalculationTypesCreateControl : UserControl, INotifyPropert
 		ChildControlEvent?.Invoke(this, new ChildControlEventArgs<CalculationTypesCreateControl>("index", null));
 	}
 
-	private static string GetPlainText(RichTextBox rtb)
+	private void BoldButton_Click(object sender, RoutedEventArgs e)
 	{
-		TextRange range = new(rtb.Document.ContentStart, rtb.Document.ContentEnd);
-		string output = range.Text;
-		return output;
+		if (_logger.IsEnabled(LogLevel.Trace))
+		{
+			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}",
+				nameof(CalculationTypesCreateControl), nameof(BoldButton_Click), sender, e);
+		}
+
+		DescriptionRichTextBox.ToggleFontWeight();
 	}
 
-	private static string GetRtfText(RichTextBox rtb)
+	private void ItalicButton_Click(object sender, RoutedEventArgs e)
 	{
-		TextRange range = new(rtb.Document.ContentStart, rtb.Document.ContentEnd);
-		using MemoryStream stream = new();
-		range.Save(stream, DataFormats.Rtf);
-		stream.Position = 0;
-		using StreamReader reader = new(stream);
-		string output = reader.ReadToEnd();
-		return output;
+		if (_logger.IsEnabled(LogLevel.Trace))
+		{
+			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}",
+				nameof(CalculationTypesCreateControl), nameof(ItalicButton_Click), sender, e);
+		}
+
+		DescriptionRichTextBox.ToggleFontStyle();
+	}
+
+	private void UnderlineButton_Click(object sender, RoutedEventArgs e)
+	{
+		if (_logger.IsEnabled(LogLevel.Trace))
+		{
+			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}",
+				nameof(CalculationTypesCreateControl), nameof(UnderlineButton_Click), sender, e);
+		}
+
+		DescriptionRichTextBox.ToggleUnderline();
+	}
+
+	private void SubscriptButton_Click(object sender, RoutedEventArgs e)
+	{
+		if (_logger.IsEnabled(LogLevel.Trace))
+		{
+			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}",
+				nameof(CalculationTypesCreateControl), nameof(SubscriptButton_Click), sender, e);
+		}
+
+		DescriptionRichTextBox.ToggleBaselineAlignment(BaselineAlignment.Subscript);
+	}
+
+	private void SuperscriptButton_Click(object sender, RoutedEventArgs e)
+	{
+		if (_logger.IsEnabled(LogLevel.Trace))
+		{
+			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}",
+				nameof(CalculationTypesCreateControl), nameof(SuperscriptButton_Click), sender, e);
+		}
+
+		DescriptionRichTextBox.ToggleBaselineAlignment(BaselineAlignment.Superscript);
+	}
+
+	private void BulletsButton_Click(object sender, RoutedEventArgs e)
+	{
+		if (_logger.IsEnabled(LogLevel.Trace))
+		{
+			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}",
+				nameof(CalculationTypesCreateControl), nameof(BulletsButton_Click), sender, e);
+		}
+
+		DescriptionRichTextBox.ToggleList(TextMarkerStyle.Disc);
+	}
+
+	private void NumberingButton_Click(object sender, RoutedEventArgs e)
+	{
+		if (_logger.IsEnabled(LogLevel.Trace))
+		{
+			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}",
+				nameof(CalculationTypesCreateControl), nameof(NumberingButton_Click), sender, e);
+		}
+
+		DescriptionRichTextBox.ToggleList(TextMarkerStyle.Decimal);
 	}
 }

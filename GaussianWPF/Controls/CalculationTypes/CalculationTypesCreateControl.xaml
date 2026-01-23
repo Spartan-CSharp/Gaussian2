@@ -40,9 +40,55 @@
 
 			<!-- Row 6 -->
 			<TextBlock Name="DescriptionTextBlock" Grid.Row="6" Grid.Column="0" Margin="0 0 5 10" Text="Description:" />
-			<RichTextBox Name="DescriptionRichTextBox" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Left" Margin="0 0 0 10" MinWidth="300" MaxWidth="800" MaxHeight="377" AcceptsTab="True">
-				<FlowDocument Name="DescriptionFlowDocument"></FlowDocument>
-			</RichTextBox>
+			<DockPanel Name="DescriptionDockPanel" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Left" Margin="0 0 0 10">
+				<ToolBar Name="DescriptionToolBar" Background="#FFDDDDDD" Margin="0 0 0 5" FontSize="12px" DockPanel.Dock="Top">
+					<Button Name="BoldButton" Width="30" Height="30" FontWeight="Bold" Content="B" ToolTip="Bold (Ctrl+B)" Click="BoldButton_Click" />
+					<Button Name="ItalicButton" Width="30" Height="30" FontStyle="Italic" Content="I" ToolTip="Italic (Ctrl+I)" Click="ItalicButton_Click" />
+					<Button Name="UnderlineButton" Width="30" Height="30" Content="U" ToolTip="Underline (Ctrl+U)" Click="UnderlineButton_Click" />
+					<Button Name="SubscriptButton" Width="30" Height="30" ToolTip="Subscript" Click="SubscriptButton_Click">
+						<TextBlock Name="SubscriptTextBlock">x<Run Name="SubscriptRun" FontSize="7.68px" BaselineAlignment="Subscript" Text="2" /></TextBlock>
+					</Button>
+					<Button Name="SuperscriptButton" Width="30" Height="30" ToolTip="Superscript" Click="SuperscriptButton_Click">
+						<TextBlock Name="SuperscriptTextBlock">x<Run Name="SuperscriptRun" FontSize="7.68px" BaselineAlignment="Superscript" Text="2" /></TextBlock>
+					</Button>
+					<Separator Name="ToolbarSeparator" />
+					<Button Name="BulletsButton" Width="30" Height="30" FontSize="6px" ToolTip="Bullets" Click="BulletsButton_Click">
+						<StackPanel Name="BulletsOuterStackPanel" Orientation="Vertical" VerticalAlignment="Center">
+							<StackPanel Name="Bullets1StackPanel" Orientation="Horizontal">
+								<TextBlock FontWeight="Bold" Text="• " />
+								<TextBlock Text="─" VerticalAlignment="Center" />
+							</StackPanel>
+							<StackPanel Name="Bullets2StackPanel" Orientation="Horizontal">
+								<TextBlock FontWeight="Bold" Text="• " />
+								<TextBlock Text="─" VerticalAlignment="Center" />
+							</StackPanel>
+							<StackPanel Name="Bullets3StackPanel" Orientation="Horizontal">
+								<TextBlock FontWeight="Bold" Text="• " />
+								<TextBlock Text="─" VerticalAlignment="Center" />
+							</StackPanel>
+						</StackPanel>
+					</Button>
+					<Button Name="NumberingButton" Width="30" Height="30" FontSize="6px" ToolTip="Numbering" Click="NumberingButton_Click">
+						<StackPanel Name="NumberingOuterStackPanel" Orientation="Vertical" VerticalAlignment="Center">
+							<StackPanel Name="Number1StackPanel" Orientation="Horizontal">
+								<TextBlock Text="1. " />
+								<TextBlock Text="─" VerticalAlignment="Center" />
+							</StackPanel>
+							<StackPanel Name="Number2StackPanel" Orientation="Horizontal">
+								<TextBlock Text="2. " />
+								<TextBlock Text="─" VerticalAlignment="Center" />
+							</StackPanel>
+							<StackPanel Name="Number3StackPanel" Orientation="Horizontal">
+								<TextBlock Text="3. " />
+								<TextBlock Text="─" VerticalAlignment="Center" />
+							</StackPanel>
+						</StackPanel>
+					</Button>
+				</ToolBar>
+				<RichTextBox Name="DescriptionRichTextBox" MinWidth="300" MaxWidth="800" MaxHeight="377" AcceptsTab="True">
+					<FlowDocument Name="DescriptionFlowDocument"></FlowDocument>
+				</RichTextBox>
+			</DockPanel>
 
 			<!-- Row 7 -->
 			<Button Name="CreateButton" Grid.Row="7" Grid.Column="1" HorizontalAlignment="Left" Margin="5" Padding="20 5" Content="Create" IsEnabled="{Binding CanSave}" Click="CreateButton_Click" />

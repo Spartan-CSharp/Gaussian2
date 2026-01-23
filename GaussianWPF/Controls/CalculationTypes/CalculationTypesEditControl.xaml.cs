@@ -1,15 +1,13 @@
 ﻿using System.ComponentModel;
-using System.IO;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
 
 using GaussianCommonLibrary.Models;
 
 using GaussianWPF.Models;
+using GaussianWPF.WPFHelpers;
 
 using GaussianWPFLibrary.DataAccess;
 using GaussianWPFLibrary.EventModels;
@@ -20,7 +18,7 @@ using Microsoft.Extensions.Logging;
 namespace GaussianWPF.Controls.CalculationTypes;
 
 /// <summary>
-/// A WPF UserControl that provides an interface for editing calculation type records.
+/// A WPF UserControl that provides an interface for editing Calculation Type records.
 /// Implements INotifyPropertyChanged for data binding and includes comprehensive error handling and logging.
 /// </summary>
 public partial class CalculationTypesEditControl : UserControl, INotifyPropertyChanged
@@ -36,7 +34,7 @@ public partial class CalculationTypesEditControl : UserControl, INotifyPropertyC
 	/// <param name="logger">Logger instance for diagnostic and trace information.</param>
 	/// <param name="loggedInUser">The currently logged-in user model.</param>
 	/// <param name="apiHelper">Helper for API operations.</param>
-	/// <param name="endpoint">Endpoint for calculation type data access operations.</param>
+	/// <param name="endpoint">Endpoint for Calculation Type data access operations.</param>
 	public CalculationTypesEditControl(ILogger<CalculationTypesEditControl> logger, ILoggedInUserModel loggedInUser, IApiHelper apiHelper, ICalculationTypesEndpoint endpoint)
 	{
 		_logger = logger;
@@ -60,8 +58,8 @@ public partial class CalculationTypesEditControl : UserControl, INotifyPropertyC
 	public event EventHandler<ChildControlEventArgs<CalculationTypesEditControl>>? ChildControlEvent;
 
 	/// <summary>
-	/// Gets or sets the ID of the calculation type being edited.
-	/// Setting this property triggers loading of the calculation type data.
+	/// Gets or sets the ID of the Calculation Type being edited.
+	/// Setting this property triggers loading of the Calculation Type data.
 	/// </summary>
 	public int CalculationTypeId
 	{
@@ -74,7 +72,7 @@ public partial class CalculationTypesEditControl : UserControl, INotifyPropertyC
 	}
 
 	/// <summary>
-	/// Gets or sets the calculation type view model being edited.
+	/// Gets or sets the Calculation Type view model being edited.
 	/// When set, updates all related properties for data binding.
 	/// </summary>
 	public CalculationTypeViewModel? CalculationType
@@ -88,7 +86,7 @@ public partial class CalculationTypesEditControl : UserControl, INotifyPropertyC
 	}
 
 	/// <summary>
-	/// Gets or sets the name of the calculation type.
+	/// Gets or sets the name of the Calculation Type.
 	/// This property is bound to the UI and affects the <see cref="CanSave"/> state.
 	/// </summary>
 	public string CalculationTypeName
@@ -102,7 +100,7 @@ public partial class CalculationTypesEditControl : UserControl, INotifyPropertyC
 	} = string.Empty;
 
 	/// <summary>
-	/// Gets or sets the keyword associated with the calculation type.
+	/// Gets or sets the keyword associated with the Calculation Type.
 	/// This property is bound to the UI and affects the <see cref="CanSave"/> state.
 	/// </summary>
 	public string Keyword
@@ -116,7 +114,7 @@ public partial class CalculationTypesEditControl : UserControl, INotifyPropertyC
 	} = string.Empty;
 
 	/// <summary>
-	/// Gets or sets a value indicating whether the calculation type model is not null.
+	/// Gets or sets a value indicating whether the Calculation Type model is not null.
 	/// Used for conditional UI rendering.
 	/// </summary>
 	public bool ModelIsNotNull
@@ -131,7 +129,7 @@ public partial class CalculationTypesEditControl : UserControl, INotifyPropertyC
 	}
 
 	/// <summary>
-	/// Gets a value indicating whether the calculation type model is null.
+	/// Gets a value indicating whether the Calculation Type model is null.
 	/// Computed from <see cref="ModelIsNotNull"/>.
 	/// </summary>
 	public bool ModelIsNull
@@ -273,7 +271,7 @@ public partial class CalculationTypesEditControl : UserControl, INotifyPropertyC
 				CalculationTypeName = CalculationType.Name;
 				Keyword = CalculationType.Keyword;
 				// Populate the RichTextBox with RTF
-				SetRtfText(DescriptionRichTextBox, CalculationType.DescriptionRtf);
+				DescriptionRichTextBox.SetRtfText(CalculationType.DescriptionRtf);
 			}
 			else
 			{
@@ -305,8 +303,8 @@ public partial class CalculationTypesEditControl : UserControl, INotifyPropertyC
 
 			ErrorMessage = string.Empty;
 
-			string descriptionRtf = GetRtfText(DescriptionRichTextBox);
-			string descriptionText = GetPlainText(DescriptionRichTextBox);
+			string descriptionRtf = DescriptionRichTextBox.GetRtfText();
+			string descriptionText = DescriptionRichTextBox.GetPlainText();
 			CalculationType!.Name = CalculationTypeName;
 			CalculationType!.Keyword = Keyword;
 			CalculationType!.DescriptionRtf = descriptionRtf;
@@ -366,35 +364,80 @@ public partial class CalculationTypesEditControl : UserControl, INotifyPropertyC
 		ChildControlEvent?.Invoke(this, new ChildControlEventArgs<CalculationTypesEditControl>("index", null));
 	}
 
-	private static string GetPlainText(RichTextBox rtb)
+	private void BoldButton_Click(object sender, RoutedEventArgs e)
 	{
-		TextRange range = new(rtb.Document.ContentStart, rtb.Document.ContentEnd);
-		string output = range.Text;
-		return output;
+		if (_logger.IsEnabled(LogLevel.Trace))
+		{
+			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}",
+				nameof(CalculationTypesEditControl), nameof(BoldButton_Click), sender, e);
+		}
+
+		DescriptionRichTextBox.ToggleFontWeight();
 	}
 
-	private static string GetRtfText(RichTextBox rtb)
+	private void ItalicButton_Click(object sender, RoutedEventArgs e)
 	{
-		TextRange range = new(rtb.Document.ContentStart, rtb.Document.ContentEnd);
-		using MemoryStream stream = new();
-		range.Save(stream, DataFormats.Rtf);
-		stream.Position = 0;
-		using StreamReader reader = new(stream);
-		string output = reader.ReadToEnd();
-		return output;
+		if (_logger.IsEnabled(LogLevel.Trace))
+		{
+			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}",
+				nameof(CalculationTypesEditControl), nameof(ItalicButton_Click), sender, e);
+		}
+
+		DescriptionRichTextBox.ToggleFontStyle();
 	}
 
-	private static void SetRtfText(RichTextBox rtb, string? rtfText)
+	private void UnderlineButton_Click(object sender, RoutedEventArgs e)
 	{
-		if (string.IsNullOrEmpty(rtfText))
+		if (_logger.IsEnabled(LogLevel.Trace))
 		{
-			rtb.Document.Blocks.Clear();
+			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}",
+				nameof(CalculationTypesEditControl), nameof(UnderlineButton_Click), sender, e);
 		}
-		else
+
+		DescriptionRichTextBox.ToggleUnderline();
+	}
+
+	private void SubscriptButton_Click(object sender, RoutedEventArgs e)
+	{
+		if (_logger.IsEnabled(LogLevel.Trace))
 		{
-			TextRange range = new(rtb.Document.ContentStart, rtb.Document.ContentEnd);
-			using MemoryStream stream = new(Encoding.UTF8.GetBytes(rtfText));
-			range.Load(stream, DataFormats.Rtf);
+			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}",
+				nameof(CalculationTypesEditControl), nameof(SubscriptButton_Click), sender, e);
 		}
+
+		DescriptionRichTextBox.ToggleBaselineAlignment(BaselineAlignment.Subscript);
+	}
+
+	private void SuperscriptButton_Click(object sender, RoutedEventArgs e)
+	{
+		if (_logger.IsEnabled(LogLevel.Trace))
+		{
+			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}",
+				nameof(CalculationTypesEditControl), nameof(SuperscriptButton_Click), sender, e);
+		}
+
+		DescriptionRichTextBox.ToggleBaselineAlignment(BaselineAlignment.Superscript);
+	}
+
+	private void BulletsButton_Click(object sender, RoutedEventArgs e)
+	{
+		if (_logger.IsEnabled(LogLevel.Trace))
+		{
+			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}",
+				nameof(CalculationTypesEditControl), nameof(BulletsButton_Click), sender, e);
+		}
+
+		DescriptionRichTextBox.ToggleList(TextMarkerStyle.Disc);
+	}
+
+	private void NumberingButton_Click(object sender, RoutedEventArgs e)
+	{
+		if (_logger.IsEnabled(LogLevel.Trace))
+		{
+			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}",
+				nameof(CalculationTypesEditControl), nameof(NumberingButton_Click), sender, e);
+		}
+
+		DescriptionRichTextBox.ToggleList(TextMarkerStyle.Decimal);
 	}
 }

@@ -1,15 +1,13 @@
 ﻿using System.ComponentModel;
-using System.IO;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
 
 using GaussianCommonLibrary.Models;
 
 using GaussianWPF.Models;
+using GaussianWPF.WPFHelpers;
 
 using GaussianWPFLibrary.DataAccess;
 using GaussianWPFLibrary.EventModels;
@@ -21,7 +19,7 @@ namespace GaussianWPF.Controls.CalculationTypes;
 
 /// <summary>
 /// Interaction logic for CalculationTypesDeleteControl.xaml
-/// Provides a user interface for viewing and deleting calculation types with confirmation.
+/// Provides a user interface for viewing and deleting Calculation Types with confirmation.
 /// </summary>
 public partial class CalculationTypesDeleteControl : UserControl, INotifyPropertyChanged
 {
@@ -36,7 +34,7 @@ public partial class CalculationTypesDeleteControl : UserControl, INotifyPropert
 	/// <param name="logger">Logger for diagnostic and trace information.</param>
 	/// <param name="loggedInUser">The currently logged-in user model.</param>
 	/// <param name="apiHelper">Helper for API interactions.</param>
-	/// <param name="endpoint">Endpoint for calculation types data access operations.</param>
+	/// <param name="endpoint">Endpoint for Calculation Types data access operations.</param>
 	public CalculationTypesDeleteControl(ILogger<CalculationTypesDeleteControl> logger, ILoggedInUserModel loggedInUser, IApiHelper apiHelper, ICalculationTypesEndpoint endpoint)
 	{
 		_logger = logger;
@@ -60,8 +58,8 @@ public partial class CalculationTypesDeleteControl : UserControl, INotifyPropert
 	public event EventHandler<ChildControlEventArgs<CalculationTypesDeleteControl>>? ChildControlEvent;
 
 	/// <summary>
-	/// Gets or sets the ID of the calculation type to be deleted.
-	/// When set, triggers loading of the calculation type details.
+	/// Gets or sets the ID of the Calculation Type to be deleted.
+	/// When set, triggers loading of the Calculation Type details.
 	/// </summary>
 	public int CalculationTypeId
 	{
@@ -74,7 +72,7 @@ public partial class CalculationTypesDeleteControl : UserControl, INotifyPropert
 	}
 
 	/// <summary>
-	/// Gets or sets the calculation type view model containing the data to be displayed and deleted.
+	/// Gets or sets the Calculation Type view model containing the data to be displayed and deleted.
 	/// </summary>
 	public CalculationTypeViewModel? CalculationType
 	{
@@ -87,7 +85,7 @@ public partial class CalculationTypesDeleteControl : UserControl, INotifyPropert
 	}
 
 	/// <summary>
-	/// Gets or sets a value indicating whether the calculation type model is not null.
+	/// Gets or sets a value indicating whether the Calculation Type model is not null.
 	/// Used for controlling UI element visibility.
 	/// </summary>
 	public bool ModelIsNotNull
@@ -102,7 +100,7 @@ public partial class CalculationTypesDeleteControl : UserControl, INotifyPropert
 	}
 
 	/// <summary>
-	/// Gets a value indicating whether the calculation type model is null.
+	/// Gets a value indicating whether the Calculation Type model is null.
 	/// Computed property based on <see cref="ModelIsNotNull"/>.
 	/// </summary>
 	public bool ModelIsNull
@@ -224,7 +222,7 @@ public partial class CalculationTypesDeleteControl : UserControl, INotifyPropert
 			if (CalculationType is not null)
 			{
 				// Populate the RichTextBox with RTF
-				SetRtfText(DescriptionRichTextBox, CalculationType.DescriptionRtf);
+				DescriptionRichTextBox.SetRtfText(CalculationType.DescriptionRtf);
 			}
 			else
 			{
@@ -293,19 +291,5 @@ public partial class CalculationTypesDeleteControl : UserControl, INotifyPropert
 		}
 
 		ChildControlEvent?.Invoke(this, new ChildControlEventArgs<CalculationTypesDeleteControl>("index", null));
-	}
-
-	private static void SetRtfText(RichTextBox rtb, string? rtfText)
-	{
-		if (string.IsNullOrEmpty(rtfText))
-		{
-			rtb.Document.Blocks.Clear();
-		}
-		else
-		{
-			TextRange range = new(rtb.Document.ContentStart, rtb.Document.ContentEnd);
-			using MemoryStream stream = new(Encoding.UTF8.GetBytes(rtfText));
-			range.Load(stream, DataFormats.Rtf);
-		}
 	}
 }

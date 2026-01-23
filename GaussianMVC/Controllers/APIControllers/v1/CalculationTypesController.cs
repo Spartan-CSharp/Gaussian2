@@ -11,25 +11,25 @@ using Microsoft.AspNetCore.Mvc;
 namespace GaussianMVC.Controllers.APIControllers.V1;
 
 /// <summary>
-/// API controller for managing calculation types.
-/// Provides CRUD operations for calculation type resources via RESTful endpoints.
+/// API controller for managing Calculation Types.
+/// Provides CRUD operations for Calculation Type resources via RESTful endpoints.
 /// </summary>
 /// <param name="logger">
 /// Logger instance for tracking controller operations, errors, and debugging information.
 /// Supports structured logging with various log levels (Debug, Trace, Error).
 /// </param>
 /// <param name="crud">
-/// Data access layer service for performing CRUD operations on calculation type entities.
-/// Handles database interactions and business logic for calculation type management.
+/// Data access layer service for performing CRUD operations on Calculation Type entities.
+/// Handles database interactions and business logic for Calculation Type management.
 /// </param>
 /// <remarks>
 /// This controller is versioned using API versioning (version 1.0) and follows RESTful conventions.
 /// All endpoints are prefixed with "api/v{version}/CalculationTypes".
 /// Supports the following operations:
-/// - GET: Retrieve all calculation types or a specific calculation type by ID
-/// - POST: Create a new calculation type
-/// - PUT: Update an existing calculation type
-/// - DELETE: Remove a calculation type by ID
+/// - GET: Retrieve all Calculation Types or a specific Calculation Type by ID
+/// - POST: Create a new Calculation Type
+/// - PUT: Update an existing Calculation Type
+/// - DELETE: Remove a Calculation Type by ID
 /// </remarks>
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
@@ -40,14 +40,14 @@ public class CalculationTypesController(ILogger<CalculationTypesController> logg
 	private readonly ICalculationTypesCrud _crud = crud;
 
 	/// <summary>
-	/// Retrieves all calculation types.
+	/// Retrieves all Calculation Types.
 	/// </summary>
 	/// <returns>
 	/// An <see cref="ActionResult"/> containing a list of all <see cref="CalculationTypeFullModel"/> objects.
-	/// Returns 200 OK with the list of calculation types on success.
+	/// Returns 200 OK with the list of Calculation Types on success.
 	/// Returns 500 Internal Server Error if an error occurs during retrieval.
 	/// </returns>
-	/// <response code="200">Returns the list of calculation types.</response>
+	/// <response code="200">Returns the list of Calculation Types.</response>
 	/// <response code="500">If an internal server error occurs.</response>
 	// GET: api/v1/CalculationTypes
 	[HttpGet(Name = "GetCalculationTypes")]
@@ -81,17 +81,17 @@ public class CalculationTypesController(ILogger<CalculationTypesController> logg
 	}
 
 	/// <summary>
-	/// Retrieves a specific calculation type by its ID.
+	/// Retrieves a specific Calculation Type by its ID.
 	/// </summary>
-	/// <param name="id">The unique identifier of the calculation type.</param>
+	/// <param name="id">The unique identifier of the Calculation Type.</param>
 	/// <returns>
 	/// An <see cref="ActionResult"/> containing the requested <see cref="CalculationTypeFullModel"/>.
-	/// Returns 200 OK with the calculation type on success.
-	/// Returns 400 Bad Request if the calculation type is not found.
+	/// Returns 200 OK with the Calculation Type on success.
+	/// Returns 400 Bad Request if the Calculation Type is not found.
 	/// Returns 500 Internal Server Error if an error occurs.
 	/// </returns>
-	/// <response code="200">Returns the requested calculation type.</response>
-	/// <response code="400">If no calculation type exists with the specified ID.</response>
+	/// <response code="200">Returns the requested Calculation Type.</response>
+	/// <response code="400">If no Calculation Type exists with the specified ID.</response>
 	/// <response code="500">If an internal server error occurs.</response>
 	// GET api/v1/CalculationTypes/5
 	[HttpGet("{id}")]
@@ -125,15 +125,15 @@ public class CalculationTypesController(ILogger<CalculationTypesController> logg
 	}
 
 	/// <summary>
-	/// Creates a new calculation type.
+	/// Creates a new Calculation Type.
 	/// </summary>
-	/// <param name="model">The calculation type model to create.</param>
+	/// <param name="model">The Calculation Type model to create.</param>
 	/// <returns>
 	/// An <see cref="ActionResult"/> containing the newly created <see cref="CalculationTypeFullModel"/>.
-	/// Returns 201 Created with the created calculation type on success.
+	/// Returns 201 Created with the created Calculation Type on success.
 	/// Returns 500 Internal Server Error if an error occurs during creation.
 	/// </returns>
-	/// <response code="201">Returns the newly created calculation type.</response>
+	/// <response code="201">Returns the newly created Calculation Type.</response>
 	/// <response code="500">If an internal server error occurs.</response>
 	// POST api/v1/CalculationTypes
 	[HttpPost]
@@ -167,17 +167,17 @@ public class CalculationTypesController(ILogger<CalculationTypesController> logg
 	}
 
 	/// <summary>
-	/// Updates an existing calculation type.
+	/// Updates an existing Calculation Type.
 	/// </summary>
-	/// <param name="id">The unique identifier of the calculation type to update.</param>
-	/// <param name="model">The updated calculation type model.</param>
+	/// <param name="id">The unique identifier of the Calculation Type to update.</param>
+	/// <param name="model">The updated Calculation Type model.</param>
 	/// <returns>
 	/// An <see cref="ActionResult"/> containing the updated <see cref="CalculationTypeFullModel"/>.
-	/// Returns 200 OK with the updated calculation type on success.
+	/// Returns 200 OK with the updated Calculation Type on success.
 	/// Returns 400 Bad Request if the ID doesn't match the model ID.
 	/// Returns 500 Internal Server Error if an error occurs.
 	/// </returns>
-	/// <response code="200">Returns the updated calculation type.</response>
+	/// <response code="200">Returns the updated Calculation Type.</response>
 	/// <response code="400">If the route parameter ID does not match the model ID.</response>
 	/// <response code="500">If an internal server error occurs.</response>
 	// PUT api/V1/CalculationTypes/5
@@ -224,15 +224,15 @@ public class CalculationTypesController(ILogger<CalculationTypesController> logg
 	}
 
 	/// <summary>
-	/// Deletes a calculation type by its ID.
+	/// Deletes a Calculation Type by its ID.
 	/// </summary>
-	/// <param name="id">The unique identifier of the calculation type to delete.</param>
+	/// <param name="id">The unique identifier of the Calculation Type to delete.</param>
 	/// <returns>
 	/// An <see cref="ActionResult"/> indicating the result of the delete operation.
 	/// Returns 200 OK on successful deletion.
 	/// Returns 500 Internal Server Error if an error occurs during deletion.
 	/// </returns>
-	/// <response code="200">If the calculation type was successfully deleted.</response>
+	/// <response code="200">If the Calculation Type was successfully deleted.</response>
 	/// <response code="500">If an internal server error occurs.</response>
 	// DELETE api/V1/CalculationTypes/5
 	[HttpDelete("{id}")]

@@ -30,8 +30,10 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 	private readonly HomeControl _homeControl;
 	private readonly IAbstractFactory<LoginControl> _loginFactory;
 	private readonly IAbstractFactory<CalculationTypesControl> _calculationTypesFactory;
+	private readonly IAbstractFactory<MethodFamiliesControl> _methodFamiliesFactory;
 	private readonly IAbstractFactory<AboutControl> _aboutFactory;
 	private readonly IAbstractFactory<PrivacyControl> _privacyFactory;
+	private readonly IAbstractFactory<ContactControl> _contactFactory;
 	private readonly IAbstractFactory<ErrorControl> _errorFactory;
 
 	/// <summary>
@@ -42,11 +44,13 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 	/// <param name="apiHelper">The API helper for authentication operations.</param>
 	/// <param name="homeControl">The home control instance to display by default.</param>
 	/// <param name="loginFactory">The factory for creating login control instances.</param>
-	/// <param name="calculationTypesFactory">The factory for creating calculation types control instances.</param>
+	/// <param name="calculationTypesFactory">The factory for creating Calculation Types control instances.</param>
+	/// <param name="methodFamiliesFactory">The factory for creating Method Families control instances.</param>
 	/// <param name="aboutFactory">The factory for creating about control instances.</param>
+	/// <param name="contactFactory">The factory for creating contact control instances.</param>
 	/// <param name="privacyFactory">The factory for creating privacy control instances.</param>
 	/// <param name="errorFactory"></param>
-	public MainWindow(ILogger<MainWindow> logger, ILoggedInUserModel loggedInUser, IApiHelper apiHelper, HomeControl homeControl, IAbstractFactory<LoginControl> loginFactory, IAbstractFactory<CalculationTypesControl> calculationTypesFactory, IAbstractFactory<AboutControl> aboutFactory, IAbstractFactory<PrivacyControl> privacyFactory, IAbstractFactory<ErrorControl> errorFactory)
+	public MainWindow(ILogger<MainWindow> logger, ILoggedInUserModel loggedInUser, IApiHelper apiHelper, HomeControl homeControl, IAbstractFactory<LoginControl> loginFactory, IAbstractFactory<CalculationTypesControl> calculationTypesFactory, IAbstractFactory<MethodFamiliesControl> methodFamiliesFactory, IAbstractFactory<AboutControl> aboutFactory, IAbstractFactory<PrivacyControl> privacyFactory, IAbstractFactory<ContactControl> contactFactory, IAbstractFactory<ErrorControl> errorFactory)
 	{
 		_logger = logger;
 		_loggedInUser = loggedInUser;
@@ -54,8 +58,10 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 		_homeControl = homeControl;
 		_loginFactory = loginFactory;
 		_calculationTypesFactory = calculationTypesFactory;
+		_methodFamiliesFactory = methodFamiliesFactory;
 		_aboutFactory = aboutFactory;
 		_privacyFactory = privacyFactory;
+		_contactFactory = contactFactory;
 		_errorFactory = errorFactory;
 
 		InitializeComponent();
@@ -152,6 +158,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 			else
 			{
 				IsLoggedIn = false;
+				MainContent.Content = _homeControl;
 			}
 		});
 	}
@@ -208,6 +215,16 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 		MainContent.Content = calculationTypesControl;
 	}
 
+	private void MethodFamilies_Click(object sender, RoutedEventArgs e)
+	{
+		if (_logger.IsEnabled(LogLevel.Trace))
+		{
+			_logger.LogTrace("{Window} {EventHandler} with {Sender} and {EventArgs}", nameof(MainWindow), nameof(MethodFamilies_Click), sender, e);
+		}
+
+		MethodFamiliesControl methodFamiliesControl = _methodFamiliesFactory.Create();
+		MainContent.Content = methodFamiliesControl;
+	}
 	private void About_Click(object sender, RoutedEventArgs e)
 	{
 		if (_logger.IsEnabled(LogLevel.Trace))
@@ -228,6 +245,28 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 
 		PrivacyControl privacyControl = _privacyFactory.Create();
 		MainContent.Content = privacyControl;
+	}
+
+	private void Contact_Click(object sender, RoutedEventArgs e)
+	{
+		if (_logger.IsEnabled(LogLevel.Trace))
+		{
+			_logger.LogTrace("{Window} {EventHandler} with {Sender} and {EventArgs}", nameof(MainWindow), nameof(Contact_Click), sender, e);
+		}
+
+		ContactControl contactControl = _contactFactory.Create();
+		MainContent.Content = contactControl;
+	}
+
+	private void Error_Click(object sender, RoutedEventArgs e)
+	{
+		if (_logger.IsEnabled(LogLevel.Trace))
+		{
+			_logger.LogTrace("{Window} {EventHandler} with {Sender} and {EventArgs}", nameof(MainWindow), nameof(Error_Click), sender, e);
+		}
+
+		ErrorControl errorControl = _errorFactory.Create();
+		MainContent.Content = errorControl;
 	}
 
 	private void App_DispatcherUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

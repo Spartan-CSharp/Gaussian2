@@ -1,15 +1,13 @@
 ﻿using System.ComponentModel;
-using System.IO;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
 
 using GaussianCommonLibrary.Models;
 
 using GaussianWPF.Models;
+using GaussianWPF.WPFHelpers;
 
 using GaussianWPFLibrary.DataAccess;
 using GaussianWPFLibrary.EventModels;
@@ -20,9 +18,9 @@ using Microsoft.Extensions.Logging;
 namespace GaussianWPF.Controls.CalculationTypes;
 
 /// <summary>
-/// User control for displaying detailed information about a specific calculation type.
+/// User control for displaying detailed information about a specific Calculation Type.
 /// Implements INotifyPropertyChanged to support WPF data binding and provides functionality
-/// for viewing calculation type details, including RTF-formatted descriptions.
+/// for viewing Calculation Type details, including RTF-formatted descriptions.
 /// </summary>
 public partial class CalculationTypesDetailsControl : UserControl, INotifyPropertyChanged
 {
@@ -37,7 +35,7 @@ public partial class CalculationTypesDetailsControl : UserControl, INotifyProper
 	/// <param name="logger">The logger instance for logging control events and errors.</param>
 	/// <param name="loggedInUser">The model representing the currently logged-in user.</param>
 	/// <param name="apiHelper">The API helper for making HTTP requests.</param>
-	/// <param name="endpoint">The endpoint for accessing calculation types data.</param>
+	/// <param name="endpoint">The endpoint for accessing Calculation Types data.</param>
 	public CalculationTypesDetailsControl(ILogger<CalculationTypesIndexControl> logger, ILoggedInUserModel loggedInUser, IApiHelper apiHelper, ICalculationTypesEndpoint endpoint)
 	{
 		_logger = logger;
@@ -62,8 +60,8 @@ public partial class CalculationTypesDetailsControl : UserControl, INotifyProper
 	public event PropertyChangedEventHandler? PropertyChanged;
 
 	/// <summary>
-	/// Gets or sets the ID of the calculation type to display.
-	/// When set, triggers retrieval of the calculation type details from the endpoint.
+	/// Gets or sets the ID of the Calculation Type to display.
+	/// When set, triggers retrieval of the Calculation Type details from the endpoint.
 	/// </summary>
 	public int CalculationTypeId
 	{
@@ -76,7 +74,7 @@ public partial class CalculationTypesDetailsControl : UserControl, INotifyProper
 	}
 
 	/// <summary>
-	/// Gets or sets the view model for the calculation type being displayed.
+	/// Gets or sets the view model for the Calculation Type being displayed.
 	/// When set, triggers updates to the UI, including the RTF description.
 	/// </summary>
 	public CalculationTypeViewModel? CalculationType
@@ -90,7 +88,7 @@ public partial class CalculationTypesDetailsControl : UserControl, INotifyProper
 	}
 
 	/// <summary>
-	/// Gets or sets a value indicating whether the calculation type model is not null.
+	/// Gets or sets a value indicating whether the Calculation Type model is not null.
 	/// Used for controlling the visibility of UI elements based on whether data is loaded.
 	/// </summary>
 	public bool ModelIsNotNull
@@ -105,7 +103,7 @@ public partial class CalculationTypesDetailsControl : UserControl, INotifyProper
 	}
 
 	/// <summary>
-	/// Gets a value indicating whether the calculation type model is null.
+	/// Gets a value indicating whether the Calculation Type model is null.
 	/// This is the inverse of <see cref="ModelIsNotNull"/>.
 	/// </summary>
 	public bool ModelIsNull
@@ -229,7 +227,7 @@ public partial class CalculationTypesDetailsControl : UserControl, INotifyProper
 			if (CalculationType is not null)
 			{
 				// Populate the RichTextBox with RTF
-				SetRtfText(DescriptionRichTextBox, CalculationType.DescriptionRtf);
+				DescriptionRichTextBox.SetRtfText(CalculationType.DescriptionRtf);
 			}
 			else
 			{
@@ -259,19 +257,5 @@ public partial class CalculationTypesDetailsControl : UserControl, INotifyProper
 		}
 
 		ChildControlEvent?.Invoke(this, new ChildControlEventArgs<CalculationTypesDetailsControl>("index", null));
-	}
-
-	private static void SetRtfText(RichTextBox rtb, string? rtfText)
-	{
-		if (string.IsNullOrEmpty(rtfText))
-		{
-			rtb.Document.Blocks.Clear();
-		}
-		else
-		{
-			TextRange range = new(rtb.Document.ContentStart, rtb.Document.ContentEnd);
-			using MemoryStream stream = new(Encoding.UTF8.GetBytes(rtfText));
-			range.Load(stream, DataFormats.Rtf);
-		}
 	}
 }

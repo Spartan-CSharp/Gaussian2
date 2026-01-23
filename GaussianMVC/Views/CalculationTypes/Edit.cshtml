@@ -17,14 +17,6 @@
 {
 	<div class="row">
 		<div class="col-md-4">
-			<dl class="row">
-				<dt class="col-sm-2">
-					@Html.DisplayNameFor(model => model.Id)
-				</dt>
-				<dd class="col-sm-10">
-					@Html.DisplayFor(model => model.Id)
-				</dd>
-			</dl>
 			<form asp-action="Edit">
 				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
 				<div class="form-group">
@@ -51,36 +43,12 @@
 					<input type="submit" value="Save" class="btn btn-primary" />
 				</div>
 			</form>
-			<dl class="row">
-				<dt class="col-sm-2">
-					@Html.DisplayNameFor(model => model.CreatedDate)
-				</dt>
-				<dd class="col-sm-10">
-					@Html.DisplayFor(model => model.CreatedDate)
-				</dd>
-			</dl>
-			<dl class="row">
-				<dt class="col-sm-2">
-					@Html.DisplayNameFor(model => model.LastUpdatedDate)
-				</dt>
-				<dd class="col-sm-10">
-					@Html.DisplayFor(model => model.LastUpdatedDate)
-				</dd>
-			</dl>
-			<dl class="row">
-				<dt class="col-sm-2">
-					@Html.DisplayNameFor(model => model.Archived)
-				</dt>
-				<dd class="col-sm-10">
-					@Html.DisplayFor(model => model.Archived)
-				</dd>
-			</dl>
 		</div>
 	</div>
 }
 else
 {
-	<p>No calculation type found with this Id.</p>
+	<p>No Calculation Type found with this Id.</p>
 }
 
 <div>

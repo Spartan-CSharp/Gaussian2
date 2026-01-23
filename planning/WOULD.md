@@ -94,7 +94,7 @@ The application should store the charge, spin multiplicity, whether the molecule
 
 ##### I. What qualifies as “key results”?
 
-The "key results" will depend on the calculation type and the experimental goals. The application should allow storing of those results that are captured in the archiving entry at the end of the output file into separate fields. There should also be a free-text field into which the user can copy and paste any other relevant results from the output file, as well as a field for notes and discussions of these results.
+The "key results" will depend on the Calculation Type and the experimental goals. The application should allow storing of those results that are captured in the archiving entry at the end of the output file into separate fields. There should also be a free-text field into which the user can copy and paste any other relevant results from the output file, as well as a field for notes and discussions of these results.
 
 ##### II. Should results be structured (numeric fields) or unstructured (text)?
 
@@ -158,7 +158,7 @@ Yes, users should be able to mark experiments with these statuses to reflect the
 
 ##### I. What fields must be searchable?
 
-For version 1, the only requirement is to return calculations that reference a specific input parameter (calculation type, method, basis set, spin state, electronic state, molecule). Future versions should include a full-text search of results and discussions.
+For version 1, the only requirement is to return calculations that reference a specific input parameter (Calculation Type, method, basis set, spin state, electronic state, molecule). Future versions should include a full-text search of results and discussions.
 
 ##### II. Should search be exact match, partial match, or fuzzy?
 
@@ -284,7 +284,7 @@ No.
 
 Strict validation is a priority to ensure data integrity, but ease of data entry is also important to encourage user adoption. The application should strike a balance between these two aspects.
 
-##### II. Should there be templates for common calculation types?
+##### II. Should there be templates for common Calculation Types?
 
 This is not needed at this time.
 

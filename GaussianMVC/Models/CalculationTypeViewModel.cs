@@ -5,7 +5,7 @@ using GaussianCommonLibrary.Models;
 namespace GaussianMVC.Models;
 
 /// <summary>
-/// View model representing a calculation type for the Gaussian MVC application.
+/// View model representing a Calculation Type for the Gaussian MVC application.
 /// Provides data transfer and validation between the view layer and the business logic.
 /// </summary>
 public class CalculationTypeViewModel
@@ -21,7 +21,7 @@ public class CalculationTypeViewModel
 	/// Initializes a new instance of the <see cref="CalculationTypeViewModel"/> class
 	/// from a <see cref="CalculationTypeFullModel"/>.
 	/// </summary>
-	/// <param name="model">The full model containing calculation type data.</param>
+	/// <param name="model">The full model containing Calculation Type data.</param>
 	/// <exception cref="ArgumentNullException">Thrown when <paramref name="model"/> is null.</exception>
 	public CalculationTypeViewModel(CalculationTypeFullModel model)
 	{
@@ -41,13 +41,13 @@ public class CalculationTypeViewModel
 	}
 
 	/// <summary>
-	/// Gets or sets the unique identifier for the calculation type.
+	/// Gets or sets the unique identifier for the Calculation Type.
 	/// </summary>
 	[Display(Name = "Id")]
 	public int Id { get; set; }
 
 	/// <summary>
-	/// Gets or sets the name of the calculation type.
+	/// Gets or sets the name of the Calculation Type.
 	/// </summary>
 	/// <remarks>
 	/// This field is required and has a maximum length of 200 characters.
@@ -58,13 +58,13 @@ public class CalculationTypeViewModel
 	public string Name { get; set; } = string.Empty;
 
 	/// <summary>
-	/// Gets or sets the keyword identifier for the calculation type.
+	/// Gets or sets the keyword identifier for the Calculation Type.
 	/// </summary>
 	/// <remarks>
 	/// This field is required and has a maximum length of 20 characters.
-	/// Used as a short identifier or code for the calculation type.
+	/// Used as a short identifier or code for the Calculation Type.
 	/// </remarks>
-	[Display(Name = "Keyword")]
+	[Display(Name = "MethodFamilyName")]
 	[Required]
 	[MaxLength(20)]
 	public string Keyword { get; set; } = string.Empty;
@@ -79,7 +79,7 @@ public class CalculationTypeViewModel
 	public string? DescriptionRtf { get; set; }
 
 	/// <summary>
-	/// Gets or sets the plain text description of the calculation type.
+	/// Gets or sets the plain text description of the Calculation Type.
 	/// </summary>
 	/// <remarks>
 	/// This field is optional and has a maximum length of 2000 characters.
@@ -89,7 +89,7 @@ public class CalculationTypeViewModel
 	public string? DescriptionText { get; set; }
 
 	/// <summary>
-	/// Gets or sets the date and time when the calculation type was created.
+	/// Gets or sets the date and time when the Calculation Type was created.
 	/// </summary>
 	/// <remarks>
 	/// Defaults to the current date and time when a new instance is created.
@@ -98,20 +98,20 @@ public class CalculationTypeViewModel
 	public DateTime CreatedDate { get; set; } = DateTime.Now;
 
 	/// <summary>
-	/// Gets or sets the date and time when the calculation type was last updated.
+	/// Gets or sets the date and time when the Calculation Type was last updated.
 	/// </summary>
 	/// <remarks>
 	/// Defaults to the current date and time when a new instance is created.
-	/// Should be updated whenever the calculation type is modified.
+	/// Should be updated whenever the Calculation Type is modified.
 	/// </remarks>
 	[Display(Name = "Last Updated Date")]
 	public DateTime LastUpdatedDate { get; set; } = DateTime.Now;
 
 	/// <summary>
-	/// Gets or sets a value indicating whether the calculation type is archived.
+	/// Gets or sets a value indicating whether the Calculation Type is archived.
 	/// </summary>
 	/// <remarks>
-	/// Defaults to <c>false</c>. When set to <c>true</c>, the calculation type
+	/// Defaults to <c>false</c>. When set to <c>true</c>, the Calculation Type
 	/// is considered archived and may be hidden from active lists.
 	/// </remarks>
 	[Display(Name = "Archived")]
@@ -137,10 +137,10 @@ public class CalculationTypeViewModel
 	}
 
 	/// <summary>
-	/// Returns a string representation of the calculation type.
+	/// Returns a string representation of the Calculation Type.
 	/// </summary>
 	/// <returns>
-	/// A string in the format "Name (Keyword)", combining the calculation type's name
+	/// A string in the format "Name (MethodFamilyName)", combining the Calculation Type's name
 	/// and keyword identifier. Returns null if both <see cref="Name"/> and <see cref="Keyword"/> are null.
 	/// </returns>
 	public override string? ToString()

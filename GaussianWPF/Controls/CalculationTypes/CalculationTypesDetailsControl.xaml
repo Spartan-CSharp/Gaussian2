@@ -31,7 +31,7 @@
 			<Separator Background="Black" Name="DetailsSeparator" Height="3" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Margin="0 5 0 10" />
 
 			<!-- Row 4 -->
-			<TextBlock Foreground="Red" Name="NoModelTextBlock" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="0 0 5 10" Visibility="{Binding ModelIsNull, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" Text="No calculation type found with this Id." />
+			<TextBlock Foreground="Red" Name="NoModelTextBlock" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2" Margin="0 0 5 10" Visibility="{Binding ModelIsNull, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" Text="No Calculation Type found with this Id." />
 
 			<!-- Row 5 -->
 			<TextBlock Name="NameLabelTextBlock" Grid.Row="5" Grid.Column="0" Margin="0 0 5 10" Visibility="{Binding ModelIsNotNull, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}" Text="Name:" />

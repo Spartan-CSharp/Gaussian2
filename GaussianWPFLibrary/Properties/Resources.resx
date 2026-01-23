@@ -117,4 +117,12 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="CalculationTypesEndpoint" xml:space="preserve">
+    <value>api/v1/CalculationTypes</value>
+    <comment>The API Endpoint for Calculation Types</comment>
+  </data>
+  <data name="MethodFamiliesEndpoint" xml:space="preserve">
+    <value>api/v1/MethodFamilies</value>
+    <comment>The API Endpoint for Method Families</comment>
+  </data>
 </root>

@@ -26,7 +26,6 @@
 				<GridView x:Name="CalculationTypesGridView" AllowsColumnReorder="false">
 					<GridViewColumn x:Name="NameColumn" DisplayMemberBinding="{Binding Path=Name}" Header="Name" />
 					<GridViewColumn x:Name="KeywordColumn" DisplayMemberBinding="{Binding Path=Keyword}" Header="Keyword" />
-					<GridViewColumn x:Name="DescriptionTextColumn" DisplayMemberBinding="{Binding Path=DescriptionText}" Header="Description (Text)" />
 					<GridViewColumn x:Name="ActionsColumn">
 						<GridViewColumn.CellTemplate>
 							<DataTemplate x:Name="ActionsDataTemplate">

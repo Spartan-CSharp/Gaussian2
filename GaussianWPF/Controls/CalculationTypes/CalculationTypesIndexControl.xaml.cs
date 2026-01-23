@@ -19,7 +19,7 @@ namespace GaussianWPF.Controls.CalculationTypes;
 
 /// <summary>
 /// Interaction logic for CalculationTypesIndexControl.xaml
-/// A WPF UserControl that displays a list of calculation types and provides CRUD operations.
+/// A WPF UserControl that displays a list of Calculation Types and provides CRUD operations.
 /// </summary>
 /// <remarks>
 /// This control implements the INotifyPropertyChanged interface to support data binding
@@ -38,7 +38,7 @@ public partial class CalculationTypesIndexControl : UserControl, INotifyProperty
 	/// <param name="logger">Logger instance for diagnostic logging.</param>
 	/// <param name="loggedInUser">Model representing the currently logged-in user.</param>
 	/// <param name="apiHelper">Helper for API communication.</param>
-	/// <param name="endpoint">Endpoint for accessing calculation types data.</param>
+	/// <param name="endpoint">Endpoint for accessing Calculation Types data.</param>
 	public CalculationTypesIndexControl(ILogger<CalculationTypesIndexControl> logger, ILoggedInUserModel loggedInUser, IApiHelper apiHelper, ICalculationTypesEndpoint endpoint)
 	{
 		_logger = logger;
@@ -67,7 +67,7 @@ public partial class CalculationTypesIndexControl : UserControl, INotifyProperty
 	public event PropertyChangedEventHandler? PropertyChanged;
 
 	/// <summary>
-	/// Gets or sets the collection of calculation types to display.
+	/// Gets or sets the collection of Calculation Types to display.
 	/// </summary>
 	/// <value>
 	/// An observable collection of <see cref="CalculationTypeViewModel"/> instances.
@@ -124,11 +124,11 @@ public partial class CalculationTypesIndexControl : UserControl, INotifyProperty
 	}
 
 	/// <summary>
-	/// Raises the <see cref="OnInitialized"/> event and loads calculation types from the API.
+	/// Raises the <see cref="OnInitialized"/> event and loads Calculation Types from the API.
 	/// </summary>
 	/// <param name="e">The event data.</param>
 	/// <remarks>
-	/// This method fetches all calculation types from the endpoint and populates the <see cref="CalculationTypesList"/>.
+	/// This method fetches all Calculation Types from the endpoint and populates the <see cref="CalculationTypesList"/>.
 	/// If an error occurs during data retrieval, it sets the <see cref="ErrorMessage"/> property.
 	/// </remarks>
 	/// <exception cref="HttpIOException">Thrown when an HTTP communication error occurs.</exception>

@@ -166,6 +166,7 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddSingleton<IDbData, SqlData>();
 builder.Services.AddTransient<ICalculationTypesCrud, CalculationTypesCrud>();
+builder.Services.AddTransient<IMethodFamiliesCrud, MethodFamiliesCrud>();
 
 WebApplication app = builder.Build();
 

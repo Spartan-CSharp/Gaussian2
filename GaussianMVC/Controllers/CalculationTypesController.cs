@@ -23,7 +23,7 @@ public class CalculationTypesController(ILogger<CalculationTypesController> logg
 	/// Displays a list of all Calculation Types.
 	/// </summary>
 	/// <returns>
-	/// A view containing a list of <see cref="CalculationTypeViewModel"/> objects representing all calculation types.
+	/// A view containing a list of <see cref="CalculationTypeViewModel"/> objects representing all Calculation Types.
 	/// </returns>
 	// GET: CalculationTypes
 	[HttpGet]
@@ -66,9 +66,9 @@ public class CalculationTypesController(ILogger<CalculationTypesController> logg
 	/// <summary>
 	/// Displays detailed information for a specific Calculation Type.
 	/// </summary>
-	/// <param name="id">The unique identifier of the calculation type to display.</param>
+	/// <param name="id">The unique identifier of the Calculation Type to display.</param>
 	/// <returns>
-	/// A view containing a <see cref="CalculationTypeViewModel"/> with the details of the specified calculation type.
+	/// A view containing a <see cref="CalculationTypeViewModel"/> with the details of the specified Calculation Type.
 	/// </returns>
 	// GET: CalculationTypes/Details/5
 	[HttpGet]
@@ -106,7 +106,7 @@ public class CalculationTypesController(ILogger<CalculationTypesController> logg
 	/// <summary>
 	/// Displays the form for creating a new Calculation Type.
 	/// </summary>
-	/// <returns>A view with an empty form for creating a new calculation type.</returns>
+	/// <returns>A view with an empty form for creating a new Calculation Type.</returns>
 	// GET: CalculationTypes/Create
 	[HttpGet]
 	public async Task<ActionResult> CreateAsync()
@@ -134,7 +134,7 @@ public class CalculationTypesController(ILogger<CalculationTypesController> logg
 	/// <summary>
 	/// Processes the creation of a new Calculation Type.
 	/// </summary>
-	/// <param name="model">The view model containing the data for the new calculation type.</param>
+	/// <param name="model">The view model containing the data for the new Calculation Type.</param>
 	/// <returns>
 	/// Redirects to the Index action if successful; otherwise, returns the view with validation errors.
 	/// On exception, redirects to the Error page.
@@ -194,7 +194,7 @@ public class CalculationTypesController(ILogger<CalculationTypesController> logg
 	/// <summary>
 	/// Displays the form for editing an existing Calculation Type.
 	/// </summary>
-	/// <param name="id">The unique identifier of the calculation type to edit.</param>
+	/// <param name="id">The unique identifier of the Calculation Type to edit.</param>
 	/// <returns>
 	/// A view containing a <see cref="CalculationTypeViewModel"/> populated with the existing data.
 	/// </returns>
@@ -234,7 +234,7 @@ public class CalculationTypesController(ILogger<CalculationTypesController> logg
 	/// <summary>
 	/// Processes the update of an existing Calculation Type.
 	/// </summary>
-	/// <param name="id">The unique identifier of the calculation type being edited.</param>
+	/// <param name="id">The unique identifier of the Calculation Type being edited.</param>
 	/// <param name="model">The view model containing the updated data.</param>
 	/// <returns>
 	/// Redirects to the Index action if successful; otherwise, returns the view with validation errors.
@@ -299,9 +299,9 @@ public class CalculationTypesController(ILogger<CalculationTypesController> logg
 	/// <summary>
 	/// Displays the confirmation page for deleting a Calculation Type.
 	/// </summary>
-	/// <param name="id">The unique identifier of the calculation type to delete.</param>
+	/// <param name="id">The unique identifier of the Calculation Type to delete.</param>
 	/// <returns>
-	/// A view containing a <see cref="CalculationTypeViewModel"/> with the details of the calculation type to be deleted.
+	/// A view containing a <see cref="CalculationTypeViewModel"/> with the details of the Calculation Type to be deleted.
 	/// </returns>
 	// GET: CalculationTypes/Delete/5
 	[HttpGet]
@@ -339,8 +339,8 @@ public class CalculationTypesController(ILogger<CalculationTypesController> logg
 	/// <summary>
 	/// Processes the deletion of a Calculation Type.
 	/// </summary>
-	/// <param name="id">The unique identifier of the calculation type to delete.</param>
-	/// <param name="model">The view model containing the data of the calculation type being deleted.</param>
+	/// <param name="id">The unique identifier of the Calculation Type to delete.</param>
+	/// <param name="model">The view model containing the data of the Calculation Type being deleted.</param>
 	/// <returns>
 	/// Redirects to the Index action if successful; otherwise, returns the view with an error message.
 	/// On exception, redirects to the Error page.

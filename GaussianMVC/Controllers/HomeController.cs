@@ -98,6 +98,33 @@ public class HomeController(ILogger<HomeController> logger) : Controller
 	}
 
 	/// <summary>
+	/// Displays the Contact page.
+	/// </summary>
+	/// <returns>The Contact view.</returns>
+	[HttpGet]
+	public IActionResult Contact()
+	{
+		try
+		{
+			if (_logger.IsEnabled(LogLevel.Debug))
+			{
+				_logger.LogDebug("{Method} {Controller} {Action}", HttpContext.Request.Method, nameof(HomeController), nameof(Contact));
+			}
+
+			return View();
+		}
+		catch (Exception ex)
+		{
+			if (_logger.IsEnabled(LogLevel.Error))
+			{
+				_logger.LogError(ex, "{Method} {Controller} {Action} had an error.", HttpContext.Request.Method, nameof(HomeController), nameof(Contact));
+			}
+
+			return RedirectToAction(nameof(Error));
+		}
+	}
+
+	/// <summary>
 	/// Displays the error page with diagnostic information.
 	/// </summary>
 	/// <returns>The Error view with an <see cref="ErrorViewModel"/> containing the request identifier.</returns>

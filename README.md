@@ -184,13 +184,13 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 	- [x] Windows Presentation Foundation Desktop Application
 	- [x] ASP.NET MVC Web Application with API
 - [x] Implement the Data Access Code using [Dapper](https://github.com/DapperLib/Dapper)
-- [ ] Implement the database code, library code, and user interface code, for the first table, corresponding to the Job Type options in Gaussian.
+- [x] Implement the database code, library code, and user interface code, for the first table, corresponding to the Job Type options in Gaussian.
 	- [x] Database Table & Stored Procedures
 	- [x] Data Access Code
 	- [x] Business Logic Code
-	- [ ] User Interface Code
+	- [x] User Interface Code
 - [ ] Continue the above pattern for the other tables.
-	- [ ] Method Families
+	- [x] Method Families
 	- [ ] Base Methods
 	- [ ] Electronic States
 	- [ ] Spin States
@@ -209,6 +209,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 	- [ ] Calculations
 	- [ ] Calculation Files
 	- [ ] Experiment Files
+- [ ] Add JWT decoding and get the logged in user properties in the WPF app
 - [ ] Add Unit Tests
 - [ ] Add Health Checks to the API
 - [ ] Add logging to the Entity Framework-scaffolded Identity pages in the MVC App

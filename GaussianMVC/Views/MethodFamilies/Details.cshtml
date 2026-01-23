@@ -1,0 +1,48 @@
+﻿@model GaussianMVC.Models.MethodFamilyViewModel
+
+@*
+	For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@{
+	ViewData["Title"] = "Method Family Details";
+}
+
+<h1>Details</h1>
+
+@if (Model is not null)
+{
+	<div>
+		<h4>Method Family</h4>
+		<hr />
+		<dl class="row">
+			<dt class="col-sm-2">
+				@Html.DisplayNameFor(model => model.MethodFamilyName)
+			</dt>
+			<dd class="col-sm-10">
+				@Html.DisplayFor(model => model.MethodFamilyName)
+			</dd>
+			<dt class="col-sm-2">
+				@Html.DisplayNameFor(model => model.DescriptionText)
+			</dt>
+			<dd class="col-sm-10">
+				@Html.DisplayFor(model => model.DescriptionText)
+			</dd>
+		</dl>
+	</div>
+	<div>
+		@Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+		<a asp-action="Index">Back to List</a>
+	</div>
+}
+else
+{
+	<div>
+		<h4>Method Family</h4>
+		<hr />
+		<p>No Method Family found with this Id.</p>
+	</div>
+	<div>
+		<a asp-action="Index">Back to List</a>
+	</div>
+}

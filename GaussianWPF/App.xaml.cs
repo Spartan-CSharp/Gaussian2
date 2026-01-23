@@ -2,6 +2,7 @@
 
 using GaussianWPF.Controls;
 using GaussianWPF.Controls.CalculationTypes;
+using GaussianWPF.Controls.MethodFamilies;
 using GaussianWPF.FactoryHelpers;
 
 using GaussianWPFLibrary.DataAccess;
@@ -51,6 +52,7 @@ public partial class App : Application
 		// Register your services
 		_ = services.AddSingleton<IApiHelper, ApiHelper>();
 		_ = services.AddSingleton<ICalculationTypesEndpoint, CalculationTypesEndpoint>();
+		_ = services.AddSingleton<IMethodFamiliesEndpoint, MethodFamiliesEndpoint>();
 		_ = services.AddSingleton<ILoggedInUserModel, LoggedInUserModel>();
 
 		// Register your Views and ViewModels
@@ -58,8 +60,10 @@ public partial class App : Application
 		_ = services.AddSingleton<HomeControl>();
 		_ = services.AddFormFactory<LoginControl>();
 		_ = services.AddFormFactory<CalculationTypesControl>();
+		_ = services.AddFormFactory<MethodFamiliesControl>();
 		_ = services.AddFormFactory<AboutControl>();
 		_ = services.AddFormFactory<PrivacyControl>();
+		_ = services.AddFormFactory<ContactControl>();
 		_ = services.AddFormFactory<ErrorControl>();
 
 		// You can register other views/viewmodels as needed, e.g.
@@ -68,6 +72,11 @@ public partial class App : Application
 		_ = services.AddFormFactory<CalculationTypesCreateControl>();
 		_ = services.AddFormFactory<CalculationTypesEditControl>();
 		_ = services.AddFormFactory<CalculationTypesDeleteControl>();
+		_ = services.AddFormFactory<MethodFamiliesIndexControl>();
+		_ = services.AddFormFactory<MethodFamiliesDetailsControl>();
+		_ = services.AddFormFactory<MethodFamiliesCreateControl>();
+		_ = services.AddFormFactory<MethodFamiliesEditControl>();
+		_ = services.AddFormFactory<MethodFamiliesDeleteControl>();
 	}
 
 	/// <summary>

@@ -141,4 +141,24 @@
     <value>GaussianData</value>
     <comment>This is the Connection String Name for the Data Database</comment>
   </data>
+  <data name="MethodFamiliesCreate" xml:space="preserve">
+    <value>spMethodFamilies_Create</value>
+    <comment>The Stored Procedure Name for the Creation of a new Method Family</comment>
+  </data>
+  <data name="MethodFamiliesDelete" xml:space="preserve">
+    <value>spMethodFamilies_Delete</value>
+    <comment>The Stored Procedure Name for Deleting a Method Family by Id</comment>
+  </data>
+  <data name="MethodFamiliesGetAll" xml:space="preserve">
+    <value>spMethodFamilies_GetAll</value>
+    <comment>The Stored Procedure Name for Getting All Method Families</comment>
+  </data>
+  <data name="MethodFamiliesGetById" xml:space="preserve">
+    <value>spMethodFamilies_GetById</value>
+    <comment>The Stored Procedure Name for Getting a Method Family by Id</comment>
+  </data>
+  <data name="MethodFamiliesUpdate" xml:space="preserve">
+    <value>spMethodFamilies_Update</value>
+    <comment>The Stored Procedure Name for Updating a Method Family</comment>
+  </data>
 </root>

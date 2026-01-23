@@ -4,6 +4,7 @@ using GaussianWPF.Controls.CalculationTypes;
 using GaussianWPF.FactoryHelpers;
 
 using GaussianWPFLibrary.DataAccess;
+using GaussianWPFLibrary.ErrorModels;
 using GaussianWPFLibrary.EventModels;
 using GaussianWPFLibrary.Models;
 
@@ -82,19 +83,19 @@ public partial class CalculationTypesControl : UserControl
 				break;
 			case "edit":
 				CalculationTypesEditControl editControl = _calculationTypesEditFactory.Create();
-				editControl.CalculationTypeId = e.ItemId ?? throw new ArgumentNullException(nameof(e.ItemId), $"The {nameof(e.ItemId)} cannot be null."); // TODO BETTER NULL HANDLING
+				editControl.CalculationTypeId = e.ItemId ?? throw new NullParameterException(nameof(e.ItemId), $"The {nameof(e.ItemId)} cannot be null.");
 				editControl.ChildControlEvent += CalculationTypes_Edit_ChildControlEvent;
 				CalculationTypesContent.Content = editControl;
 				break;
 			case "details":
 				CalculationTypesDetailsControl detailsControl = _calculationTypesDetailsFactory.Create();
-				detailsControl.CalculationTypeId = e.ItemId ?? throw new ArgumentNullException(nameof(e.ItemId), $"The {nameof(e.ItemId)} cannot be null."); // TODO BETTER NULL HANDLING
+				detailsControl.CalculationTypeId = e.ItemId ?? throw new NullParameterException(nameof(e.ItemId), $"The {nameof(e.ItemId)} cannot be null.");
 				detailsControl.ChildControlEvent += CalculationTypes_Details_ChildControlEvent;
 				CalculationTypesContent.Content = detailsControl;
 				break;
 			case "delete":
 				CalculationTypesDeleteControl deleteControl = _calculationTypesDeleteFactory.Create();
-				deleteControl.CalculationTypeId = e.ItemId ?? throw new ArgumentNullException(nameof(e.ItemId), $"The {nameof(e.ItemId)} cannot be null."); // TODO BETTER NULL HANDLING
+				deleteControl.CalculationTypeId = e.ItemId ?? throw new NullParameterException(nameof(e.ItemId), $"The {nameof(e.ItemId)} cannot be null.");
 				deleteControl.ChildControlEvent += CalculationTypes_Delete_ChildControlEvent;
 				CalculationTypesContent.Content = deleteControl;
 				break;
@@ -154,7 +155,7 @@ public partial class CalculationTypesControl : UserControl
 		{
 			case "edit":
 				CalculationTypesEditControl editControl = _calculationTypesEditFactory.Create();
-				editControl.CalculationTypeId = e.ItemId ?? throw new ArgumentNullException(nameof(e.ItemId), $"The {nameof(e.ItemId)} cannot be null."); // TODO BETTER NULL HANDLING
+				editControl.CalculationTypeId = e.ItemId ?? throw new NullParameterException(nameof(e.ItemId), $"The {nameof(e.ItemId)} cannot be null.");
 				editControl.ChildControlEvent += CalculationTypes_Edit_ChildControlEvent;
 				CalculationTypesContent.Content = editControl;
 				break;

@@ -1,0 +1,12 @@
+﻿CREATE TABLE [dbo].[MethodFamilies]
+(
+	[Id] INT NOT NULL IDENTITY(1,1),
+	[Keyword] NVARCHAR(200) NOT NULL,
+	[DescriptionRtf] NVARCHAR(MAX) NULL,
+	[DescriptionText] NVARCHAR(2000) NULL,
+	[CreatedDate] DATETIME2(7) NOT NULL DEFAULT (GETUTCDATE()),
+	[LastUpdatedDate] DATETIME2(7) NOT NULL DEFAULT (GETUTCDATE()),
+	[Archived] BIT NOT NULL DEFAULT 0,
+	CONSTRAINT [PK_MethodFamilies] PRIMARY KEY CLUSTERED ([Id] ASC),
+	CONSTRAINT [UQ_MethodFamilies_Name] UNIQUE NONCLUSTERED ([Keyword] ASC)
+)
