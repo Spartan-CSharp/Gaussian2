@@ -126,12 +126,14 @@ builder.Services.AddApiVersioning(options =>
 	options.SubstituteApiVersionInUrl = true;
 });
 builder.Services.AddAuthorizationBuilder()
-	//	.AddPolicy("AdminAndUserPolicy", policy => policy.RequireRole("Admin", "User"))
-	//	.AddPolicy("AdminOnlyPolicy", policy => policy.RequireRole("Admin"));
-	//	.AddPolicy("UserOnlyPolicy", policy => policy.RequireRole("User"))
+	.AddPolicy("AdministratorPolicy", policy => policy.RequireRole("Administrator"))
+	.AddPolicy("FullUserPolicy", policy => policy.RequireRole("Administrator", "FullUser"))
+	.AddPolicy("EditingUserPolicy", policy => policy.RequireRole("Administrator", "FullUser", "EditingUser"))
+	.AddPolicy("CreatingUserPolicy", policy => policy.RequireRole("Administrator", "FullUser", "EditingUser", "CreatingUser"))
+	.AddPolicy("ViewOnlyUserPolicy", policy => policy.RequireRole("Administrator", "FullUser", "EditingUser", "CreatingUser", "ViewOnlyUser"))
 	.SetFallbackPolicy(new AuthorizationPolicyBuilder()
-			.RequireAuthenticatedUser()
-			.Build());
+		.RequireAuthenticatedUser()
+		.Build());
 builder.Services.AddAuthentication(options =>
 {
 	options.DefaultScheme = "MultiScheme";

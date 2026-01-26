@@ -5,8 +5,6 @@ using System.Text;
 
 using Asp.Versioning;
 
-using GaussianMVC.Data;
-
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -18,17 +16,17 @@ namespace GaussianMVC.Controllers.APIControllers;
 /// API controller responsible for handling authentication and JWT token generation.
 /// Provides endpoints for user authentication and token-based authorization.
 /// </summary>
-/// <param name="context">The application database context for accessing user identity data.</param>
 /// <param name="userManager">The ASP.NET Core Identity user manager for user operations.</param>
+/// <param name="roleManager">The ASP.NET Core Identity role manager for role operations.</param>
 /// <param name="logger">The logger instance for recording authentication events and diagnostics.</param>
 /// <param name="config">The application configuration providing authentication settings.</param>
 [Route("api/[controller]")]
 [ApiController]
 [ApiVersionNeutral]
-public class AuthenticationController(ApplicationDbContext context, UserManager<IdentityUser> userManager, ILogger<AuthenticationController> logger, IConfiguration config) : ControllerBase
+public class AuthenticationController(UserManager<IdentityUser> userManager, RoleManager<IdentityRole> roleManager, ILogger<AuthenticationController> logger, IConfiguration config) : ControllerBase
 {
-	private readonly ApplicationDbContext _context = context;
 	private readonly UserManager<IdentityUser> _userManager = userManager;
+	private readonly RoleManager<IdentityRole> _roleManager = roleManager;
 	private readonly ILogger<AuthenticationController> _logger = logger;
 	private readonly IConfiguration _config = config;
 	private DateTimeOffset _loginTime;
@@ -172,10 +170,14 @@ public class AuthenticationController(ApplicationDbContext context, UserManager<
 			new(JwtRegisteredClaimNames.PhoneNumberVerified, user.PhoneNumberConfirmed.ToString(CultureInfo.InvariantCulture).ToLower(CultureInfo.InvariantCulture))
 		];
 
-		IQueryable<IdentityRole> userRoles = from ur in _context.UserRoles
-											 join r in _context.Roles on ur.RoleId equals r.Id
-											 where ur.UserId == user.Id
-											 select r;
+		IList<string> userRoleNames = _userManager.GetRolesAsync(user).Result;
+		List<IdentityRole> userRoles = [];
+
+		foreach (string item in userRoleNames)
+		{
+			IdentityRole role = _roleManager.Roles.Where(r => r.Name == item).First();
+			userRoles.Add(role);
+		}
 
 		foreach (IdentityRole role in userRoles)
 		{
@@ -184,28 +186,24 @@ public class AuthenticationController(ApplicationDbContext context, UserManager<
 				claims.Add(new Claim(ClaimTypes.Role, role.Name));
 			}
 
-			IQueryable<IdentityRoleClaim<string>> roleClaims = from rc in _context.RoleClaims
-															   where rc.RoleId == role.Id
-															   select rc;
+			IList<Claim> roleClaims = _roleManager.GetClaimsAsync(role).Result;
 
-			foreach (IdentityRoleClaim<string>? roleClaim in roleClaims)
+			foreach (Claim? roleClaim in roleClaims)
 			{
-				if (roleClaim is not null && !string.IsNullOrEmpty(roleClaim.ClaimType) && !string.IsNullOrEmpty(roleClaim.ClaimValue))
+				if (roleClaim is not null)
 				{
-					claims.Add(new Claim(roleClaim.ClaimType, roleClaim.ClaimValue));
+					claims.Add(roleClaim);
 				}
 			}
 		}
 
-		IQueryable<IdentityUserClaim<string>> userClaims = from uc in _context.UserClaims
-														   where uc.UserId == user.Id
-														   select uc;
+		IList<Claim> userClaims = _userManager.GetClaimsAsync(user).Result;
 
-		foreach (IdentityUserClaim<string>? userClaim in userClaims)
+		foreach (Claim? userClaim in userClaims)
 		{
-			if (userClaim is not null && !string.IsNullOrEmpty(userClaim.ClaimType) && !string.IsNullOrEmpty(userClaim.ClaimValue))
+			if (userClaim is not null)
 			{
-				claims.Add(new Claim(userClaim.ClaimType, userClaim.ClaimValue));
+				claims.Add(userClaim);
 			}
 		}
 

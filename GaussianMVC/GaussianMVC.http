@@ -1,8 +1,9 @@
 ﻿# For more info on HTTP files go to https://aka.ms/vs/httpfile
 @GaussianMVC_HostAddress = https://localhost:7056
 
+###
+
 POST {{GaussianMVC_HostAddress}}/api/authentication/token
-Authorization: bearer {{$bearerToken}}
 Content-Type: application/json
 
 {
@@ -11,13 +12,145 @@ Content-Type: application/json
 
 ###
 
+GET {{GaussianMVC_HostAddress}}/api/v1/Home
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v1/Home/About
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v1/Home/Privacy
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v1/Home/Contact
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v1/Home/Error
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v1/Identity/Roles
+Authorization: Bearer {{$bearerToken}}
+
+###
+
+POST {{GaussianMVC_HostAddress}}/api/v1/Identity/Roles
+Authorization: Bearer {{$bearerToken}}
+Content-Type: application/json
+
+{
+  //RoleData
+}
+
+###
+
+DELETE {{GaussianMVC_HostAddress}}/api/v1/Identity/Roles/{{id}}
+Authorization: Bearer {{$bearerToken}}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v1/Identity/Roles/{{id}}
+Authorization: Bearer {{$bearerToken}}
+
+###
+
+PUT {{GaussianMVC_HostAddress}}/api/v1/Identity/Roles/{{id}}
+Authorization: Bearer {{$bearerToken}}
+
+###
+
+@roleId=string
+DELETE {{GaussianMVC_HostAddress}}/api/v1/Identity/Roles/{{roleId}}/Claims
+Authorization: Bearer {{$bearerToken}}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v1/Identity/Roles/{{roleId}}/Claims
+Authorization: Bearer {{$bearerToken}}
+
+###
+
+POST {{GaussianMVC_HostAddress}}/api/v1/Identity/Roles/{{roleId}}/Claims
+Authorization: Bearer {{$bearerToken}}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v1/Identity/Users
+Authorization: Bearer {{$bearerToken}}
+
+###
+
+POST {{GaussianMVC_HostAddress}}/api/v1/Identity/Users
+Authorization: Bearer {{$bearerToken}}
+Content-Type: application/json
+
+{
+  //UserData
+}
+
+###
+
+DELETE {{GaussianMVC_HostAddress}}/api/v1/Identity/Users/{{id}}
+Authorization: Bearer {{$bearerToken}}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v1/Identity/Users/{{id}}
+Authorization: Bearer {{$bearerToken}}
+
+###
+
+PUT {{GaussianMVC_HostAddress}}/api/v1/Identity/Users/{{id}}
+Authorization: Bearer {{$bearerToken}}
+
+###
+
+@userId=string
+DELETE {{GaussianMVC_HostAddress}}/api/v1/Identity/Users/{{userId}}/Claims
+Authorization: Bearer {{$bearerToken}}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v1/Identity/Users/{{userId}}/Claims
+Authorization: Bearer {{$bearerToken}}
+
+###
+
+POST {{GaussianMVC_HostAddress}}/api/v1/Identity/Users/{{userId}}/Claims
+Authorization: Bearer {{$bearerToken}}
+
+###
+
+PUT {{GaussianMVC_HostAddress}}/api/v1/Identity/Users/{{userId}}/Claims
+Authorization: Bearer {{$bearerToken}}
+
+###
+
+DELETE {{GaussianMVC_HostAddress}}/api/v1/Identity/Users/{{userId}}/Roles
+Authorization: Bearer {{$bearerToken}}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v1/Identity/Users/{{userId}}/Roles
+Authorization: Bearer {{$bearerToken}}
+
+###
+
+POST {{GaussianMVC_HostAddress}}/api/v1/Identity/Users/{{userId}}/Roles
+Authorization: Bearer {{$bearerToken}}
+
+###
+
 GET {{GaussianMVC_HostAddress}}/api/v1/CalculationTypes
-Authorization: bearer {{$bearerToken}}
+Authorization: Bearer {{$bearerToken}}
 
 ###
 
 POST {{GaussianMVC_HostAddress}}/api/v1/CalculationTypes
-Authorization: bearer {{$bearerToken}}
+Authorization: Bearer {{$bearerToken}}
 Content-Type: application/json
 
 {
@@ -27,17 +160,52 @@ Content-Type: application/json
 ###
 
 @id=0
-DELETE {{GaussianMVC_HostAddress}}/api/v1/CalculationTypes/{{id}}
-Authorization: bearer {{$bearerToken}}
-
-###
-
 GET {{GaussianMVC_HostAddress}}/api/v1/CalculationTypes/{{id}}
-Authorization: bearer {{$bearerToken}}
+Authorization: Bearer {{$bearerToken}}
 
 ###
 
+@id=0
 PUT {{GaussianMVC_HostAddress}}/api/v1/CalculationTypes/{{id}}
-Authorization: bearer {{$bearerToken}}
+Authorization: Bearer {{$bearerToken}}
+
+###
+
+@id=0
+DELETE {{GaussianMVC_HostAddress}}/api/v1/CalculationTypes/{{id}}
+Authorization: Bearer {{$bearerToken}}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v1/MethodFamilies
+Authorization: Bearer {{$bearerToken}}
+
+###
+
+POST {{GaussianMVC_HostAddress}}/api/v1/MethodFamilies
+Authorization: Bearer {{$bearerToken}}
+Content-Type: application/json
+
+{
+  //MethodFamilyFullModel
+}
+
+###
+
+@id=0
+GET {{GaussianMVC_HostAddress}}/api/v1/MethodFamilies/{{id}}
+Authorization: Bearer {{$bearerToken}}
+
+###
+
+@id=0
+PUT {{GaussianMVC_HostAddress}}/api/v1/MethodFamilies/{{id}}
+Authorization: Bearer {{$bearerToken}}
+
+###
+
+@id=0
+DELETE {{GaussianMVC_HostAddress}}/api/v1/MethodFamilies/{{id}}
+Authorization: Bearer {{$bearerToken}}
 
 ###
