@@ -66,7 +66,7 @@ public class CalculationTypeViewModel
 	/// </remarks>
 	[Display(Name = "Keyword")]
 	[Required]
-	[MaxLength(20)]
+	[MaxLength(30)]
 	public string Keyword { get; set; } = string.Empty;
 
 	/// <summary>

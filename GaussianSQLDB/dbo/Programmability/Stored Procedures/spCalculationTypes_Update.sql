@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [dbo].[spCalculationTypes_Update]
 	@Id INT,
 	@Name NVARCHAR(200),
-	@Keyword NVARCHAR(20),
+	@Keyword NVARCHAR(30),
 	@DescriptionRtf NVARCHAR(MAX),
 	@DescriptionText NVARCHAR(2000)
 AS

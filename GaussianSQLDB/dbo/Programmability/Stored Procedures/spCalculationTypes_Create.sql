@@ -1,6 +1,6 @@
 ﻿CREATE PROCEDURE [dbo].[spCalculationTypes_Create]
 	@Name NVARCHAR(200),
-	@Keyword NVARCHAR(20),
+	@Keyword NVARCHAR(30),
 	@DescriptionRtf NVARCHAR(MAX),
 	@DescriptionText NVARCHAR(2000),
 	@Id INT = 0 OUTPUT
