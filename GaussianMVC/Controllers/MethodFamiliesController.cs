@@ -118,7 +118,8 @@ public class MethodFamiliesController(ILogger<MethodFamiliesController> logger, 
 				_logger.LogDebug("{Method} {Controller} {Action}", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(CreateAsync));
 			}
 
-			return View();
+			MethodFamilyViewModel model = new();
+			return View(model);
 		}
 		catch (Exception ex)
 		{
@@ -265,7 +266,7 @@ public class MethodFamiliesController(ILogger<MethodFamiliesController> logger, 
 			if (ModelState.IsValid && id == model.Id)
 			{
 				MethodFamilyFullModel methodFamily = model.ToFullModel();
-				methodFamily = await _crud.CreateNewMethodFamilyAsync(methodFamily).ConfigureAwait(false);
+				methodFamily = await _crud.UpdateMethodFamilyAsync(methodFamily).ConfigureAwait(false);
 				model = new MethodFamilyViewModel(methodFamily);
 
 				if (_logger.IsEnabled(LogLevel.Trace))
@@ -358,7 +359,7 @@ public class MethodFamiliesController(ILogger<MethodFamiliesController> logger, 
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Method} {Controller} {Action} {Id}, {Model}", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(DeleteAsync), id, model);
+				_logger.LogDebug("{Method} {Controller} {Action} {Id} {Model}", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(DeleteAsync), id, model);
 			}
 
 			if (id == model?.Id)

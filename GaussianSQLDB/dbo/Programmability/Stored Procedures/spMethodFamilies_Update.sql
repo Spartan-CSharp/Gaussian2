@@ -1,6 +1,6 @@
 ﻿CREATE PROCEDURE [dbo].[spMethodFamilies_Update]
 	@Id INT,
-	@Keyword NVARCHAR(200),
+	@Name NVARCHAR(200),
 	@DescriptionRtf NVARCHAR(MAX),
 	@DescriptionText NVARCHAR(2000)
 AS
@@ -9,7 +9,7 @@ BEGIN
 	UPDATE 
 		[dbo].[MethodFamilies]
 	SET
-		[Keyword] = @Keyword,
+		[Name] = @Name,
 		[DescriptionRtf] = @DescriptionRtf,
 		[DescriptionText] = @DescriptionText,
 		[LastUpdatedDate] = GETUTCDATE()

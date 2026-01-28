@@ -46,7 +46,7 @@ public class MethodFamiliesCrud(IDbData dbData, ILogger<MethodFamiliesCrud> logg
 		}
 
 		DynamicParameters p = new();
-		p.Add("@Keyword", model.Keyword);
+		p.Add("@Name", model.Name);
 		p.Add("@DescriptionRtf", model.DescriptionRtf);
 		p.Add("@DescriptionText", model.DescriptionText);
 		p.Add("@Id", 0, dbType: DbType.Int32, direction: ParameterDirection.Output);
@@ -82,6 +82,28 @@ public class MethodFamiliesCrud(IDbData dbData, ILogger<MethodFamiliesCrud> logg
 		if (_logger.IsEnabled(LogLevel.Trace))
 		{
 			_logger.LogTrace("{Method} Returning {Count}", nameof(GetAllMethodFamiliesAsync), output.Count);
+		}
+
+		return output;
+	}
+
+	/// <summary>
+	/// Retrieves a simplified list of Method Families from the database.
+	/// </summary>
+	/// <returns>A list of Method Families with basic identifying information.</returns>
+	public async Task<List<MethodFamilyRecord>> GetMethodFamilyListAsync()
+	{
+		if (_logger.IsEnabled(LogLevel.Trace))
+		{
+			_logger.LogTrace("{Method} Called", nameof(GetMethodFamilyListAsync));
+		}
+
+		DynamicParameters p = new();
+		List<MethodFamilyRecord> output = await _dbData.LoadDataAsync<MethodFamilyRecord, dynamic>(Resources.MethodFamiliesGetList, p, Resources.DataDatabaseConnectionString).ConfigureAwait(false);
+
+		if (_logger.IsEnabled(LogLevel.Trace))
+		{
+			_logger.LogTrace("{Method} Returning {Count}", nameof(GetMethodFamilyListAsync), output.Count);
 		}
 
 		return output;
@@ -139,7 +161,7 @@ public class MethodFamiliesCrud(IDbData dbData, ILogger<MethodFamiliesCrud> logg
 
 		DynamicParameters p = new();
 		p.Add("@Id", model.Id);
-		p.Add("@Keyword", model.Keyword);
+		p.Add("@Name", model.Name);
 		p.Add("@DescriptionRtf", model.DescriptionRtf);
 		p.Add("@DescriptionText", model.DescriptionText);
 

@@ -1,10 +1,11 @@
 ﻿using System.Windows.Controls;
 
+using GaussianCommonLibrary.ErrorModels;
+
 using GaussianWPF.Controls.MethodFamilies;
 using GaussianWPF.FactoryHelpers;
 
 using GaussianWPFLibrary.DataAccess;
-using GaussianWPFLibrary.ErrorModels;
 using GaussianWPFLibrary.EventModels;
 using GaussianWPFLibrary.Models;
 

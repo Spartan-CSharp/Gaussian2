@@ -61,7 +61,7 @@ public partial class MethodFamiliesCreateControl : UserControl, INotifyPropertyC
 	/// <summary>
 	/// Gets or sets the Method Family view model being created.
 	/// </summary>
-	public MethodFamilyViewModel? MethodFamily
+	public MethodFamilyViewModel MethodFamily
 	{
 		get;
 		set
@@ -69,7 +69,7 @@ public partial class MethodFamiliesCreateControl : UserControl, INotifyPropertyC
 			field = value;
 			OnPropertyChanged(nameof(MethodFamily));
 		}
-	}
+	} = new();
 
 	/// <summary>
 	/// Gets or sets the keyword associated with the Method Family.
@@ -179,16 +179,11 @@ public partial class MethodFamiliesCreateControl : UserControl, INotifyPropertyC
 			}
 
 			ErrorMessage = string.Empty;
-
 			string descriptionRtf = DescriptionRichTextBox.GetRtfText();
 			string descriptionText = DescriptionRichTextBox.GetPlainText();
-			MethodFamily = new MethodFamilyViewModel
-			{
-				MethodFamilyName = MethodFamilyName,
-				DescriptionRtf = descriptionRtf,
-				DescriptionText = descriptionText
-			};
-
+			MethodFamily.Name = MethodFamilyName;
+			MethodFamily.DescriptionRtf = descriptionRtf;
+			MethodFamily.DescriptionText = descriptionText;
 			MethodFamilyFullModel model = MethodFamily.ToFullModel();
 			MethodFamilyFullModel? result = _endpoint.CreateAsync(model).Result;
 

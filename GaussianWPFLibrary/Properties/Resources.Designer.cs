@@ -61,6 +61,15 @@ namespace GaussianWPFLibrary.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to api/v1/BaseMethods.
+        /// </summary>
+        internal static string BaseMethodsEndpoint {
+            get {
+                return ResourceManager.GetString("BaseMethodsEndpoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to api/v1/CalculationTypes.
         /// </summary>
         internal static string CalculationTypesEndpoint {

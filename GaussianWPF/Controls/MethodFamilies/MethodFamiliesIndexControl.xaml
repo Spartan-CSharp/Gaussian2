@@ -24,7 +24,7 @@
 		<ListView Name="MethodFamiliesListView" Grid.Row="3" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="0 0 0 20" ItemsSource="{Binding MethodFamiliesList}">
 			<ListView.View>
 				<GridView x:Name="MethodFamiliesGridView" AllowsColumnReorder="false">
-					<GridViewColumn x:Name="NameColumn" DisplayMemberBinding="{Binding Path=MethodFamilyName}" Header="Name" />
+					<GridViewColumn x:Name="NameColumn" DisplayMemberBinding="{Binding Path=Name}" Header="Name" />
 					<GridViewColumn x:Name="ActionsColumn">
 						<GridViewColumn.CellTemplate>
 							<DataTemplate x:Name="ActionsDataTemplate">

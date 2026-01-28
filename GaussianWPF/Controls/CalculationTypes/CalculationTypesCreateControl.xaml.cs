@@ -61,7 +61,7 @@ public partial class CalculationTypesCreateControl : UserControl, INotifyPropert
 	/// <summary>
 	/// Gets or sets the Calculation Type view model being created.
 	/// </summary>
-	public CalculationTypeViewModel? CalculationType
+	public CalculationTypeViewModel CalculationType
 	{
 		get;
 		set
@@ -69,7 +69,7 @@ public partial class CalculationTypesCreateControl : UserControl, INotifyPropert
 			field = value;
 			OnPropertyChanged(nameof(CalculationType));
 		}
-	}
+	} = new();
 
 	/// <summary>
 	/// Gets or sets the name of the Calculation Type.
@@ -193,17 +193,12 @@ public partial class CalculationTypesCreateControl : UserControl, INotifyPropert
 			}
 
 			ErrorMessage = string.Empty;
-
 			string descriptionRtf = DescriptionRichTextBox.GetRtfText();
 			string descriptionText = DescriptionRichTextBox.GetPlainText();
-			CalculationType = new CalculationTypeViewModel
-			{
-				Name = CalculationTypeName,
-				Keyword = Keyword,
-				DescriptionRtf = descriptionRtf,
-				DescriptionText = descriptionText
-			};
-
+			CalculationType.Name = CalculationTypeName;
+			CalculationType.Keyword = Keyword;
+			CalculationType.DescriptionRtf = descriptionRtf;
+			CalculationType.DescriptionText = descriptionText;
 			CalculationTypeFullModel model = CalculationType.ToFullModel();
 			CalculationTypeFullModel? result = _endpoint.CreateAsync(model).Result;
 

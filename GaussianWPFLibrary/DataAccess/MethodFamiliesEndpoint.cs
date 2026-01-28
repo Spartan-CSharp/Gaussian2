@@ -78,6 +78,56 @@ public class MethodFamiliesEndpoint(ILogger<MethodFamiliesEndpoint> logger, IApi
 	}
 
 	/// <summary>
+	/// Retrieves a list of Method Family records from the API.
+	/// </summary>
+	/// <returns>
+	/// A task that represents the asynchronous operation. The task result contains
+	/// a list of <see cref="MethodFamilyRecord"/> objects, or <c>null</c> if the response is empty.
+	/// </returns>
+	/// <exception cref="HttpIOException">
+	/// Thrown when the HTTP response does not indicate success.
+	/// </exception>
+	public async Task<List<MethodFamilyRecord>?> GetListAsync()
+	{
+		if (_logger.IsEnabled(LogLevel.Trace))
+		{
+			_logger.LogTrace("{Method} Called", nameof(GetListAsync));
+		}
+
+		Uri apiEndpoint = new($"{Resources.MethodFamiliesEndpoint}/List", UriKind.Relative);
+
+		using HttpResponseMessage response = await _apiHelper.ApiClient.GetAsync(apiEndpoint).ConfigureAwait(false);
+
+		if (response.IsSuccessStatusCode)
+		{
+			if (_logger.IsEnabled(LogLevel.Trace))
+			{
+				_logger.LogTrace("{Method} HttpResponse Had a Success Code: {ResponseCode} {ResponsePhrase}", nameof(GetListAsync), response.StatusCode, response.ReasonPhrase);
+			}
+
+			List<MethodFamilyRecord>? result = await response.Content.ReadFromJsonAsync<List<MethodFamilyRecord>>().ConfigureAwait(false);
+
+			if (_logger.IsEnabled(LogLevel.Trace))
+			{
+				_logger.LogTrace("{Method} received {ResponseContent}", nameof(GetListAsync), result);
+			}
+
+			return result;
+		}
+		else
+		{
+			HttpIOException ex = new(HttpRequestError.InvalidResponse, response.ReasonPhrase);
+
+			if (_logger.IsEnabled(LogLevel.Error))
+			{
+				_logger.LogError(ex, "{Method} HttpResponse Did Not Have a Success Code: {ResponseCode} {ResponsePhrase}", nameof(GetListAsync), response.StatusCode, response.ReasonPhrase);
+			}
+
+			throw ex;
+		}
+	}
+
+	/// <summary>
 	/// Retrieves a specific Method Family by its unique identifier.
 	/// </summary>
 	/// <param name="id">The unique identifier of the Method Family to retrieve.</param>

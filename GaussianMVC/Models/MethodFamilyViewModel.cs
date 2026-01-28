@@ -31,7 +31,7 @@ public class MethodFamilyViewModel
 		}
 
 		Id = model.Id;
-		MethodFamilyName = model.Keyword;
+		Name = model.Name;
 		DescriptionRtf = model.DescriptionRtf;
 		DescriptionText = model.DescriptionText;
 		CreatedDate = model.CreatedDate;
@@ -52,10 +52,10 @@ public class MethodFamilyViewModel
 	/// This field is required and has a maximum length of 200 characters.
 	/// Used as a short identifier or code for the Method Family.
 	/// </remarks>
-	[Display(Name = "Method Family Name")]
+	[Display(Name = "Name")]
 	[Required]
 	[MaxLength(200)]
-	public string MethodFamilyName { get; set; } = string.Empty;
+	public string Name { get; set; } = string.Empty;
 
 	/// <summary>
 	/// Gets or sets the description in Rich Text Format (RTF).
@@ -103,7 +103,7 @@ public class MethodFamilyViewModel
 	/// is considered archived and may be hidden from active lists.
 	/// </remarks>
 	[Display(Name = "Archived")]
-	public bool Archived { get; set; } = false;
+	public bool Archived { get; set; }
 
 	/// <summary>
 	/// Converts this view model to a <see cref="MethodFamilyFullModel"/> instance.
@@ -114,7 +114,7 @@ public class MethodFamilyViewModel
 		return new MethodFamilyFullModel
 		{
 			Id = Id,
-			Keyword = MethodFamilyName,
+			Name = Name,
 			DescriptionRtf = DescriptionRtf,
 			DescriptionText = DescriptionText,
 			CreatedDate = CreatedDate,
@@ -124,14 +124,23 @@ public class MethodFamilyViewModel
 	}
 
 	/// <summary>
+	/// Converts the current Method Family full model to a simplified Method Family record.
+	/// </summary>
+	/// <returns>A new <see cref="MethodFamilyRecord"/> instance containing the Id and Name properties.</returns>
+	public MethodFamilyRecord ToRecord()
+	{
+		return new MethodFamilyRecord(Id, Name);
+	}
+
+	/// <summary>
 	/// Returns a string representation of the Method Family.
 	/// </summary>
 	/// <returns>
-	/// A string in the format "Name (MethodFamilyName)", combining the Method Family's name
-	/// and keyword identifier. Returns null if <see cref="MethodFamilyName"/> is null.
+	/// A string in the format "Name (Name)", combining the Method Family's name
+	/// and keyword identifier. Returns null if <see cref="Name"/> is null.
 	/// </returns>
 	public override string? ToString()
 	{
-		return $"{MethodFamilyName}";
+		return $"{Name}";
 	}
 }

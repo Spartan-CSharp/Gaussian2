@@ -81,17 +81,58 @@ public class MethodFamiliesController(ILogger<MethodFamiliesController> logger, 
 	}
 
 	/// <summary>
+	/// Retrieves a simplified list of Method Families.
+	/// </summary>
+	/// <returns>
+	/// An <see cref="ActionResult"/> containing a list of <see cref="MethodFamilyRecord"/> objects.
+	/// Returns 200 OK with the list of Method Family records on success.
+	/// Returns 500 Internal Server Error if an error occurs during retrieval.
+	/// </returns>
+	/// <response code="200">Returns the list of Method Family records.</response>
+	/// <response code="500">If an internal server error occurs.</response>
+	// GET: api/v1/MethodFamilies/List
+	[HttpGet("List")]
+	public async Task<ActionResult<List<MethodFamilyRecord>>> GetListAsync()
+	{
+		try
+		{
+			if (_logger.IsEnabled(LogLevel.Debug))
+			{
+				_logger.LogDebug("{Controller} {Action}", nameof(MethodFamiliesController), nameof(GetListAsync));
+			}
+
+			List<MethodFamilyRecord> methodFamilies = await _crud.GetMethodFamilyListAsync().ConfigureAwait(false);
+
+			if (_logger.IsEnabled(LogLevel.Trace))
+			{
+				_logger.LogTrace("{Controller} {Action} {Method} returned {Count}", nameof(MethodFamiliesController), nameof(GetListAsync), nameof(_crud.GetMethodFamilyListAsync), methodFamilies.Count);
+			}
+
+			return Ok(methodFamilies);
+		}
+		catch (Exception ex)
+		{
+			if (_logger.IsEnabled(LogLevel.Error))
+			{
+				_logger.LogError(ex, "{Controller} {Action} had an error", nameof(MethodFamiliesController), nameof(GetListAsync));
+			}
+
+			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
+		}
+	}
+
+	/// <summary>
 	/// Retrieves a specific Method Family by its ID.
 	/// </summary>
 	/// <param name="id">The unique identifier of the Method Family.</param>
 	/// <returns>
 	/// An <see cref="ActionResult"/> containing the requested <see cref="MethodFamilyFullModel"/>.
 	/// Returns 200 OK with the Method Family on success.
-	/// Returns 400 Bad Request if the Method Family is not found.
+	/// Returns 404 Not Found if the Method Family is not found.
 	/// Returns 500 Internal Server Error if an error occurs.
 	/// </returns>
 	/// <response code="200">Returns the requested Method Family.</response>
-	/// <response code="400">If no Method Family exists with the specified ID.</response>
+	/// <response code="404">If no Method Family exists with the specified ID.</response>
 	/// <response code="500">If an internal server error occurs.</response>
 	// GET api/v1/MethodFamilies/5
 	[HttpGet("{id}")]
@@ -111,7 +152,7 @@ public class MethodFamiliesController(ILogger<MethodFamiliesController> logger, 
 				_logger.LogTrace("{Controller} {Action} {Id} {Method} returned {Model}", nameof(MethodFamiliesController), nameof(GetAsync), id, nameof(_crud.GetMethodFamilyByIdAsync), methodFamily);
 			}
 
-			return methodFamily is null ? (ActionResult<MethodFamilyFullModel>)BadRequest($"No Method Family exists with the supplied Id {id}.") : (ActionResult<MethodFamilyFullModel>)Ok(methodFamily);
+			return methodFamily is null ? (ActionResult<MethodFamilyFullModel>)NotFound($"No Method Family exists with the supplied Id {id}.") : (ActionResult<MethodFamilyFullModel>)Ok(methodFamily);
 		}
 		catch (Exception ex)
 		{

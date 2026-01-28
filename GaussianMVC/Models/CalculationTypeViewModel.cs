@@ -64,7 +64,7 @@ public class CalculationTypeViewModel
 	/// This field is required and has a maximum length of 20 characters.
 	/// Used as a short identifier or code for the Calculation Type.
 	/// </remarks>
-	[Display(Name = "MethodFamilyName")]
+	[Display(Name = "Keyword")]
 	[Required]
 	[MaxLength(20)]
 	public string Keyword { get; set; } = string.Empty;
@@ -115,7 +115,7 @@ public class CalculationTypeViewModel
 	/// is considered archived and may be hidden from active lists.
 	/// </remarks>
 	[Display(Name = "Archived")]
-	public bool Archived { get; set; } = false;
+	public bool Archived { get; set; }
 
 	/// <summary>
 	/// Converts this view model to a <see cref="CalculationTypeFullModel"/> instance.
@@ -140,7 +140,7 @@ public class CalculationTypeViewModel
 	/// Returns a string representation of the Calculation Type.
 	/// </summary>
 	/// <returns>
-	/// A string in the format "Name (MethodFamilyName)", combining the Calculation Type's name
+	/// A string in the format "Name (Name)", combining the Calculation Type's name
 	/// and keyword identifier. Returns null if both <see cref="Name"/> and <see cref="Keyword"/> are null.
 	/// </returns>
 	public override string? ToString()

@@ -191,7 +191,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 	- [x] User Interface Code
 - [ ] Continue the above pattern for the other tables.
 	- [x] Method Families
-	- [ ] Base Methods
+	- [x] Base Methods
 	- [ ] Electronic States
 	- [ ] Spin States
 	- [ ] Electronic State/Method Families
@@ -199,6 +199,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 	- [ ] Full Methods
 	- [ ] Basis Sets
 	- [ ] Density Fitting Sets
+	- [ ] Model Chemistries
 	- [ ] ONIOMs
 	- [ ] Species Types
 	- [ ] File Types
@@ -213,6 +214,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 - [ ] Add Unit Tests
 - [ ] Add Health Checks to the API
 - [ ] Add logging to the Entity Framework-scaffolded Identity pages in the MVC App
+- [ ] Add Role-based permissions on controllers and pages in the MVC app and in the controls/menu in the WPF app
 - [ ] Refactor and optimize the code
 - [ ] Remove the warning disables in .globalconfig and address each warning
 - [ ] Beef up API with additional response codes and document them

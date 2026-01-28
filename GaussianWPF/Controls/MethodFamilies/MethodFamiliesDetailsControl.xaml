@@ -34,7 +34,7 @@
 
 			<!-- Row 5 -->
 			<TextBlock Name="NameLabelTextBlock" Grid.Row="5" Grid.Column="0" Margin="0 0 5 10" Visibility="{Binding ModelIsNotNull, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}" Text="Name:" />
-			<TextBlock Name="NameTextBlock" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" Margin="0 0 0 10" Visibility="{Binding ModelIsNotNull, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}" Text="{Binding MethodFamily.MethodFamilyName, UpdateSourceTrigger=PropertyChanged}" />
+			<TextBlock Name="NameTextBlock" Grid.Row="5" Grid.Column="1" HorizontalAlignment="Left" Margin="0 0 0 10" Visibility="{Binding ModelIsNotNull, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}" Text="{Binding MethodFamily.Name, UpdateSourceTrigger=PropertyChanged}" />
 
 			<!-- Row 6 -->
 			<TextBlock Name="DescriptionTextBlock" Grid.Row="6" Grid.Column="0" Margin="0 0 5 10" Visibility="{Binding ModelIsNotNull, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Visible}" Text="Description:" />

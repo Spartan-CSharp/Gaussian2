@@ -5,7 +5,7 @@ BEGIN
 	SET NOCOUNT ON;
 	SELECT 
 		[Id],
-		[Keyword],
+		[Name],
 		[DescriptionRtf],
 		[DescriptionText],
 		[CreatedDate],
@@ -17,5 +17,5 @@ BEGIN
 		[Id] = @Id AND
 		[Archived] = 0
 	ORDER BY
-		[Keyword] ASC;
+		[Name] ASC;
 END

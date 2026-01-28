@@ -61,6 +61,60 @@ namespace GaussianMVCLibrary.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to spBaseMethods_Create.
+        /// </summary>
+        internal static string BaseMethodsCreate {
+            get {
+                return ResourceManager.GetString("BaseMethodsCreate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to spBaseMethods_Delete.
+        /// </summary>
+        internal static string BaseMethodsDelete {
+            get {
+                return ResourceManager.GetString("BaseMethodsDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to spBaseMethods_GetAll.
+        /// </summary>
+        internal static string BaseMethodsGetAll {
+            get {
+                return ResourceManager.GetString("BaseMethodsGetAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to spBaseMethods_GetById.
+        /// </summary>
+        internal static string BaseMethodsGetById {
+            get {
+                return ResourceManager.GetString("BaseMethodsGetById", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to spBaseMethods_GetByMethodFamilyId.
+        /// </summary>
+        internal static string BaseMethodsGetByMethodFamilyId {
+            get {
+                return ResourceManager.GetString("BaseMethodsGetByMethodFamilyId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to spBaseMethods_Update.
+        /// </summary>
+        internal static string BaseMethodsUpdate {
+            get {
+                return ResourceManager.GetString("BaseMethodsUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to spCalculationTypes_Create.
         /// </summary>
         internal static string CalculationTypesCreate {
@@ -147,6 +201,15 @@ namespace GaussianMVCLibrary.Properties {
         internal static string MethodFamiliesGetById {
             get {
                 return ResourceManager.GetString("MethodFamiliesGetById", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to spMethodFamilies_GetList.
+        /// </summary>
+        internal static string MethodFamiliesGetList {
+            get {
+                return ResourceManager.GetString("MethodFamiliesGetList", resourceCulture);
             }
         }
         

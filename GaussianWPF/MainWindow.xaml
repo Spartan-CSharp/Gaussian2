@@ -17,6 +17,7 @@
 			<MenuItem Name="SettingsMenu" Visibility="{Binding IsLoggedIn, Converter={StaticResource BooleanToVisibilityConverter}, UpdateSourceTrigger=PropertyChanged}" Header="_Settings">
 				<MenuItem Name="CalculationTypes" Header="Calculation _Types" Click="CalculationTypes_Click" />
 				<MenuItem Name="MethodFamilies" Header="Method _Families" Click="MethodFamilies_Click" />
+				<MenuItem Name="BaseMethods" Header="Base _Methods" Click="BaseMethods_Click" />
 			</MenuItem>
 			<MenuItem Name="HelpMenu" Header="_Help">
 				<MenuItem Name="About" Header="_About" Click="About_Click" />

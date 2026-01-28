@@ -1,0 +1,52 @@
+﻿@model IEnumerable<GaussianMVC.Models.BaseMethodViewModel>
+
+@*
+	For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@{
+	ViewData["Title"] = "Base Methods";
+}
+
+<h1>Base Methods</h1>
+
+<p>
+	<a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+	<thead>
+		<tr>
+			<th>
+				@Html.DisplayNameFor(model => model.Keyword)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.MethodFamily)
+			</th>
+			<th>
+				@Html.DisplayNameFor(model => model.DescriptionText)
+			</th>
+			<th></th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (var item in Model)
+		{
+			<tr>
+				<td>
+					@Html.DisplayFor(modelItem => item.Keyword)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.MethodFamilyList.Where(m => m.Selected == true).First().Text)
+				</td>
+				<td>
+					@Html.DisplayFor(modelItem => item.DescriptionText)
+				</td>
+				<td>
+					@Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+					@Html.ActionLink("Details", "Details", new { id = item.Id }) |
+					@Html.ActionLink("Delete", "Delete", new { id = item.Id })
+				</td>
+			</tr>
+		}
+	</tbody>
+</table>

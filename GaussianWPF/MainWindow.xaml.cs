@@ -31,6 +31,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 	private readonly IAbstractFactory<LoginControl> _loginFactory;
 	private readonly IAbstractFactory<CalculationTypesControl> _calculationTypesFactory;
 	private readonly IAbstractFactory<MethodFamiliesControl> _methodFamiliesFactory;
+	private readonly IAbstractFactory<BaseMethodsControl> _baseMethodsFactory;
 	private readonly IAbstractFactory<AboutControl> _aboutFactory;
 	private readonly IAbstractFactory<PrivacyControl> _privacyFactory;
 	private readonly IAbstractFactory<ContactControl> _contactFactory;
@@ -46,11 +47,12 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 	/// <param name="loginFactory">The factory for creating login control instances.</param>
 	/// <param name="calculationTypesFactory">The factory for creating Calculation Types control instances.</param>
 	/// <param name="methodFamiliesFactory">The factory for creating Method Families control instances.</param>
+	/// <param name="baseMethodsFactory">The factory for creating Base Methods control instances.</param>
 	/// <param name="aboutFactory">The factory for creating about control instances.</param>
 	/// <param name="contactFactory">The factory for creating contact control instances.</param>
 	/// <param name="privacyFactory">The factory for creating privacy control instances.</param>
-	/// <param name="errorFactory"></param>
-	public MainWindow(ILogger<MainWindow> logger, ILoggedInUserModel loggedInUser, IApiHelper apiHelper, HomeControl homeControl, IAbstractFactory<LoginControl> loginFactory, IAbstractFactory<CalculationTypesControl> calculationTypesFactory, IAbstractFactory<MethodFamiliesControl> methodFamiliesFactory, IAbstractFactory<AboutControl> aboutFactory, IAbstractFactory<PrivacyControl> privacyFactory, IAbstractFactory<ContactControl> contactFactory, IAbstractFactory<ErrorControl> errorFactory)
+	/// <param name="errorFactory">The factory for creating error control instances.</param>
+	public MainWindow(ILogger<MainWindow> logger, ILoggedInUserModel loggedInUser, IApiHelper apiHelper, HomeControl homeControl, IAbstractFactory<LoginControl> loginFactory, IAbstractFactory<CalculationTypesControl> calculationTypesFactory, IAbstractFactory<MethodFamiliesControl> methodFamiliesFactory, IAbstractFactory<BaseMethodsControl> baseMethodsFactory, IAbstractFactory<AboutControl> aboutFactory, IAbstractFactory<PrivacyControl> privacyFactory, IAbstractFactory<ContactControl> contactFactory, IAbstractFactory<ErrorControl> errorFactory)
 	{
 		_logger = logger;
 		_loggedInUser = loggedInUser;
@@ -59,6 +61,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 		_loginFactory = loginFactory;
 		_calculationTypesFactory = calculationTypesFactory;
 		_methodFamiliesFactory = methodFamiliesFactory;
+		_baseMethodsFactory = baseMethodsFactory;
 		_aboutFactory = aboutFactory;
 		_privacyFactory = privacyFactory;
 		_contactFactory = contactFactory;
@@ -225,6 +228,18 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 		MethodFamiliesControl methodFamiliesControl = _methodFamiliesFactory.Create();
 		MainContent.Content = methodFamiliesControl;
 	}
+
+	private void BaseMethods_Click(object sender, RoutedEventArgs e)
+	{
+		if (_logger.IsEnabled(LogLevel.Trace))
+		{
+			_logger.LogTrace("{Window} {EventHandler} with {Sender} and {EventArgs}", nameof(MainWindow), nameof(BaseMethods_Click), sender, e);
+		}
+
+		BaseMethodsControl baseMethodsControl = _baseMethodsFactory.Create();
+		MainContent.Content = baseMethodsControl;
+	}
+
 	private void About_Click(object sender, RoutedEventArgs e)
 	{
 		if (_logger.IsEnabled(LogLevel.Trace))

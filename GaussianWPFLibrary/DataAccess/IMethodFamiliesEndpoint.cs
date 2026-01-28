@@ -47,6 +47,15 @@ public interface IMethodFamiliesEndpoint
 	Task<MethodFamilyFullModel?> GetByIdAsync(int id);
 
 	/// <summary>
+	/// Retrieves a list of Method Family records from the API.
+	/// </summary>
+	/// <returns>
+	/// A task that represents the asynchronous operation. The task result contains
+	/// a list of <see cref="MethodFamilyRecord"/> objects, or <c>null</c> if the response is empty.
+	/// </returns>
+	Task<List<MethodFamilyRecord>?> GetListAsync();
+
+	/// <summary>
 	/// Updates an existing Method Family via the API.
 	/// </summary>
 	/// <param name="id">The unique identifier of the Method Family to update.</param>

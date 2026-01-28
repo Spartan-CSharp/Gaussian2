@@ -144,6 +144,46 @@ Authorization: Bearer {{$bearerToken}}
 
 ###
 
+POST {{GaussianMVC_HostAddress}}/api/v1/BaseMethods
+Authorization: Bearer {{$bearerToken}}
+Content-Type: application/json
+
+{
+  //BaseMethodSimpleModel
+}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v1/BaseMethods/Family
+Authorization: Bearer {{$bearerToken}}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v1/BaseMethods/Full
+Authorization: Bearer {{$bearerToken}}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v1/BaseMethods/Simple
+Authorization: Bearer {{$bearerToken}}
+
+###
+
+DELETE {{GaussianMVC_HostAddress}}/api/v1/BaseMethods/{{id}}
+Authorization: Bearer {{$bearerToken}}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v1/BaseMethods/{{id}}
+Authorization: Bearer {{$bearerToken}}
+
+###
+
+PUT {{GaussianMVC_HostAddress}}/api/v1/BaseMethods/{{id}}
+Authorization: Bearer {{$bearerToken}}
+
+###
+
 GET {{GaussianMVC_HostAddress}}/api/v1/CalculationTypes
 Authorization: Bearer {{$bearerToken}}
 
@@ -189,6 +229,11 @@ Content-Type: application/json
 {
   //MethodFamilyFullModel
 }
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v1/MethodFamilies/List
+Authorization: Bearer {{$bearerToken}}
 
 ###
 

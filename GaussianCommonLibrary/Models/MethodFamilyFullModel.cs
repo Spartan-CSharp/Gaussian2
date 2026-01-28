@@ -12,9 +12,9 @@ public class MethodFamilyFullModel
 	public int Id { get; set; }
 
 	/// <summary>
-	/// Gets or sets the keyword identifier used for the Method Family.
+	/// Gets or sets the display name of the Method Family.
 	/// </summary>
-	public string Keyword { get; set; } = string.Empty;
+	public string Name { get; set; } = string.Empty;
 
 	/// <summary>
 	/// Gets or sets the Rich Text Format (RTF) description of the Method Family.
@@ -44,11 +44,20 @@ public class MethodFamilyFullModel
 	public bool Archived { get; set; }
 
 	/// <summary>
+	/// Converts the current Method Family full model to a simplified Method Family record.
+	/// </summary>
+	/// <returns>A new <see cref="MethodFamilyRecord"/> instance containing the Id and Name properties.</returns>
+	public MethodFamilyRecord ToRecord()
+	{
+		return new MethodFamilyRecord(Id, Name);
+	}
+
+	/// <summary>
 	/// Returns a string representation of the Method Family.
 	/// </summary>
-	/// <returns>A string in the format "Name (Keyword)".</returns>
+	/// <returns>A string in the format "Name".</returns>
 	public override string? ToString()
 	{
-		return $"{Keyword}";
+		return $"{Name}";
 	}
 }

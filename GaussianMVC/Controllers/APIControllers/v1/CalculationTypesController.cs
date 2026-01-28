@@ -87,11 +87,11 @@ public class CalculationTypesController(ILogger<CalculationTypesController> logg
 	/// <returns>
 	/// An <see cref="ActionResult"/> containing the requested <see cref="CalculationTypeFullModel"/>.
 	/// Returns 200 OK with the Calculation Type on success.
-	/// Returns 400 Bad Request if the Calculation Type is not found.
+	/// Returns 404 Not Found if the Calculation Type is not found.
 	/// Returns 500 Internal Server Error if an error occurs.
 	/// </returns>
 	/// <response code="200">Returns the requested Calculation Type.</response>
-	/// <response code="400">If no Calculation Type exists with the specified ID.</response>
+	/// <response code="404">If no Calculation Type exists with the specified ID.</response>
 	/// <response code="500">If an internal server error occurs.</response>
 	// GET api/v1/CalculationTypes/5
 	[HttpGet("{id}")]
@@ -111,7 +111,7 @@ public class CalculationTypesController(ILogger<CalculationTypesController> logg
 				_logger.LogTrace("{Controller} {Action} {Id} {Method} returned {Model}", nameof(CalculationTypesController), nameof(GetAsync), id, nameof(_crud.GetCalculationTypeByIdAsync), calculationType);
 			}
 
-			return calculationType is null ? (ActionResult<CalculationTypeFullModel>)BadRequest($"No Calculation Type exists with the supplied Id {id}.") : (ActionResult<CalculationTypeFullModel>)Ok(calculationType);
+			return calculationType is null ? (ActionResult<CalculationTypeFullModel>)NotFound($"No Calculation Type exists with the supplied Id {id}.") : (ActionResult<CalculationTypeFullModel>)Ok(calculationType);
 		}
 		catch (Exception ex)
 		{

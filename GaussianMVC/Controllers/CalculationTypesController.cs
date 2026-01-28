@@ -118,7 +118,8 @@ public class CalculationTypesController(ILogger<CalculationTypesController> logg
 				_logger.LogDebug("{Method} {Controller} {Action}", HttpContext.Request.Method, nameof(CalculationTypesController), nameof(CreateAsync));
 			}
 
-			return View();
+			CalculationTypeViewModel model = new();
+			return View(model);
 		}
 		catch (Exception ex)
 		{
@@ -265,7 +266,7 @@ public class CalculationTypesController(ILogger<CalculationTypesController> logg
 			if (ModelState.IsValid && id == model.Id)
 			{
 				CalculationTypeFullModel calculationType = model.ToFullModel();
-				calculationType = await _crud.CreateNewCalculationTypeAsync(calculationType).ConfigureAwait(false);
+				calculationType = await _crud.UpdateCalculationTypeAsync(calculationType).ConfigureAwait(false);
 				model = new CalculationTypeViewModel(calculationType);
 
 				if (_logger.IsEnabled(LogLevel.Trace))
@@ -358,7 +359,7 @@ public class CalculationTypesController(ILogger<CalculationTypesController> logg
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Method} {Controller} {Action} {Id}, {Model}", HttpContext.Request.Method, nameof(CalculationTypesController), nameof(DeleteAsync), id, model);
+				_logger.LogDebug("{Method} {Controller} {Action} {Id} {Model}", HttpContext.Request.Method, nameof(CalculationTypesController), nameof(DeleteAsync), id, model);
 			}
 
 			if (id == model?.Id)

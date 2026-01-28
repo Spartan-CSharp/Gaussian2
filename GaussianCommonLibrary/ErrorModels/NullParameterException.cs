@@ -1,4 +1,4 @@
-﻿namespace GaussianWPFLibrary.ErrorModels;
+﻿namespace GaussianCommonLibrary.ErrorModels;
 
 /// <summary>
 /// Represents an exception that is thrown when a required parameter is null.

@@ -247,10 +247,9 @@ public partial class MethodFamiliesDeleteControl : UserControl, INotifyPropertyC
 
 			ErrorMessage = string.Empty;
 
-			MethodFamilyFullModel model = MethodFamily!.ToFullModel();
 			_endpoint.DeleteAsync(MethodFamilyId).Wait();
-			MethodFamily.LastUpdatedDate = DateTime.Now;
-			MethodFamily.Archived = true;
+			MethodFamily!.LastUpdatedDate = DateTime.Now;
+			MethodFamily!.Archived = true;
 			ChildControlEvent?.Invoke(this, new ChildControlEventArgs<MethodFamiliesDeleteControl>("delete", null));
 		}
 		catch (HttpIOException ex)

@@ -79,6 +79,14 @@
     <Build Include="dbo\Programmability\Stored Procedures\spMethodFamilies_Create.sql" />
     <Build Include="dbo\Programmability\Stored Procedures\spMethodFamilies_Delete.sql" />
     <Build Include="dbo\Programmability\Stored Procedures\spMethodFamilies_Update.sql" />
+    <Build Include="dbo\Tables\BaseMethods.sql" />
+    <Build Include="dbo\Programmability\Stored Procedures\spBaseMethods_GetAll.sql" />
+    <Build Include="dbo\Programmability\Stored Procedures\spBaseMethods_GetById.sql" />
+    <Build Include="dbo\Programmability\Stored Procedures\spBaseMethods_Create.sql" />
+    <Build Include="dbo\Programmability\Stored Procedures\spBaseMethods_Update.sql" />
+    <Build Include="dbo\Programmability\Stored Procedures\spBaseMethods_Delete.sql" />
+    <Build Include="dbo\Programmability\Stored Procedures\spBaseMethods_GetByMethodFamilyId.sql" />
+    <Build Include="dbo\Programmability\Stored Procedures\spMethodFamilies_GetList.sql" />
   </ItemGroup>
   <ItemGroup>
     <PreDeploy Include="PreScripts\Script.PreDeployment.sql" />

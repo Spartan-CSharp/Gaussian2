@@ -35,6 +35,12 @@ public interface IMethodFamiliesCrud
 	Task<MethodFamilyFullModel?> GetMethodFamilyByIdAsync(int id);
 
 	/// <summary>
+	/// Retrieves a simplified list of Method Families from the database.
+	/// </summary>
+	/// <returns>A list of Method Families with basic identifying information.</returns>
+	Task<List<MethodFamilyRecord>> GetMethodFamilyListAsync();
+
+	/// <summary>
 	/// Updates an existing Method Family in the database.
 	/// </summary>
 	/// <param name="model">The Method Family model containing the updated data.</param>

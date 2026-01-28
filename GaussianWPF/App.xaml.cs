@@ -1,6 +1,7 @@
 ﻿using System.Windows;
 
 using GaussianWPF.Controls;
+using GaussianWPF.Controls.BaseMethods;
 using GaussianWPF.Controls.CalculationTypes;
 using GaussianWPF.Controls.MethodFamilies;
 using GaussianWPF.FactoryHelpers;
@@ -53,6 +54,7 @@ public partial class App : Application
 		_ = services.AddSingleton<IApiHelper, ApiHelper>();
 		_ = services.AddSingleton<ICalculationTypesEndpoint, CalculationTypesEndpoint>();
 		_ = services.AddSingleton<IMethodFamiliesEndpoint, MethodFamiliesEndpoint>();
+		_ = services.AddSingleton<IBaseMethodsEndpoint, BaseMethodsEndpoint>();
 		_ = services.AddSingleton<ILoggedInUserModel, LoggedInUserModel>();
 
 		// Register your Views and ViewModels
@@ -61,6 +63,7 @@ public partial class App : Application
 		_ = services.AddFormFactory<LoginControl>();
 		_ = services.AddFormFactory<CalculationTypesControl>();
 		_ = services.AddFormFactory<MethodFamiliesControl>();
+		_ = services.AddFormFactory<BaseMethodsControl>();
 		_ = services.AddFormFactory<AboutControl>();
 		_ = services.AddFormFactory<PrivacyControl>();
 		_ = services.AddFormFactory<ContactControl>();
@@ -77,6 +80,11 @@ public partial class App : Application
 		_ = services.AddFormFactory<MethodFamiliesCreateControl>();
 		_ = services.AddFormFactory<MethodFamiliesEditControl>();
 		_ = services.AddFormFactory<MethodFamiliesDeleteControl>();
+		_ = services.AddFormFactory<BaseMethodsIndexControl>();
+		_ = services.AddFormFactory<BaseMethodsDetailsControl>();
+		_ = services.AddFormFactory<BaseMethodsCreateControl>();
+		_ = services.AddFormFactory<BaseMethodsEditControl>();
+		_ = services.AddFormFactory<BaseMethodsDeleteControl>();
 	}
 
 	/// <summary>

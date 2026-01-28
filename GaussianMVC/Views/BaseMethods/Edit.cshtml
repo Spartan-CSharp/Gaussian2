@@ -1,0 +1,64 @@
+﻿@model GaussianMVC.Models.BaseMethodViewModel
+
+@*
+	For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@{
+	ViewData["Title"] = "Edit Base Method";
+}
+
+<h1>Edit</h1>
+
+<h4>Base Method</h4>
+<hr />
+
+@if (Model is not null)
+{
+	<div class="row">
+		<div class="col-md-4">
+			<form asp-action="Edit">
+				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+				<div class="form-group">
+					<label asp-for="Keyword" class="control-label"></label>
+					<input asp-for="Keyword" class="form-control" />
+					<span asp-validation-for="Keyword" class="text-danger"></span>
+				</div>
+				<div class="form-group">
+					<label asp-for="MethodFamily" class="control-label"></label>
+					<select asp-for="MethodFamily" asp-items="Model.MethodFamilyList" class="form-control">
+						<option value="">-- Select Method Family --</option>
+					</select>
+					<span asp-validation-for="MethodFamily" class="text-danger"></span>
+				</div>
+				<div class="form-group">
+					<label asp-for="DescriptionRtf" class="control-label"></label>
+					<textarea asp-for="DescriptionRtf" class="form-control"></textarea>
+					<span asp-validation-for="DescriptionRtf" class="text-danger"></span>
+				</div>
+				<div class="form-group">
+					<label asp-for="DescriptionText" class="control-label"></label>
+					<textarea asp-for="DescriptionText" class="form-control"></textarea>
+					<span asp-validation-for="DescriptionText" class="text-danger"></span>
+				</div>
+				<div class="form-group">
+					<input type="submit" value="Save" class="btn btn-primary" />
+				</div>
+			</form>
+		</div>
+	</div>
+}
+else
+{
+	<p>No Base Method found with this Id.</p>
+}
+
+<div>
+	<a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}

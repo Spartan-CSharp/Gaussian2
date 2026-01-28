@@ -247,10 +247,9 @@ public partial class CalculationTypesDeleteControl : UserControl, INotifyPropert
 
 			ErrorMessage = string.Empty;
 
-			CalculationTypeFullModel model = CalculationType!.ToFullModel();
 			_endpoint.DeleteAsync(CalculationTypeId).Wait();
-			CalculationType.LastUpdatedDate = DateTime.Now;
-			CalculationType.Archived = true;
+			CalculationType!.LastUpdatedDate = DateTime.Now;
+			CalculationType!.Archived = true;
 			ChildControlEvent?.Invoke(this, new ChildControlEventArgs<CalculationTypesDeleteControl>("delete", null));
 		}
 		catch (HttpIOException ex)

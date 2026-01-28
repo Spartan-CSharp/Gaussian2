@@ -522,7 +522,7 @@ Archived
 
 ### MethodFamilies Table
 Id
-Keyword
+Name
 DescriptionRtf
 DescriptionText
 CreatedDate

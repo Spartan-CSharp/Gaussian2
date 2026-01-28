@@ -117,9 +117,33 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="BaseMethodsCreate" xml:space="preserve">
+    <value>spBaseMethods_Create</value>
+    <comment>The Stored Procedure Name for Creating a new Base Method</comment>
+  </data>
+  <data name="BaseMethodsDelete" xml:space="preserve">
+    <value>spBaseMethods_Delete</value>
+    <comment>The Stored Procedure Name for Deleting a Base Method by Id</comment>
+  </data>
+  <data name="BaseMethodsGetAll" xml:space="preserve">
+    <value>spBaseMethods_GetAll</value>
+    <comment>The Stored Procedure Name for Getting All Base Methods</comment>
+  </data>
+  <data name="BaseMethodsGetById" xml:space="preserve">
+    <value>spBaseMethods_GetById</value>
+    <comment>The Stored Procedure Name for Getting a Base Method by Id</comment>
+  </data>
+  <data name="BaseMethodsGetByMethodFamilyId" xml:space="preserve">
+    <value>spBaseMethods_GetByMethodFamilyId</value>
+    <comment>The Stored Procedure Name for Getting a Base Method by its Method Family Id</comment>
+  </data>
+  <data name="BaseMethodsUpdate" xml:space="preserve">
+    <value>spBaseMethods_Update</value>
+    <comment>The Stored Procedure Name for Updating a Base Method by Id</comment>
+  </data>
   <data name="CalculationTypesCreate" xml:space="preserve">
     <value>spCalculationTypes_Create</value>
-    <comment>The Stored Procedure Name for the Creation of a new Calculation Type</comment>
+    <comment>The Stored Procedure Name for Creating a new Calculation Type</comment>
   </data>
   <data name="CalculationTypesDelete" xml:space="preserve">
     <value>spCalculationTypes_Delete</value>
@@ -135,7 +159,7 @@
   </data>
   <data name="CalculationTypesUpdate" xml:space="preserve">
     <value>spCalculationTypes_Update</value>
-    <comment>The Stored Procedure Name for Updating a Calculation Type</comment>
+    <comment>The Stored Procedure Name for Updating a Calculation Type by Id</comment>
   </data>
   <data name="DataDatabaseConnectionString" xml:space="preserve">
     <value>GaussianData</value>
@@ -143,7 +167,7 @@
   </data>
   <data name="MethodFamiliesCreate" xml:space="preserve">
     <value>spMethodFamilies_Create</value>
-    <comment>The Stored Procedure Name for the Creation of a new Method Family</comment>
+    <comment>The Stored Procedure Name for Creating a new Method Family</comment>
   </data>
   <data name="MethodFamiliesDelete" xml:space="preserve">
     <value>spMethodFamilies_Delete</value>
@@ -157,8 +181,12 @@
     <value>spMethodFamilies_GetById</value>
     <comment>The Stored Procedure Name for Getting a Method Family by Id</comment>
   </data>
+  <data name="MethodFamiliesGetList" xml:space="preserve">
+    <value>spMethodFamilies_GetList</value>
+    <comment>The Stored Procedure Name for Getting a List of Method Family Ids and Names</comment>
+  </data>
   <data name="MethodFamiliesUpdate" xml:space="preserve">
     <value>spMethodFamilies_Update</value>
-    <comment>The Stored Procedure Name for Updating a Method Family</comment>
+    <comment>The Stored Procedure Name for Updating a Method Family by Id</comment>
   </data>
 </root>

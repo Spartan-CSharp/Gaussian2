@@ -254,7 +254,7 @@ public partial class MethodFamiliesEditControl : UserControl, INotifyPropertyCha
 		{
 			if (MethodFamily is not null)
 			{
-				MethodFamilyName = MethodFamily.MethodFamilyName;
+				MethodFamilyName = MethodFamily.Name;
 				// Populate the RichTextBox with RTF
 				DescriptionRichTextBox.SetRtfText(MethodFamily.DescriptionRtf);
 			}
@@ -289,7 +289,7 @@ public partial class MethodFamiliesEditControl : UserControl, INotifyPropertyCha
 
 			string descriptionRtf = DescriptionRichTextBox.GetRtfText();
 			string descriptionText = DescriptionRichTextBox.GetPlainText();
-			MethodFamily!.MethodFamilyName = MethodFamilyName;
+			MethodFamily!.Name = MethodFamilyName;
 			MethodFamily!.DescriptionRtf = descriptionRtf;
 			MethodFamily!.DescriptionText = descriptionText;
 
