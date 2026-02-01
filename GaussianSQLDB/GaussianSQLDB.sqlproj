@@ -87,6 +87,12 @@
     <Build Include="dbo\Programmability\Stored Procedures\spBaseMethods_Delete.sql" />
     <Build Include="dbo\Programmability\Stored Procedures\spBaseMethods_GetByMethodFamilyId.sql" />
     <Build Include="dbo\Programmability\Stored Procedures\spMethodFamilies_GetList.sql" />
+    <Build Include="dbo\Tables\ElectronicStates.sql" />
+    <Build Include="dbo\Programmability\Stored Procedures\spElectronicStates_Create.sql" />
+    <Build Include="dbo\Programmability\Stored Procedures\spElectronicStates_Delete.sql" />
+    <Build Include="dbo\Programmability\Stored Procedures\spElectronicStates_GetAll.sql" />
+    <Build Include="dbo\Programmability\Stored Procedures\spElectronicStates_GetById.sql" />
+    <Build Include="dbo\Programmability\Stored Procedures\spElectronicStates_Update.sql" />
   </ItemGroup>
   <ItemGroup>
     <PreDeploy Include="PreScripts\Script.PreDeployment.sql" />

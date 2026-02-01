@@ -5,12 +5,6 @@ namespace GaussianMVCLibrary.DataAccess;
 /// <summary>
 /// Defines a contract for database operations that execute stored procedures.
 /// </summary>
-/// <remarks>
-/// This interface provides an abstraction layer for data access operations,
-/// supporting both synchronous and asynchronous methods for loading and saving data
-/// through stored procedures. Implementations should handle database connections,
-/// command execution, and object mapping.
-/// </remarks>
 public interface IDbData
 {
 	/// <summary>

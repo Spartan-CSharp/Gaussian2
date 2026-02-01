@@ -4,10 +4,14 @@
 	<meta charset="utf-8" />
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>@ViewData["Title"] - Gaussian Web Application</title>
-	<script type="importmap"></script>
 	<link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+	<!-- Syncfusion ASP.NET MVC controls styles -->
+	<link rel="stylesheet" href="https://cdn.syncfusion.com/ej2/32.1.19/fluent.css" />
 	<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
 	<link rel="stylesheet" href="~/GaussianMVC.styles.css" asp-append-version="true" />
+	<script type="importmap"></script>
+	<!-- Syncfusion ASP.NET MVC controls scripts -->
+	<script src="https://cdn.syncfusion.com/ej2/32.1.19/dist/ej2.min.js"></script>
 </head>
 <body>
 	<header>
@@ -45,6 +49,7 @@
 									<li><a class="dropdown-item text-dark" asp-area="" asp-controller="CalculationTypes" asp-action="Index">Calculation Types</a></li>
 									<li><a class="dropdown-item text-dark" asp-area="" asp-controller="MethodFamilies" asp-action="Index">Method Families</a></li>
 									<li><a class="dropdown-item text-dark" asp-area="" asp-controller="BaseMethods" asp-action="Index">Base Methods</a></li>
+									<li><a class="dropdown-item text-dark" asp-area="" asp-controller="ElectronicStates" asp-action="Index">Electronic States</a></li>
 								</ul>
 							</li>
 						}
@@ -67,6 +72,7 @@
 	</footer>
 	<script src="~/lib/jquery/dist/jquery.min.js"></script>
 	<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+	<ejs-scripts></ejs-scripts>
 	<script src="~/js/site.js" asp-append-version="true"></script>
 	@await RenderSectionAsync("Scripts", required: false)
 </body>

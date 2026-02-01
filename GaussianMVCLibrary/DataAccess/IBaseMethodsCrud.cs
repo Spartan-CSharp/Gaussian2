@@ -28,6 +28,12 @@ public interface IBaseMethodsCrud
 	Task<List<BaseMethodFullModel>> GetAllFullBaseMethodsAsync();
 
 	/// <summary>
+	/// Retrieves all base methods with intermediate details asynchronously.
+	/// </summary>
+	/// <returns>A task that represents the asynchronous operation. The task result contains a list of all base methods as intermediate models with method family records.</returns>
+	Task<List<BaseMethodIntermediateModel>> GetAllIntermediateBaseMethodsAsync();
+
+	/// <summary>
 	/// Retrieves all base methods with simplified details asynchronously.
 	/// </summary>
 	/// <returns>A task that represents the asynchronous operation. The task result contains a list of all base methods as simple models.</returns>

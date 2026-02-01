@@ -29,3 +29,16 @@ body {
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
 	text-align: start;
 }
+
+.html-description-column {
+	max-width: 300px;
+	max-height: 100px;
+	overflow: auto;
+}
+
+.html-description-row  {
+	border: 1px solid #dee2e6;
+	padding: 10px;
+	background-color: #f8f9fa;
+	border-radius: 4px;
+}

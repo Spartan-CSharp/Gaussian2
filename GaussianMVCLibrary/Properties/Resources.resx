@@ -165,6 +165,26 @@
     <value>GaussianData</value>
     <comment>This is the Connection String Name for the Data Database</comment>
   </data>
+  <data name="ElectronicStatesCreate" xml:space="preserve">
+    <value>spElectronicStates_Create</value>
+    <comment>The Stored Procedure Name for Creating a new Electronic State</comment>
+  </data>
+  <data name="ElectronicStatesDelete" xml:space="preserve">
+    <value>spElectronicStates_Delete</value>
+    <comment>The Stored Procedure Name for Deleting an Electronic State by Id</comment>
+  </data>
+  <data name="ElectronicStatesGetAll" xml:space="preserve">
+    <value>spElectronicStates_GetAll</value>
+    <comment>The Stored Procedure Name for Getting All Electronic States</comment>
+  </data>
+  <data name="ElectronicStatesGetById" xml:space="preserve">
+    <value>spElectronicStates_GetById</value>
+    <comment>The Stored Procedure Name for Getting an Electronic State by Id</comment>
+  </data>
+  <data name="ElectronicStatesUpdate" xml:space="preserve">
+    <value>spElectronicStates_Update</value>
+    <comment>The Stored Procedure Name for Updating an Electronic State by Id</comment>
+  </data>
   <data name="MethodFamiliesCreate" xml:space="preserve">
     <value>spMethodFamilies_Create</value>
     <comment>The Stored Procedure Name for Creating a new Method Family</comment>

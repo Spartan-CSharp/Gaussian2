@@ -19,21 +19,13 @@ public class SqlData(IConfiguration config, ILogger<SqlData> logger) : IDbData
 	private readonly IConfiguration _config = config;
 	private readonly ILogger<SqlData> _logger = logger;
 
-	/// <summary>
-	/// Synchronously loads data from the database by executing a stored procedure.
-	/// </summary>
-	/// <typeparam name="TDataType">The type of data to return.</typeparam>
-	/// <typeparam name="TParams">The type of the parameters object.</typeparam>
-	/// <param name="storedProcedure">The name of the stored procedure to execute.</param>
-	/// <param name="parameters">The parameters to pass to the stored procedure.</param>
-	/// <param name="connectionStringName">The name of the connection string in the configuration.</param>
-	/// <returns>A collection of <typeparamref name="TDataType"/> objects returned from the stored procedure.</returns>
+	/// <inheritdoc/>
 	/// <exception cref="InvalidOperationException">Thrown when the connection string is not found in the configuration.</exception>
 	public Collection<TDataType> LoadData<TDataType, TParams>(string storedProcedure, TParams parameters, string connectionStringName)
 	{
 		if (_logger.IsEnabled(LogLevel.Trace))
 		{
-			_logger.LogTrace("{Method}<{DataType}, {ParamType}> Called with {StoredProcedure}, {Parameters}, {ConnectionStringName}", nameof(LoadData), typeof(TDataType).Name, typeof(TParams).Name, storedProcedure, parameters, connectionStringName);
+			_logger.LogTrace("{Class} {Method}<{DataType}, {ParamType}> called with {StoredProcedure}, {Parameters}, {ConnectionStringName}.", nameof(SqlData), nameof(LoadData), typeof(TDataType).Name, typeof(TParams).Name, storedProcedure, parameters, connectionStringName);
 		}
 
 		string connectionString = _config.GetConnectionString(connectionStringName) ?? throw new InvalidOperationException($"Connection string {connectionStringName} not found.");
@@ -42,27 +34,19 @@ public class SqlData(IConfiguration config, ILogger<SqlData> logger) : IDbData
 
 		if (_logger.IsEnabled(LogLevel.Trace))
 		{
-			_logger.LogTrace("{Method}<{DataType}, {ParamType}> Returning {Count}", nameof(LoadData), typeof(TDataType).Name, typeof(TParams).Name, rows.Count());
+			_logger.LogTrace("{Class} {Method}<{DataType}, {ParamType}> returning {Count} {DataType}.", nameof(SqlData), nameof(LoadData), typeof(TDataType).Name, typeof(TParams).Name, rows.Count(), typeof(TDataType).Name);
 		}
 
 		return [.. rows];
 	}
 
-	/// <summary>
-	/// Asynchronously loads data from the database by executing a stored procedure.
-	/// </summary>
-	/// <typeparam name="TDataType">The type of data to return.</typeparam>
-	/// <typeparam name="TParams">The type of the parameters object.</typeparam>
-	/// <param name="storedProcedure">The name of the stored procedure to execute.</param>
-	/// <param name="parameters">The parameters to pass to the stored procedure.</param>
-	/// <param name="connectionStringName">The name of the connection string in the configuration.</param>
-	/// <returns>A task that represents the asynchronous operation. The task result contains a list of <typeparamref name="TDataType"/> objects returned from the stored procedure.</returns>
+	/// <inheritdoc/>
 	/// <exception cref="InvalidOperationException">Thrown when the connection string is not found in the configuration.</exception>
 	public async Task<List<TDataType>> LoadDataAsync<TDataType, TParams>(string storedProcedure, TParams parameters, string connectionStringName)
 	{
 		if (_logger.IsEnabled(LogLevel.Trace))
 		{
-			_logger.LogTrace("{Method}<{DataType}, {ParamType}> Called with {StoredProcedure}, {Parameters}, {ConnectionStringName}", nameof(LoadDataAsync), typeof(TDataType).Name, typeof(TParams).Name, storedProcedure, parameters, connectionStringName);
+			_logger.LogTrace("{Class} {Method}<{DataType}, {ParamType}> called with {StoredProcedure}, {Parameters}, {ConnectionStringName}.", nameof(SqlData), nameof(LoadDataAsync), typeof(TDataType).Name, typeof(TParams).Name, storedProcedure, parameters, connectionStringName);
 		}
 
 		string connectionString = _config.GetConnectionString(connectionStringName) ?? throw new InvalidOperationException($"Connection string {connectionStringName} not found.");
@@ -71,26 +55,19 @@ public class SqlData(IConfiguration config, ILogger<SqlData> logger) : IDbData
 
 		if (_logger.IsEnabled(LogLevel.Trace))
 		{
-			_logger.LogTrace("{Method}<{DataType}, {ParamType}> Returning {Count}", nameof(LoadDataAsync), typeof(TDataType).Name, typeof(TParams).Name, rows.Count());
+			_logger.LogTrace("{Class} {Method}<{DataType}, {ParamType}> returning {Count} {DataType}.", nameof(SqlData), nameof(LoadDataAsync), typeof(TDataType).Name, typeof(TParams).Name, rows.Count(), typeof(TDataType).Name);
 		}
 
 		return [.. rows];
 	}
 
-	/// <summary>
-	/// Synchronously saves data to the database by executing a stored procedure.
-	/// </summary>
-	/// <typeparam name="TParams">The type of the parameters object.</typeparam>
-	/// <param name="storedProcedure">The name of the stored procedure to execute.</param>
-	/// <param name="parameters">The parameters to pass to the stored procedure.</param>
-	/// <param name="connectionStringName">The name of the connection string in the configuration.</param>
-	/// <returns>The number of rows affected by the stored procedure execution.</returns>
+	/// <inheritdoc/>
 	/// <exception cref="InvalidOperationException">Thrown when the connection string is not found in the configuration.</exception>
 	public int SaveData<TParams>(string storedProcedure, TParams parameters, string connectionStringName)
 	{
 		if (_logger.IsEnabled(LogLevel.Trace))
 		{
-			_logger.LogTrace("{Method}<{ParamType}> Called with {StoredProcedure}, {Parameters}, {ConnectionStringName}", nameof(SaveData), typeof(TParams).Name, storedProcedure, parameters, connectionStringName);
+			_logger.LogTrace("{Class} {Method}<{ParamType}> called with {StoredProcedure}, {Parameters}, {ConnectionStringName}.", nameof(SqlData), nameof(SaveData), typeof(TParams).Name, storedProcedure, parameters, connectionStringName);
 		}
 
 		string connectionString = _config.GetConnectionString(connectionStringName) ?? throw new InvalidOperationException($"Connection string {connectionStringName} not found.");
@@ -99,26 +76,18 @@ public class SqlData(IConfiguration config, ILogger<SqlData> logger) : IDbData
 
 		if (_logger.IsEnabled(LogLevel.Trace))
 		{
-			_logger.LogTrace("{Method}<{ParamType}> Returning {Count}", nameof(SaveData), typeof(TParams).Name, rows);
+			_logger.LogTrace("{Class} {Method}<{ParamType}> Returning {Count} rows affected.", nameof(SqlData), nameof(SaveData), typeof(TParams).Name, rows);
 		}
 
 		return rows;
 	}
 
-	/// <summary>
-	/// Asynchronously saves data to the database by executing a stored procedure.
-	/// </summary>
-	/// <typeparam name="TParams">The type of the parameters object.</typeparam>
-	/// <param name="storedProcedure">The name of the stored procedure to execute.</param>
-	/// <param name="parameters">The parameters to pass to the stored procedure.</param>
-	/// <param name="connectionStringName">The name of the connection string in the configuration.</param>
-	/// <returns>A task that represents the asynchronous operation. The task result contains the number of rows affected by the stored procedure execution.</returns>
-	/// <exception cref="InvalidOperationException">Thrown when the connection string is not found in the configuration.</exception>
+	/// <inheritdoc/>
 	public async Task<int> SaveDataAsync<TParams>(string storedProcedure, TParams parameters, string connectionStringName)
 	{
 		if (_logger.IsEnabled(LogLevel.Trace))
 		{
-			_logger.LogTrace("{Method}<{ParamType}> Called with {StoredProcedure}, {Parameters}, {ConnectionStringName}", nameof(SaveDataAsync), typeof(TParams).Name, storedProcedure, parameters, connectionStringName);
+			_logger.LogTrace("{Class} {Method}<{ParamType}> called with {StoredProcedure}, {Parameters}, {ConnectionStringName}.", nameof(SqlData), nameof(SaveDataAsync), typeof(TParams).Name, storedProcedure, parameters, connectionStringName);
 		}
 
 		string connectionString = _config.GetConnectionString(connectionStringName) ?? throw new InvalidOperationException($"Connection string {connectionStringName} not found.");
@@ -127,7 +96,7 @@ public class SqlData(IConfiguration config, ILogger<SqlData> logger) : IDbData
 
 		if (_logger.IsEnabled(LogLevel.Trace))
 		{
-			_logger.LogTrace("{Method}<{ParamType}> Returning {Count}", nameof(SaveDataAsync), typeof(TParams).Name, rows);
+			_logger.LogTrace("{Class} {Method}<{ParamType}> Returning {Count} rows affected.", nameof(SqlData), nameof(SaveDataAsync), typeof(TParams).Name, rows);
 		}
 
 		return rows;
