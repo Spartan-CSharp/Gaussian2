@@ -1,4 +1,8 @@
-﻿using GaussianCommonLibrary.Models;
+﻿using System.Diagnostics;
+using System.Globalization;
+using System.Text;
+
+using GaussianCommonLibrary.Models;
 
 using GaussianMVC.Models;
 
@@ -10,10 +14,10 @@ namespace GaussianMVC.Controllers;
 
 /// <summary>
 /// MVC controller for managing Method Families.
-/// Provides CRUD operations for MethodFamily entities through a web interface.
+/// Provides CRUD operations for MethodFamilyId entities through a web interface.
 /// </summary>
 /// <param name="logger">The logger instance for logging controller operations.</param>
-/// <param name="crud">The data access service for MethodFamily CRUD operations.</param>
+/// <param name="crud">The data access service for MethodFamilyId CRUD operations.</param>
 public class MethodFamiliesController(ILogger<MethodFamiliesController> logger, IMethodFamiliesCrud crud) : Controller
 {
 	private readonly ILogger<MethodFamiliesController> _logger = logger;
@@ -33,7 +37,7 @@ public class MethodFamiliesController(ILogger<MethodFamiliesController> logger, 
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Method} {Controller} {Action}", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(IndexAsync));
+				_logger.LogDebug("{Method} {Controller} {Action} called.", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(IndexAsync));
 			}
 
 			List<MethodFamilyFullModel> methodFamilies = await _crud.GetAllMethodFamiliesAsync().ConfigureAwait(false);
@@ -45,9 +49,9 @@ public class MethodFamiliesController(ILogger<MethodFamiliesController> logger, 
 				modelList.Add(viewModel);
 			}
 
-			if (_logger.IsEnabled(LogLevel.Trace))
+			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogTrace("{Method} {Controller} {Action} {ModelCount}", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(IndexAsync), modelList.Count);
+				_logger.LogDebug("{Method} {Controller} {Action} returning {ModelCount} {ModelName}.", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(IndexAsync), modelList.Count, nameof(MethodFamilyViewModel));
 			}
 
 			return View(modelList);
@@ -59,7 +63,18 @@ public class MethodFamiliesController(ILogger<MethodFamiliesController> logger, 
 				_logger.LogError(ex, "{Method} {Controller} {Action} had an error.", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(IndexAsync));
 			}
 
-			return RedirectToAction(nameof(HomeController.Error), "Home");
+			Response.StatusCode = StatusCodes.Status500InternalServerError;
+
+			ErrorViewModel evm = new()
+			{
+				RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
+				StatusCode = StatusCodes.Status500InternalServerError,
+				StatusPhrase = "Internal Server Error",
+				ExceptionType = ex.GetType().Name,
+				ExceptionMessage = ex.Message
+			};
+
+			return View("Error", evm);
 		}
 	}
 
@@ -78,16 +93,15 @@ public class MethodFamiliesController(ILogger<MethodFamiliesController> logger, 
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Method} {Controller} {Action} {Id}", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(DetailsAsync), id);
+				_logger.LogDebug("{Method} {Controller} {Action} {Id} called.", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(DetailsAsync), id);
 			}
 
 			MethodFamilyFullModel? methodFamily = await _crud.GetMethodFamilyByIdAsync(id).ConfigureAwait(false);
-
 			MethodFamilyViewModel? model = methodFamily is null ? null : new(methodFamily);
 
-			if (_logger.IsEnabled(LogLevel.Trace))
+			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogTrace("{Method} {Controller} {Action} {Id} {Model}", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(DetailsAsync), id, model);
+				_logger.LogDebug("{Method} {Controller} {Action} {Id} returning {ModelName} {Model}.", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(DetailsAsync), id, nameof(MethodFamilyViewModel), model);
 			}
 
 			return View(model);
@@ -99,7 +113,18 @@ public class MethodFamiliesController(ILogger<MethodFamiliesController> logger, 
 				_logger.LogError(ex, "{Method} {Controller} {Action} {Id} had an error.", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(DetailsAsync), id);
 			}
 
-			return RedirectToAction(nameof(HomeController.Error), "Home");
+			Response.StatusCode = StatusCodes.Status500InternalServerError;
+
+			ErrorViewModel evm = new()
+			{
+				RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
+				StatusCode = StatusCodes.Status500InternalServerError,
+				StatusPhrase = "Internal Server Error",
+				ExceptionType = ex.GetType().Name,
+				ExceptionMessage = ex.Message
+			};
+
+			return View("Error", evm);
 		}
 	}
 
@@ -109,16 +134,22 @@ public class MethodFamiliesController(ILogger<MethodFamiliesController> logger, 
 	/// <returns>A view with an empty form for creating a new Method Family.</returns>
 	// GET: MethodFamilies/Create
 	[HttpGet]
-	public async Task<ActionResult> CreateAsync()
+	public async Task<ActionResult<MethodFamilyViewModel>> CreateAsync()
 	{
 		try
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Method} {Controller} {Action}", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(CreateAsync));
+				_logger.LogDebug("{Method} {Controller} {Action} called.", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(CreateAsync));
 			}
 
 			MethodFamilyViewModel model = new();
+
+			if (_logger.IsEnabled(LogLevel.Debug))
+			{
+				_logger.LogDebug("{Method} {Controller} {Action} returning {ModelName} {Model}.", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(CreateAsync), nameof(MethodFamilyViewModel), model);
+			}
+
 			return View(model);
 		}
 		catch (Exception ex)
@@ -128,7 +159,18 @@ public class MethodFamiliesController(ILogger<MethodFamiliesController> logger, 
 				_logger.LogError(ex, "{Method} {Controller} {Action} had an error.", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(CreateAsync));
 			}
 
-			return RedirectToAction(nameof(HomeController.Error), "Home");
+			Response.StatusCode = StatusCodes.Status500InternalServerError;
+
+			ErrorViewModel evm = new()
+			{
+				RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
+				StatusCode = StatusCodes.Status500InternalServerError,
+				StatusPhrase = "Internal Server Error",
+				ExceptionType = ex.GetType().Name,
+				ExceptionMessage = ex.Message
+			};
+
+			return View("Error", evm);
 		}
 	}
 
@@ -150,13 +192,10 @@ public class MethodFamiliesController(ILogger<MethodFamiliesController> logger, 
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Method} {Controller} {Action} {Model}", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(CreateAsync), model);
+				_logger.LogDebug("{Method} {Controller} {Action} called with {ModelName} {Model}.", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(CreateAsync), nameof(MethodFamilyViewModel), model);
 			}
 
-			if (model is null)
-			{
-				throw new ArgumentNullException(nameof(model), $"The parameter {nameof(model)} cannot be null.");
-			}
+			ArgumentNullException.ThrowIfNull(model, nameof(model));
 
 			if (ModelState.IsValid)
 			{
@@ -164,20 +203,34 @@ public class MethodFamiliesController(ILogger<MethodFamiliesController> logger, 
 				methodFamily = await _crud.CreateNewMethodFamilyAsync(methodFamily).ConfigureAwait(false);
 				model = new MethodFamilyViewModel(methodFamily);
 
-				if (_logger.IsEnabled(LogLevel.Trace))
+				if (_logger.IsEnabled(LogLevel.Debug))
 				{
-					_logger.LogTrace("{Method} {Controller} {Action} {Model}", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(CreateAsync), model);
+					_logger.LogDebug("{Method} {Controller} {Action} returning {ModelName} {Model}.", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(CreateAsync), nameof(MethodFamilyViewModel), model);
 				}
 
-				return RedirectToAction(nameof(Index));
+				Response.StatusCode = StatusCodes.Status201Created;
+				return View("Details", model);
 			}
 			else
 			{
-				if (_logger.IsEnabled(LogLevel.Warning))
+				Dictionary<string, List<string>> modelValidationErrors = ModelState.Where(kvp => kvp.Value?.Errors.Count > 0).ToDictionary(kvp => kvp.Key, kvp => kvp.Value!.Errors.Select(e => e.ErrorMessage).ToList());
+				StringBuilder sb = new();
+
+				foreach (KeyValuePair<string, List<string>> validationErrors in modelValidationErrors)
 				{
-					_logger.LogWarning("{Method} {Controller} {Action} {Model} has an invalid model", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(CreateAsync), model);
+					sb.AppendLine(validationErrors.Key);
+					foreach (string validationError in validationErrors.Value)
+					{
+						sb.AppendLine(CultureInfo.InvariantCulture, $"\t{validationError}");
+					}
 				}
 
+				if (_logger.IsEnabled(LogLevel.Warning))
+				{
+					_logger.LogWarning("{Method} {Controller} {Action} called with {ModelName} {Model} had one or more validation errors occur:\n{ValidationErrors}", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(CreateAsync), nameof(MethodFamilyViewModel), model, sb.ToString());
+				}
+
+				Response.StatusCode = StatusCodes.Status400BadRequest;
 				return View(model);
 			}
 		}
@@ -185,10 +238,21 @@ public class MethodFamiliesController(ILogger<MethodFamiliesController> logger, 
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Method} {Controller} {Action} {Model} had an error.", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(CreateAsync), model);
+				_logger.LogError(ex, "{Method} {Controller} {Action} called with {ModelName} {Model} had an error.", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(CreateAsync), nameof(MethodFamilyViewModel), model);
 			}
 
-			return RedirectToAction(nameof(HomeController.Error), "Home");
+			Response.StatusCode = StatusCodes.Status500InternalServerError;
+
+			ErrorViewModel evm = new()
+			{
+				RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
+				StatusCode = StatusCodes.Status500InternalServerError,
+				StatusPhrase = "Internal Server Error",
+				ExceptionType = ex.GetType().Name,
+				ExceptionMessage = ex.Message
+			};
+
+			return View("Error", evm);
 		}
 	}
 
@@ -201,22 +265,21 @@ public class MethodFamiliesController(ILogger<MethodFamiliesController> logger, 
 	/// </returns>
 	// GET: MethodFamilies/Edit/5
 	[HttpGet]
-	public async Task<ActionResult<MethodFamilyViewModel>> EditAsync(int id)
+	public async Task<ActionResult<MethodFamilyViewModel?>> EditAsync(int id)
 	{
 		try
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Method} {Controller} {Action} {Id}", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(EditAsync), id);
+				_logger.LogDebug("{Method} {Controller} {Action} {Id} called.", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(EditAsync), id);
 			}
 
 			MethodFamilyFullModel? methodFamily = await _crud.GetMethodFamilyByIdAsync(id).ConfigureAwait(false);
-
 			MethodFamilyViewModel? model = methodFamily is null ? null : new(methodFamily);
 
-			if (_logger.IsEnabled(LogLevel.Trace))
+			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogTrace("{Method} {Controller} {Action} {Id} {Model}", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(EditAsync), id, model);
+				_logger.LogDebug("{Method} {Controller} {Action} {Id} returning {ModelName} {Model}.", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(EditAsync), id, nameof(MethodFamilyViewModel), model);
 			}
 
 			return View(model);
@@ -228,7 +291,18 @@ public class MethodFamiliesController(ILogger<MethodFamiliesController> logger, 
 				_logger.LogError(ex, "{Method} {Controller} {Action} {Id} had an error.", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(EditAsync), id);
 			}
 
-			return RedirectToAction(nameof(HomeController.Error), "Home");
+			Response.StatusCode = StatusCodes.Status500InternalServerError;
+
+			ErrorViewModel evm = new()
+			{
+				RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
+				StatusCode = StatusCodes.Status500InternalServerError,
+				StatusPhrase = "Internal Server Error",
+				ExceptionType = ex.GetType().Name,
+				ExceptionMessage = ex.Message
+			};
+
+			return View("Error", evm);
 		}
 	}
 
@@ -255,13 +329,10 @@ public class MethodFamiliesController(ILogger<MethodFamiliesController> logger, 
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Method} {Controller} {Action} {Id} {Model}", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(EditAsync), id, model);
+				_logger.LogDebug("{Method} {Controller} {Action} {Id} called with {ModelName} {Model}.", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(EditAsync), id, nameof(MethodFamilyViewModel), model);
 			}
 
-			if (model is null)
-			{
-				throw new ArgumentNullException(nameof(model), $"The parameter {nameof(model)} cannot be null.");
-			}
+			ArgumentNullException.ThrowIfNull(model, nameof(model));
 
 			if (ModelState.IsValid && id == model.Id)
 			{
@@ -269,20 +340,43 @@ public class MethodFamiliesController(ILogger<MethodFamiliesController> logger, 
 				methodFamily = await _crud.UpdateMethodFamilyAsync(methodFamily).ConfigureAwait(false);
 				model = new MethodFamilyViewModel(methodFamily);
 
-				if (_logger.IsEnabled(LogLevel.Trace))
+				if (_logger.IsEnabled(LogLevel.Debug))
 				{
-					_logger.LogTrace("{Method} {Controller} {Action} {Id} {Model}", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(EditAsync), id, model);
+					_logger.LogDebug("{Method} {Controller} {Action} {Id} returning {ModelName} {Model}.", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(EditAsync), id, nameof(MethodFamilyViewModel), model);
 				}
 
-				return RedirectToAction(nameof(Index));
+				return View("Details", model);
 			}
 			else
 			{
-				if (_logger.IsEnabled(LogLevel.Warning))
+				if (id != model.Id)
 				{
-					_logger.LogWarning("{Method} {Controller} {Action} {Id} {Model} has an invalid model", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(EditAsync), id, model);
+					if (_logger.IsEnabled(LogLevel.Warning))
+					{
+						_logger.LogWarning("{Method} {Controller} {Action} {Id} called with {ModelName} {Model} has a mismatching Id.", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(EditAsync), id, nameof(MethodFamilyViewModel), model);
+					}
+				}
+				else
+				{
+					Dictionary<string, List<string>> modelValidationErrors = ModelState.Where(kvp => kvp.Value?.Errors.Count > 0).ToDictionary(kvp => kvp.Key, kvp => kvp.Value!.Errors.Select(e => e.ErrorMessage).ToList());
+					StringBuilder sb = new();
+
+					foreach (KeyValuePair<string, List<string>> validationErrors in modelValidationErrors)
+					{
+						sb.AppendLine(validationErrors.Key);
+						foreach (string validationError in validationErrors.Value)
+						{
+							sb.AppendLine(CultureInfo.InvariantCulture, $"\t{validationError}");
+						}
+					}
+
+					if (_logger.IsEnabled(LogLevel.Warning))
+					{
+						_logger.LogWarning("{Method} {Controller} {Action} called with {ModelName} {Model} had one or more validation errors occur:\n{ValidationErrors}", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(EditAsync), nameof(MethodFamilyViewModel), model, sb.ToString());
+					}
 				}
 
+				Response.StatusCode = StatusCodes.Status400BadRequest;
 				return View(model);
 			}
 		}
@@ -290,10 +384,21 @@ public class MethodFamiliesController(ILogger<MethodFamiliesController> logger, 
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Method} {Controller} {Action} {Id} {Model} had an error.", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(EditAsync), id, model);
+				_logger.LogError(ex, "{Method} {Controller} {Action} {Id} called with {ModelName} {Model} had an error.", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(EditAsync), id, nameof(MethodFamilyViewModel), model);
 			}
 
-			return RedirectToAction(nameof(HomeController.Error), "Home");
+			Response.StatusCode = StatusCodes.Status500InternalServerError;
+
+			ErrorViewModel evm = new()
+			{
+				RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
+				StatusCode = StatusCodes.Status500InternalServerError,
+				StatusPhrase = "Internal Server Error",
+				ExceptionType = ex.GetType().Name,
+				ExceptionMessage = ex.Message
+			};
+
+			return View("Error", evm);
 		}
 	}
 
@@ -306,22 +411,21 @@ public class MethodFamiliesController(ILogger<MethodFamiliesController> logger, 
 	/// </returns>
 	// GET: MethodFamilies/Delete/5
 	[HttpGet]
-	public async Task<ActionResult<MethodFamilyViewModel>> DeleteAsync(int id)
+	public async Task<ActionResult<MethodFamilyViewModel?>> DeleteAsync(int id)
 	{
 		try
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Method} {Controller} {Action} {Id}", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(DeleteAsync), id);
+				_logger.LogDebug("{Method} {Controller} {Action} {Id} called.", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(DeleteAsync), id);
 			}
 
 			MethodFamilyFullModel? methodFamily = await _crud.GetMethodFamilyByIdAsync(id).ConfigureAwait(false);
-
 			MethodFamilyViewModel? model = methodFamily is null ? null : new(methodFamily);
 
-			if (_logger.IsEnabled(LogLevel.Trace))
+			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogTrace("{Method} {Controller} {Action} {Id} {Model}", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(DeleteAsync), id, model);
+				_logger.LogDebug("{Method} {Controller} {Action} {Id} returning {ModelName} {Model}.", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(DeleteAsync), id, nameof(MethodFamilyViewModel), model);
 			}
 
 			return View(model);
@@ -333,7 +437,18 @@ public class MethodFamiliesController(ILogger<MethodFamiliesController> logger, 
 				_logger.LogError(ex, "{Method} {Controller} {Action} {Id} had an error.", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(DeleteAsync), id);
 			}
 
-			return RedirectToAction(nameof(HomeController.Error), "Home");
+			Response.StatusCode = StatusCodes.Status500InternalServerError;
+
+			ErrorViewModel evm = new()
+			{
+				RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
+				StatusCode = StatusCodes.Status500InternalServerError,
+				StatusPhrase = "Internal Server Error",
+				ExceptionType = ex.GetType().Name,
+				ExceptionMessage = ex.Message
+			};
+
+			return View("Error", evm);
 		}
 	}
 
@@ -359,21 +474,28 @@ public class MethodFamiliesController(ILogger<MethodFamiliesController> logger, 
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Method} {Controller} {Action} {Id} {Model}", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(DeleteAsync), id, model);
+				_logger.LogDebug("{Method} {Controller} {Action} {Id} called with {ModelName} {Model}.", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(DeleteAsync), id, nameof(MethodFamilyViewModel), model);
 			}
 
 			if (id == model?.Id)
 			{
 				await _crud.DeleteMethodFamilyAsync(id).ConfigureAwait(false);
+
+				if (_logger.IsEnabled(LogLevel.Debug))
+				{
+					_logger.LogDebug("{Method} {Controller} {Action} {Id} returning.", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(DeleteAsync), id);
+				}
+
 				return RedirectToAction(nameof(Index));
 			}
 			else
 			{
 				if (_logger.IsEnabled(LogLevel.Warning))
 				{
-					_logger.LogWarning("{Method} {Controller} {Action} {Id} {Model} has an invalid model", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(DeleteAsync), id, model);
+					_logger.LogWarning("{Method} {Controller} {Action} {Id} called with {ModelName} {Model} has a mismatching Id.", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(DeleteAsync), id, nameof(MethodFamilyViewModel), model);
 				}
 
+				Response.StatusCode = StatusCodes.Status400BadRequest;
 				return View(model);
 			}
 		}
@@ -381,10 +503,21 @@ public class MethodFamiliesController(ILogger<MethodFamiliesController> logger, 
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Method} {Controller} {Action} {Id} {Model} had an error.", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(DeleteAsync), id, model);
+				_logger.LogError(ex, "{Method} {Controller} {Action} {Id} called with {ModelName} {Model} had an error.", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(DeleteAsync), id, nameof(MethodFamilyViewModel), model);
 			}
 
-			return RedirectToAction(nameof(HomeController.Error), "Home");
+			Response.StatusCode = StatusCodes.Status500InternalServerError;
+
+			ErrorViewModel evm = new()
+			{
+				RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
+				StatusCode = StatusCodes.Status500InternalServerError,
+				StatusPhrase = "Internal Server Error",
+				ExceptionType = ex.GetType().Name,
+				ExceptionMessage = ex.Message
+			};
+
+			return View("Error", evm);
 		}
 	}
 }

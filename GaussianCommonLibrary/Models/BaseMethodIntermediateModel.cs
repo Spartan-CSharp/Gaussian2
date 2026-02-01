@@ -1,24 +1,24 @@
 ﻿namespace GaussianCommonLibrary.Models;
 
 /// <summary>
-/// Represents a base method with full details including its associated method family.
+/// Represents a base method with method family information as a record rather than a full model.
 /// </summary>
-public class BaseMethodFullModel
+public class BaseMethodIntermediateModel
 {
 	/// <summary>
-	/// Initializes a new instance of the <see cref="BaseMethodFullModel"/> class.
+	/// Initializes a new instance of the <see cref="BaseMethodIntermediateModel"/> class.
 	/// </summary>
-	public BaseMethodFullModel()
+	public BaseMethodIntermediateModel()
 	{
 	}
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="BaseMethodFullModel"/> class from a simple model and method family.
+	/// Initializes a new instance of the <see cref="BaseMethodIntermediateModel"/> class from a simple model and method family record.
 	/// </summary>
 	/// <param name="model">The simple model containing base method properties.</param>
-	/// <param name="methodFamily">The method family to associate with this base method.</param>
+	/// <param name="methodFamily">The method family record to associate with this base method.</param>
 	/// <exception cref="ArgumentNullException">Thrown when <paramref name="model"/> or <paramref name="methodFamily"/> is null.</exception>
-	public BaseMethodFullModel(BaseMethodSimpleModel model, MethodFamilyFullModel methodFamily)
+	public BaseMethodIntermediateModel(BaseMethodSimpleModel model, MethodFamilyRecord methodFamily)
 	{
 		ArgumentNullException.ThrowIfNull(model, nameof(model));
 		ArgumentNullException.ThrowIfNull(methodFamily, nameof(methodFamily));
@@ -33,23 +33,21 @@ public class BaseMethodFullModel
 	}
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="BaseMethodFullModel"/> class from an intermediate model and method family.
+	/// Initializes a new instance of the <see cref="BaseMethodIntermediateModel"/> class from a full model.
 	/// </summary>
-	/// <param name="model">The intermediate model containing base method properties.</param>
-	/// <param name="methodFamily">The method family to associate with this base method.</param>
-	/// <exception cref="ArgumentNullException">Thrown when <paramref name="model"/> or <paramref name="methodFamily"/> is null.</exception>
-	public BaseMethodFullModel(BaseMethodIntermediateModel model, MethodFamilyFullModel methodFamily)
+	/// <param name="fullModel">The full model to convert from.</param>
+	/// <exception cref="ArgumentNullException">Thrown when <paramref name="fullModel"/> is null.</exception>
+	public BaseMethodIntermediateModel(BaseMethodFullModel fullModel)
 	{
-		ArgumentNullException.ThrowIfNull(model, nameof(model));
-		ArgumentNullException.ThrowIfNull(methodFamily, nameof(methodFamily));
-		Id = model.Id;
-		Keyword = model.Keyword;
-		MethodFamily = methodFamily;
-		DescriptionRtf = model.DescriptionRtf;
-		DescriptionText = model.DescriptionText;
-		CreatedDate = model.CreatedDate;
-		LastUpdatedDate = model.LastUpdatedDate;
-		Archived = model.Archived;
+		ArgumentNullException.ThrowIfNull(fullModel, nameof(fullModel));
+		Id = fullModel.Id;
+		Keyword = fullModel.Keyword;
+		MethodFamily = fullModel.MethodFamily.ToRecord();
+		DescriptionRtf = fullModel.DescriptionRtf;
+		DescriptionText = fullModel.DescriptionText;
+		CreatedDate = fullModel.CreatedDate;
+		LastUpdatedDate = fullModel.LastUpdatedDate;
+		Archived = fullModel.Archived;
 	}
 
 	/// <summary>
@@ -63,9 +61,9 @@ public class BaseMethodFullModel
 	public string Keyword { get; set; } = string.Empty;
 
 	/// <summary>
-	/// Gets or sets the method family to which this base method belongs.
+	/// Gets or sets the method family record to which this base method belongs.
 	/// </summary>
-	public required MethodFamilyFullModel MethodFamily { get; set; }
+	public required MethodFamilyRecord MethodFamily { get; set; }
 
 	/// <summary>
 	/// Gets or sets the description in Rich Text Format.
@@ -93,9 +91,9 @@ public class BaseMethodFullModel
 	public bool Archived { get; set; }
 
 	/// <summary>
-	/// Converts this full Base Method model to its simplified representation.
+	/// Converts this model to a <see cref="BaseMethodSimpleModel"/>.
 	/// </summary>
-	/// <returns>A <see cref="BaseMethodSimpleModel"/> containing the core property values.</returns>
+	/// <returns>A simple model representation of this base method.</returns>
 	public BaseMethodSimpleModel ToSimpleModel()
 	{
 		return new BaseMethodSimpleModel
@@ -112,16 +110,19 @@ public class BaseMethodFullModel
 	}
 
 	/// <summary>
-	/// Converts this full Base Method model to its intermediate representation.
+	/// Converts this model to a <see cref="BaseMethodFullModel"/> using the specified method family.
 	/// </summary>
-	/// <returns>A <see cref="BaseMethodIntermediateModel"/> containing the property values with the method family as a record.</returns>
-	public BaseMethodIntermediateModel ToIntermediateModel()
+	/// <param name="methodFamily">The method family full model to associate with the resulting full model.</param>
+	/// <returns>A full model representation of this base method.</returns>
+	public BaseMethodFullModel ToFullModel(MethodFamilyFullModel methodFamily)
 	{
-		return new BaseMethodIntermediateModel
+		ArgumentNullException.ThrowIfNull(methodFamily, nameof(methodFamily));
+
+		return new BaseMethodFullModel
 		{
 			Id = Id,
 			Keyword = Keyword,
-			MethodFamily = MethodFamily.ToRecord(),
+			MethodFamily = methodFamily,
 			DescriptionRtf = DescriptionRtf,
 			DescriptionText = DescriptionText,
 			CreatedDate = CreatedDate,
@@ -131,7 +132,7 @@ public class BaseMethodFullModel
 	}
 
 	/// <summary>
-	/// Returns a string representation of the Base Method.
+	/// Returns a string representation of the base method.
 	/// </summary>
 	/// <returns>A string in the format "Keyword".</returns>
 	public override string? ToString()

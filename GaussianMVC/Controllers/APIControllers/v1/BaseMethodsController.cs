@@ -1,6 +1,11 @@
-﻿using Asp.Versioning;
+﻿using System.Globalization;
+using System.Text;
+
+using Asp.Versioning;
 
 using GaussianCommonLibrary.Models;
+
+using GaussianMVC.Models.APIModels.V1;
 
 using GaussianMVCLibrary.DataAccess;
 
@@ -37,22 +42,22 @@ public class BaseMethodsController(ILogger<BaseMethodsController> logger, IBaseM
 	/// <returns>A list of all base methods with complete information.</returns>
 	/// <response code="200">Returns the list of base methods successfully.</response>
 	/// <response code="500">An internal server error occurred while processing the request.</response>
-	// GET: api/v1/BaseMethods/Full
-	[HttpGet("Full")]
+	// GET: api/v1/BaseMethods
+	[HttpGet()]
 	public async Task<ActionResult<List<BaseMethodFullModel>>> GetFullAsync()
 	{
 		try
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Controller} {Action}", nameof(BaseMethodsController), nameof(GetFullAsync));
+				_logger.LogDebug("{Method} {Controller} {Action} called.", HttpContext.Request.Method, nameof(BaseMethodsController), nameof(GetFullAsync));
 			}
 
 			List<BaseMethodFullModel> baseMethods = await _crud.GetAllFullBaseMethodsAsync().ConfigureAwait(false);
 
-			if (_logger.IsEnabled(LogLevel.Trace))
+			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogTrace("{Controller} {Action} {Method} returned {Count}", nameof(BaseMethodsController), nameof(GetFullAsync), nameof(_crud.GetAllFullBaseMethodsAsync), baseMethods.Count);
+				_logger.LogDebug("{Method} {Controller} {Action} returning {ModelCount} {ModelName}.", HttpContext.Request.Method, nameof(BaseMethodsController), nameof(GetFullAsync), baseMethods.Count, nameof(BaseMethodFullModel));
 			}
 
 			return Ok(baseMethods);
@@ -61,7 +66,44 @@ public class BaseMethodsController(ILogger<BaseMethodsController> logger, IBaseM
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Controller} {Action} had an error", nameof(BaseMethodsController), nameof(GetFullAsync));
+				_logger.LogError(ex, "{Method} {Controller} {Action} had an error.", HttpContext.Request.Method, nameof(BaseMethodsController), nameof(GetFullAsync));
+			}
+
+			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
+		}
+	}
+
+	/// <summary>
+	/// Retrieves all base methods with intermediate details.
+	/// </summary>
+	/// <returns>A list of all base methods with method family records instead of full method family models.</returns>
+	/// <response code="200">Returns the list of base methods successfully.</response>
+	/// <response code="500">An internal server error occurred while processing the request.</response>
+	// GET: api/v1/BaseMethods/Intermediate
+	[HttpGet("Intermediate")]
+	public async Task<ActionResult<List<BaseMethodIntermediateModel>>> GetIntermediateAsync()
+	{
+		try
+		{
+			if (_logger.IsEnabled(LogLevel.Debug))
+			{
+				_logger.LogDebug("{Method} {Controller} {Action} called.", HttpContext.Request.Method, nameof(BaseMethodsController), nameof(GetIntermediateAsync));
+			}
+
+			List<BaseMethodIntermediateModel> baseMethods = await _crud.GetAllIntermediateBaseMethodsAsync().ConfigureAwait(false);
+
+			if (_logger.IsEnabled(LogLevel.Debug))
+			{
+				_logger.LogDebug("{Method} {Controller} {Action} returning {ModelCount} {ModelName}.", HttpContext.Request.Method, nameof(BaseMethodsController), nameof(GetIntermediateAsync), baseMethods.Count, nameof(BaseMethodIntermediateModel));
+			}
+
+			return Ok(baseMethods);
+		}
+		catch (Exception ex)
+		{
+			if (_logger.IsEnabled(LogLevel.Error))
+			{
+				_logger.LogError(ex, "{Method} {Controller} {Action} had an error.", HttpContext.Request.Method, nameof(BaseMethodsController), nameof(GetIntermediateAsync));
 			}
 
 			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
@@ -82,14 +124,14 @@ public class BaseMethodsController(ILogger<BaseMethodsController> logger, IBaseM
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Controller} {Action}", nameof(BaseMethodsController), nameof(GetSimpleAsync));
+				_logger.LogDebug("{Method} {Controller} {Action} called.", HttpContext.Request.Method, nameof(BaseMethodsController), nameof(GetSimpleAsync));
 			}
 
 			List<BaseMethodSimpleModel> baseMethods = await _crud.GetAllSimpleBaseMethodsAsync().ConfigureAwait(false);
 
-			if (_logger.IsEnabled(LogLevel.Trace))
+			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogTrace("{Controller} {Action} {Method} returned {Count}", nameof(BaseMethodsController), nameof(GetSimpleAsync), nameof(_crud.GetAllSimpleBaseMethodsAsync), baseMethods.Count);
+				_logger.LogDebug("{Method} {Controller} {Action} returning {ModelCount} {Model}", HttpContext.Request.Method, nameof(BaseMethodsController), nameof(GetSimpleAsync), baseMethods.Count, nameof(BaseMethodSimpleModel));
 			}
 
 			return Ok(baseMethods);
@@ -98,7 +140,7 @@ public class BaseMethodsController(ILogger<BaseMethodsController> logger, IBaseM
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Controller} {Action} had an error", nameof(BaseMethodsController), nameof(GetSimpleAsync));
+				_logger.LogError(ex, "{Method} {Controller} {Action} had an error.", HttpContext.Request.Method, nameof(BaseMethodsController), nameof(GetSimpleAsync));
 			}
 
 			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
@@ -120,14 +162,14 @@ public class BaseMethodsController(ILogger<BaseMethodsController> logger, IBaseM
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Controller} {Action} {MethodFamilyId}", nameof(BaseMethodsController), nameof(GetByFamilyAsync), methodFamilyId);
+				_logger.LogDebug("{Method} {Controller} {Action} called with query parameter methodFamilyId = {MethodFamilyId}.", HttpContext.Request.Method, nameof(BaseMethodsController), nameof(GetByFamilyAsync), methodFamilyId);
 			}
 
 			List<BaseMethodFullModel> baseMethods = await _crud.GetBaseMethodsByMethodFamilyIdAsync(methodFamilyId).ConfigureAwait(false);
 
-			if (_logger.IsEnabled(LogLevel.Trace))
+			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogTrace("{Controller} {Action} {Method} {MethodFamilyId} returned {Count}", nameof(BaseMethodsController), nameof(GetByFamilyAsync), nameof(_crud.GetBaseMethodsByMethodFamilyIdAsync), methodFamilyId, baseMethods.Count);
+				_logger.LogDebug("{Method} {Controller} {Action} returning {ModelCount} {Model} with methodFamilyId = {MethodFamilyId}.", HttpContext.Request.Method, nameof(BaseMethodsController), nameof(GetByFamilyAsync), baseMethods.Count, nameof(BaseMethodFullModel), methodFamilyId);
 			}
 
 			return Ok(baseMethods);
@@ -136,7 +178,7 @@ public class BaseMethodsController(ILogger<BaseMethodsController> logger, IBaseM
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Controller} {Action} {MethodFamilyId} had an error", nameof(BaseMethodsController), nameof(GetByFamilyAsync), methodFamilyId);
+				_logger.LogError(ex, "{Method} {Controller} {Action} called with query parameter methodFamilyId = {MethodFamilyId} had an error", HttpContext.Request.Method, nameof(BaseMethodsController), nameof(GetByFamilyAsync), methodFamilyId);
 			}
 
 			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
@@ -159,14 +201,14 @@ public class BaseMethodsController(ILogger<BaseMethodsController> logger, IBaseM
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Controller} {Action} {Id}", nameof(BaseMethodsController), nameof(GetAsync), id);
+				_logger.LogDebug("{Method} {Controller} {Action} {Id} called.", HttpContext.Request.Method, nameof(BaseMethodsController), nameof(GetAsync), id);
 			}
 
 			BaseMethodFullModel? baseMethod = await _crud.GetBaseMethodByIdAsync(id).ConfigureAwait(false);
 
-			if (_logger.IsEnabled(LogLevel.Trace))
+			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogTrace("{Controller} {Action} {Method} {Id} returned {Count}", nameof(BaseMethodsController), nameof(GetAsync), nameof(_crud.GetBaseMethodByIdAsync), id, baseMethod);
+				_logger.LogDebug("{Method} {Controller} {Action} {Id} returning {ModelName} {Model}", HttpContext.Request.Method, nameof(BaseMethodsController), nameof(GetAsync), id, nameof(BaseMethodFullModel), baseMethod);
 			}
 
 			return baseMethod is null ? (ActionResult<BaseMethodFullModel>)NotFound($"No Base Method exists with the supplied Id {id}.") : (ActionResult<BaseMethodFullModel>)Ok(baseMethod);
@@ -175,7 +217,7 @@ public class BaseMethodsController(ILogger<BaseMethodsController> logger, IBaseM
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Controller} {Action} {Id} had an error", nameof(BaseMethodsController), nameof(GetAsync), id);
+				_logger.LogError(ex, "{Method} {Controller} {Action} {Id} had an error.", HttpContext.Request.Method, nameof(BaseMethodsController), nameof(GetAsync), id);
 			}
 
 			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
@@ -191,29 +233,56 @@ public class BaseMethodsController(ILogger<BaseMethodsController> logger, IBaseM
 	/// <response code="500">An internal server error occurred while processing the request.</response>
 	// POST api/v1/BaseMethods
 	[HttpPost]
-	public async Task<ActionResult<BaseMethodFullModel>> PostAsync([FromBody] BaseMethodSimpleModel model)
+	public async Task<ActionResult<BaseMethodFullModel>> PostAsync([FromBody] BaseMethodAPIModel model)
 	{
 		try
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Controller} {Action} {Model}", nameof(BaseMethodsController), nameof(PostAsync), model);
+				_logger.LogDebug("{Method} {Controller} {Action} called with {ModelName} {Model}.", HttpContext.Request.Method, nameof(BaseMethodsController), nameof(PostAsync), nameof(BaseMethodAPIModel), model);
 			}
 
-			BaseMethodFullModel baseMethod = await _crud.CreateNewBaseMethodAsync(model).ConfigureAwait(false);
+			ArgumentNullException.ThrowIfNull(model, nameof(model));
 
-			if (_logger.IsEnabled(LogLevel.Trace))
+			if (ModelState.IsValid)
 			{
-				_logger.LogTrace("{Controller} {Action} {Model} {Method} returned {Model}", nameof(BaseMethodsController), nameof(PostAsync), model, nameof(_crud.CreateNewBaseMethodAsync), baseMethod);
-			}
+				BaseMethodFullModel baseMethod = await _crud.CreateNewBaseMethodAsync(model.ToSimpleModel()).ConfigureAwait(false);
 
-			return CreatedAtAction(nameof(PostAsync), RouteData.Values, baseMethod);
+				if (_logger.IsEnabled(LogLevel.Debug))
+				{
+					_logger.LogDebug("{Method} {Controller} {Action} returning {ModelName} {Model}.", HttpContext.Request.Method, nameof(BaseMethodsController), nameof(PostAsync), nameof(BaseMethodFullModel), baseMethod);
+				}
+
+				return CreatedAtAction(nameof(PostAsync), RouteData.Values, baseMethod);
+			}
+			else
+			{
+				Dictionary<string, List<string>> modelValidationErrors = ModelState.Where(kvp => kvp.Value?.Errors.Count > 0).ToDictionary(kvp => kvp.Key, kvp => kvp.Value!.Errors.Select(e => e.ErrorMessage).ToList());
+				StringBuilder sb = new();
+
+				foreach (KeyValuePair<string, List<string>> validationErrors in modelValidationErrors)
+				{
+					_ = sb.AppendLine(validationErrors.Key);
+
+					foreach (string validationError in validationErrors.Value)
+					{
+						_ = sb.AppendLine(CultureInfo.InvariantCulture, $"\t{validationError}");
+					}
+				}
+
+				if (_logger.IsEnabled(LogLevel.Warning))
+				{
+					_logger.LogWarning("{Method} {Controller} {Action} called with {ModelName} {Model} had one or more validation errors occur:\n{ValidationErrors}", HttpContext.Request.Method, nameof(BaseMethodsController), nameof(PostAsync), nameof(BaseMethodAPIModel), model, sb.ToString());
+				}
+
+				return BadRequest(new ValidationProblemDetails(ModelState));
+			}
 		}
 		catch (Exception ex)
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Controller} {Action} had an error", nameof(BaseMethodsController), nameof(PostAsync));
+				_logger.LogError(ex, "{Method} {Controller} {Action} called with {ModelName} {Model} had an error.", HttpContext.Request.Method, nameof(BaseMethodsController), nameof(PostAsync), nameof(BaseMethodAPIModel), model);
 			}
 
 			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
@@ -231,41 +300,67 @@ public class BaseMethodsController(ILogger<BaseMethodsController> logger, IBaseM
 	/// <response code="500">An internal server error occurred while processing the request.</response>
 	// PUT api/v1/BaseMethods/5
 	[HttpPut("{id}")]
-	public async Task<ActionResult<BaseMethodFullModel>> PutAsync(int id, [FromBody] BaseMethodSimpleModel model)
+	public async Task<ActionResult<BaseMethodFullModel>> PutAsync(int id, [FromBody] BaseMethodAPIModel model)
 	{
 		try
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Controller} {Action} {Id} {Model}", nameof(BaseMethodsController), nameof(PutAsync), id, model);
+				_logger.LogDebug("{Method} {Controller} {Action} {Id} called with {ModelName} {Model}.", HttpContext.Request.Method, nameof(BaseMethodsController), nameof(PutAsync), id, nameof(BaseMethodAPIModel), model);
 			}
 
-			if (id == model?.Id)
-			{
-				BaseMethodFullModel baseMethod = await _crud.UpdateBaseMethodAsync(model).ConfigureAwait(false);
+			ArgumentNullException.ThrowIfNull(model, nameof(model));
 
-				if (_logger.IsEnabled(LogLevel.Trace))
+			if (ModelState.IsValid && id == model.Id)
+			{
+				BaseMethodFullModel baseMethod = await _crud.UpdateBaseMethodAsync(model.ToSimpleModel()).ConfigureAwait(false);
+
+				if (_logger.IsEnabled(LogLevel.Debug))
 				{
-					_logger.LogTrace("{Controller} {Action} {Id} {Model} {Method} returned {Model}", nameof(BaseMethodsController), nameof(PutAsync), id, model, nameof(_crud.UpdateBaseMethodAsync), baseMethod);
+					_logger.LogDebug("{Method} {Controller} {Action} {Id} returning {ModelName} {Model}.", HttpContext.Request.Method, nameof(BaseMethodsController), nameof(PutAsync), id, nameof(BaseMethodFullModel), baseMethod);
 				}
 
 				return Ok(baseMethod);
 			}
 			else
 			{
-				if (_logger.IsEnabled(LogLevel.Trace))
+				if (id != model.Id)
 				{
-					_logger.LogTrace("{Controller} {Action} {Id} {Model} route parameter Id does not match the model ID", nameof(BaseMethodsController), nameof(PutAsync), id, model);
-				}
+					if (_logger.IsEnabled(LogLevel.Warning))
+					{
+						_logger.LogWarning("{Method} {Controller} {Action} {Id} called with {ModelName} {Model} has a mismatching Id.", HttpContext.Request.Method, nameof(BaseMethodsController), nameof(PutAsync), id, nameof(BaseMethodAPIModel), model);
+					}
 
-				return BadRequest($"The route parameter ID {id} does not match the model ID {model?.Id} from the request body.");
+					return BadRequest($"The route parameter Id {id} does not match the Model Id {model?.Id} from the request body.");
+				}
+				else
+				{
+					Dictionary<string, List<string>> modelValidationErrors = ModelState.Where(kvp => kvp.Value?.Errors.Count > 0).ToDictionary(kvp => kvp.Key, kvp => kvp.Value!.Errors.Select(e => e.ErrorMessage).ToList());
+					StringBuilder sb = new();
+
+					foreach (KeyValuePair<string, List<string>> validationErrors in modelValidationErrors)
+					{
+						_ = sb.AppendLine(validationErrors.Key);
+						foreach (string validationError in validationErrors.Value)
+						{
+							_ = sb.AppendLine(CultureInfo.InvariantCulture, $"\t{validationError}");
+						}
+					}
+
+					if (_logger.IsEnabled(LogLevel.Warning))
+					{
+						_logger.LogWarning("{Method} {Controller} {Action} {Id} called with {ModelName} {Model} had one or more validation errors occur:\n{ValidationErrors}", HttpContext.Request.Method, nameof(BaseMethodsController), nameof(PutAsync), id, nameof(BaseMethodAPIModel), model, sb.ToString());
+					}
+
+					return BadRequest(new ValidationProblemDetails(ModelState));
+				}
 			}
 		}
 		catch (Exception ex)
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Controller} {Action} had an error", nameof(BaseMethodsController), nameof(PutAsync));
+				_logger.LogError(ex, "{Method} {Controller} {Action} {Id} called with {ModelName} {Model} had an error.", HttpContext.Request.Method, nameof(BaseMethodsController), nameof(PutAsync), id, nameof(BaseMethodAPIModel), model);
 			}
 
 			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
@@ -287,17 +382,23 @@ public class BaseMethodsController(ILogger<BaseMethodsController> logger, IBaseM
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Controller} {Action} {Id}", nameof(BaseMethodsController), nameof(DeleteAsync), id);
+				_logger.LogDebug("{Method} {Controller} {Action} {Id} called.", HttpContext.Request.Method, nameof(BaseMethodsController), nameof(DeleteAsync), id);
 			}
 
 			await _crud.DeleteBaseMethodAsync(id).ConfigureAwait(false);
+
+			if (_logger.IsEnabled(LogLevel.Debug))
+			{
+				_logger.LogDebug("{Method} {Controller} {Action} {Id} returning.", HttpContext.Request.Method, nameof(BaseMethodsController), nameof(DeleteAsync), id);
+			}
+
 			return Ok();
 		}
 		catch (Exception ex)
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Controller} {Action} had an error", nameof(BaseMethodsController), nameof(DeleteAsync));
+				_logger.LogError(ex, "{Method} {Controller} {Action} {Id} had an error.", HttpContext.Request.Method, nameof(BaseMethodsController), nameof(DeleteAsync), id);
 			}
 
 			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);

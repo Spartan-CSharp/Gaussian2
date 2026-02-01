@@ -5,12 +5,19 @@
 
 <h1 class="text-danger">Error.</h1>
 <h2 class="text-danger">An error occurred while processing your request.</h2>
+<h3 class="text-danger">@Model.StatusCode @Model.StatusPhrase</h3>
 
 @if (Model.ShowRequestId)
 {
 	<p>
 		<strong>Request ID:</strong> <code>@Model.RequestId</code>
 	</p>
+}
+
+@if (!(string.IsNullOrWhiteSpace(Model.ExceptionType) && string.IsNullOrWhiteSpace(Model.ExceptionMessage)))
+{
+	<h3 class="text-danger">@Model.ExceptionType</h3>
+	<p class="text-danger">@Model.ExceptionMessage</p>
 }
 
 <h3>Development Mode</h3>

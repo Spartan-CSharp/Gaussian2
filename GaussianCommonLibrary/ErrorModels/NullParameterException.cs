@@ -1,22 +1,22 @@
 ﻿namespace GaussianCommonLibrary.ErrorModels;
 
 /// <summary>
-/// Represents an exception that is thrown when a required parameter is null.
+/// Exception thrown when a required parameter is null.
 /// </summary>
 public class NullParameterException : Exception
 {
 	/// <summary>
 	/// Initializes a new instance of the <see cref="NullParameterException"/> class.
 	/// </summary>
-	public NullParameterException() : base()
+	public NullParameterException() : base("A required parameter is null.")
 	{
 	}
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="NullParameterException"/> class with the specified parameter name.
 	/// </summary>
-	/// <param name="paramName">The name of the parameter that is null.</param>
-	public NullParameterException(string? paramName) : base()
+	/// <param name="paramName">The name of the null parameter.</param>
+	public NullParameterException(string? paramName) : base("A required parameter is null.")
 	{
 		ParamName = paramName;
 	}
@@ -24,38 +24,35 @@ public class NullParameterException : Exception
 	/// <summary>
 	/// Initializes a new instance of the <see cref="NullParameterException"/> class with the specified parameter name and error message.
 	/// </summary>
-	/// <param name="paramName">The name of the parameter that is null.</param>
-	/// <param name="message">The message that describes the error.</param>
-	public NullParameterException(string? paramName, string? message) : base(message)
+	/// <param name="paramName">The name of the null parameter.</param>
+	/// <param name="message">Custom error message, or null to use the default message.</param>
+	public NullParameterException(string? paramName, string? message) : base(message ?? "A required parameter is null.")
 	{
 		ParamName = paramName;
 	}
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="NullParameterException"/> class with a specified error message and a reference to the inner exception that is the cause of this exception.
+	/// Initializes a new instance of the <see cref="NullParameterException"/> class with the specified message and inner exception.
 	/// </summary>
-	/// <param name="message">The error message that explains the reason for the exception.</param>
-	/// <param name="innerException">The exception that is the cause of the current exception, or a null reference if no inner exception is specified.</param>
-	public NullParameterException(string? message, Exception? innerException) : base(message, innerException)
+	/// <param name="message">Custom error message, or null to use the default message.</param>
+	/// <param name="innerException">The exception that caused this exception.</param>
+	public NullParameterException(string? message, Exception? innerException) : base(message ?? "A required parameter is null.", innerException)
 	{
 	}
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="NullParameterException"/> class with the specified parameter name, error message, and a reference to the inner exception that is the cause of this exception.
+	/// Initializes a new instance of the <see cref="NullParameterException"/> class with the specified parameter name, message, and inner exception.
 	/// </summary>
-	/// <param name="paramName">The name of the parameter that is null.</param>
-	/// <param name="message">The error message that explains the reason for the exception.</param>
-	/// <param name="innerException">The exception that is the cause of the current exception, or a null reference if no inner exception is specified.</param>
-	public NullParameterException(string? paramName, string? message, Exception? innerException) : base(message, innerException)
+	/// <param name="paramName">The name of the null parameter.</param>
+	/// <param name="message">Custom error message, or null to use the default message.</param>
+	/// <param name="innerException">The exception that caused this exception.</param>
+	public NullParameterException(string? paramName, string? message, Exception? innerException) : base(message ?? "A required parameter is null.", innerException)
 	{
 		ParamName = paramName;
 	}
 
 	/// <summary>
-	/// Gets the name of the parameter that caused the exception.
+	/// Gets the name of the parameter that was null.
 	/// </summary>
-	/// <value>
-	/// The name of the parameter that is null, or <see langword="null"/> if not specified.
-	/// </value>
 	public string? ParamName { get; private set; }
 }

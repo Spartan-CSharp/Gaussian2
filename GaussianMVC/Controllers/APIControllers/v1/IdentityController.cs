@@ -1,5 +1,7 @@
 ﻿using System.Data;
+using System.Globalization;
 using System.Security.Claims;
+using System.Text;
 
 using Asp.Versioning;
 
@@ -63,17 +65,23 @@ public class IdentityController(ILogger<IdentityController> logger, UserManager<
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Controller} {Action}", nameof(IdentityController), nameof(GetAllUsersAsync));
+				_logger.LogDebug("{Method} {Controller} {Action} called.", HttpContext.Request.Method, nameof(IdentityController), nameof(GetAllUsersAsync));
 			}
 
 			List<IdentityUser> output = [.. _userManager.Users];
+
+			if (_logger.IsEnabled(LogLevel.Debug))
+			{
+				_logger.LogDebug("{Method} {Controller} {Action} returning {ModelCount} {ModelName}.", HttpContext.Request.Method, nameof(IdentityController), nameof(GetAllUsersAsync), output.Count, nameof(IdentityUser));
+			}
+
 			return Ok(output);
 		}
 		catch (Exception ex)
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Controller} {Action} had an error", nameof(IdentityController), nameof(GetAllUsersAsync));
+				_logger.LogError(ex, "{Method} {Controller} {Action} had an error.", HttpContext.Request.Method, nameof(IdentityController), nameof(GetAllUsersAsync));
 			}
 
 			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
@@ -96,35 +104,23 @@ public class IdentityController(ILogger<IdentityController> logger, UserManager<
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Controller} {Action} {Id}", nameof(IdentityController), nameof(GetUserAsync), id);
+				_logger.LogDebug("{Method} {Controller} {Action} {Id} called.", HttpContext.Request.Method, nameof(IdentityController), nameof(GetUserAsync), id);
 			}
 
-			IdentityUser? user = _userManager.Users.Where(u => u.Id == id).FirstOrDefault();
+			IdentityUser? user = _userManager.Users.FirstOrDefault(u => u.Id == id);
 
-			if (user is null)
+			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				if (_logger.IsEnabled(LogLevel.Warning))
-				{
-					_logger.LogWarning("{Controller} {Action} {Id} failed to return a valid user", nameof(IdentityController), nameof(GetUserAsync), id);
-				}
-
-				return BadRequest($"No User exists with the supplied Id {id}.");
+				_logger.LogDebug("{Method} {Controller} {Action} {Id} returning {ModelName} {Model}.", HttpContext.Request.Method, nameof(IdentityController), nameof(GetUserAsync), id, nameof(IdentityUser), user);
 			}
-			else
-			{
-				if (_logger.IsEnabled(LogLevel.Trace))
-				{
-					_logger.LogTrace("{Controller} {Action} {Id} returned user {User}", nameof(IdentityController), nameof(GetUserAsync), id, user);
-				}
 
-				return Ok(user);
-			}
+			return user is null ? (ActionResult<IdentityUser>)NotFound($"No User exists with the supplied Id {id}.") : (ActionResult<IdentityUser>)Ok(user);
 		}
 		catch (Exception ex)
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Controller} {Action} {Id} had an error", nameof(IdentityController), nameof(GetUserAsync), id);
+				_logger.LogError(ex, "{Method} {Controller} {Action} {Id} had an error.", HttpContext.Request.Method, nameof(IdentityController), nameof(GetUserAsync), id);
 			}
 
 			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
@@ -147,13 +143,10 @@ public class IdentityController(ILogger<IdentityController> logger, UserManager<
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Controller} {Action} {UserData}", nameof(IdentityController), nameof(CreateUserAsync), userData);
+				_logger.LogDebug("{Method} {Controller} {Action} called with {ModelName} {Model}.", HttpContext.Request.Method, nameof(IdentityController), nameof(CreateUserAsync), nameof(UserData), userData);
 			}
 
-			if (userData is null)
-			{
-				throw new ArgumentNullException(nameof(userData), $"The parameter {nameof(userData)} cannot be null.");
-			}
+			ArgumentNullException.ThrowIfNull(userData, nameof(userData));
 
 			IdentityResult result = await _userManager.CreateAsync(new IdentityUser
 			{
@@ -163,23 +156,27 @@ public class IdentityController(ILogger<IdentityController> logger, UserManager<
 
 			if (result.Succeeded)
 			{
-				IdentityUser createdUser = _userManager.Users.Where(u => u.UserName == userData.UserName).First();
+				IdentityUser createdUser = _userManager.Users.First(u => u.UserName == userData.UserName);
 
-				if (_logger.IsEnabled(LogLevel.Trace))
+				if (_logger.IsEnabled(LogLevel.Debug))
 				{
-					_logger.LogTrace("{Controller} {Action} {UserData} returned created user {CreatedUser}", nameof(IdentityController), nameof(CreateUserAsync), userData, createdUser);
+					_logger.LogDebug("{Method} {Controller} {Action} returning {ModelName} {Model}.", HttpContext.Request.Method, nameof(IdentityController), nameof(CreateUserAsync), nameof(IdentityUser), createdUser);
 				}
 
 				return CreatedAtAction(nameof(CreateUserAsync), RouteData.Values, createdUser);
 			}
 			else
 			{
+				StringBuilder sb = new();
+
 				foreach (IdentityError item in result.Errors)
 				{
-					if (_logger.IsEnabled(LogLevel.Warning))
-					{
-						_logger.LogWarning("{Controller} {Action} {UserData} failed with error {Code} {Description}", nameof(IdentityController), nameof(CreateUserAsync), userData, item.Code, item.Description);
-					}
+					_ = sb.AppendLine(CultureInfo.InvariantCulture, $"\t{item.Code}: {item.Description}");
+				}
+
+				if (_logger.IsEnabled(LogLevel.Warning))
+				{
+					_logger.LogWarning("{Method} {Controller} {Action} called with {ModelName} {Model} had one or more identity errors occur:\n{IdentityErrors}", HttpContext.Request.Method, nameof(IdentityController), nameof(CreateUserAsync), nameof(UserData), userData, sb.ToString());
 				}
 
 				return BadRequest(result.Errors);
@@ -189,7 +186,7 @@ public class IdentityController(ILogger<IdentityController> logger, UserManager<
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Controller} {Action} {UserData} had an error", nameof(IdentityController), nameof(CreateUserAsync), userData);
+				_logger.LogError(ex, "{Method} {Controller} {Action} called with {ModelName} {Model} had an error.", HttpContext.Request.Method, nameof(IdentityController), nameof(CreateUserAsync), nameof(UserData), userData);
 			}
 
 			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
@@ -213,7 +210,7 @@ public class IdentityController(ILogger<IdentityController> logger, UserManager<
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Controller} {Action} {Id} {User}", nameof(IdentityController), nameof(UpdateUserAsync), id, user);
+				_logger.LogDebug("{Method} {Controller} {Action} {Id} called with {ModelName} {Model}.", HttpContext.Request.Method, nameof(IdentityController), nameof(UpdateUserAsync), id, nameof(IdentityUser), user);
 			}
 
 			if (user?.Id == id)
@@ -222,23 +219,27 @@ public class IdentityController(ILogger<IdentityController> logger, UserManager<
 
 				if (result.Succeeded)
 				{
-					IdentityUser updatedUser = _userManager.Users.Where(u => u.Id == id).First();
+					IdentityUser updatedUser = _userManager.Users.First(u => u.Id == id);
 
-					if (_logger.IsEnabled(LogLevel.Trace))
+					if (_logger.IsEnabled(LogLevel.Debug))
 					{
-						_logger.LogTrace("{Controller} {Action} {Id} {User} returned updated user {UpdatedUser}", nameof(IdentityController), nameof(UpdateUserAsync), id, user, updatedUser);
+						_logger.LogDebug("{Method} {Controller} {Action} {Id} returning {ModelName} {Model}.", HttpContext.Request.Method, nameof(IdentityController), nameof(UpdateUserAsync), id, nameof(IdentityUser), updatedUser);
 					}
 
 					return Ok(updatedUser);
 				}
 				else
 				{
+					StringBuilder sb = new();
+
 					foreach (IdentityError item in result.Errors)
 					{
-						if (_logger.IsEnabled(LogLevel.Warning))
-						{
-							_logger.LogWarning("{Controller} {Action} {User} failed with error {Code} {Description}", nameof(IdentityController), nameof(UpdateUserAsync), user, item.Code, item.Description);
-						}
+						_ = sb.AppendLine(CultureInfo.InvariantCulture, $"\t{item.Code}: {item.Description}");
+					}
+
+					if (_logger.IsEnabled(LogLevel.Warning))
+					{
+						_logger.LogWarning("{Method} {Controller} {Action} called with {ModelName} {Model} had one or more identity errors occur:\n{IdentityErrors}", HttpContext.Request.Method, nameof(IdentityController), nameof(UpdateUserAsync), nameof(IdentityUser), user, sb.ToString());
 					}
 
 					return BadRequest(result.Errors);
@@ -248,17 +249,17 @@ public class IdentityController(ILogger<IdentityController> logger, UserManager<
 			{
 				if (_logger.IsEnabled(LogLevel.Warning))
 				{
-					_logger.LogWarning("{Controller} {Action} {Id} {User} has ID Mismatch", nameof(IdentityController), nameof(UpdateUserAsync), id, user);
+					_logger.LogWarning("{Method} {Controller} {Action} {Id} called with {ModelName} {Model} has a mismatching Id.", HttpContext.Request.Method, nameof(IdentityController), nameof(UpdateUserAsync), id, nameof(IdentityUser), user);
 				}
 
-				return BadRequest($"The route parameter ID {id} does not match the user id {user?.Id} from the request body.");
+				return BadRequest($"The route parameter Id {id} does not match the User Id {user?.Id} from the request body.");
 			}
 		}
 		catch (Exception ex)
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Controller} {Action} {Id} {User} had an error", nameof(IdentityController), nameof(UpdateUserAsync), id, user);
+				_logger.LogError(ex, "{Method} {Controller} {Action} {Id} called with {ModelName} {Model} had an error.", HttpContext.Request.Method, nameof(IdentityController), nameof(UpdateUserAsync), id, nameof(IdentityUser), user);
 			}
 
 			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
@@ -281,29 +282,33 @@ public class IdentityController(ILogger<IdentityController> logger, UserManager<
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Controller} {Action} {Id}", nameof(IdentityController), nameof(DeleteUserAsync), id);
+				_logger.LogDebug("{Method} {Controller} {Action} {Id} called.", HttpContext.Request.Method, nameof(IdentityController), nameof(DeleteUserAsync), id);
 			}
 
-			IdentityUser user = _userManager.Users.Where(u => u.Id == id).First();
+			IdentityUser user = _userManager.Users.First(u => u.Id == id);
 			IdentityResult result = await _userManager.DeleteAsync(user).ConfigureAwait(false);
 
 			if (result.Succeeded)
 			{
-				if (_logger.IsEnabled(LogLevel.Trace))
+				if (_logger.IsEnabled(LogLevel.Debug))
 				{
-					_logger.LogTrace("{Controller} {Action} {Id} returned success", nameof(IdentityController), nameof(DeleteUserAsync), id);
+					_logger.LogDebug("{Method} {Controller} {Action} {Id} returning.", HttpContext.Request.Method, nameof(IdentityController), nameof(DeleteUserAsync), id);
 				}
 
 				return Ok();
 			}
 			else
 			{
+				StringBuilder sb = new();
+
 				foreach (IdentityError item in result.Errors)
 				{
-					if (_logger.IsEnabled(LogLevel.Warning))
-					{
-						_logger.LogWarning("{Controller} {Action} {Id} failed with error {Code} {Description}", nameof(IdentityController), nameof(DeleteUserAsync), id, item.Code, item.Description);
-					}
+					_ = sb.AppendLine(CultureInfo.InvariantCulture, $"\t{item.Code}: {item.Description}");
+				}
+
+				if (_logger.IsEnabled(LogLevel.Warning))
+				{
+					_logger.LogWarning("{Method} {Controller} {Action} had one or more identity errors occur:\n{IdentityErrors}", HttpContext.Request.Method, nameof(IdentityController), nameof(DeleteUserAsync), sb.ToString());
 				}
 
 				return BadRequest(result.Errors);
@@ -313,7 +318,7 @@ public class IdentityController(ILogger<IdentityController> logger, UserManager<
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Controller} {Action} {Id} had an error", nameof(IdentityController), nameof(DeleteUserAsync), id);
+				_logger.LogError(ex, "{Method} {Controller} {Action} {Id} had an error.", HttpContext.Request.Method, nameof(IdentityController), nameof(DeleteUserAsync), id);
 			}
 
 			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
@@ -334,17 +339,23 @@ public class IdentityController(ILogger<IdentityController> logger, UserManager<
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Controller} {Action}", nameof(IdentityController), nameof(GetAllRolesAsync));
+				_logger.LogDebug("{Method} {Controller} {Action} called.", HttpContext.Request.Method, nameof(IdentityController), nameof(GetAllRolesAsync));
 			}
 
 			List<IdentityRole> output = [.. _roleManager.Roles];
+
+			if (_logger.IsEnabled(LogLevel.Debug))
+			{
+				_logger.LogDebug("{Method} {Controller} {Action} returning {ModelCount} {ModelName}.", HttpContext.Request.Method, nameof(IdentityController), nameof(GetAllRolesAsync), output.Count, nameof(IdentityRole));
+			}
+
 			return Ok(output);
 		}
 		catch (Exception ex)
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Controller} {Action} had an error", nameof(IdentityController), nameof(GetAllRolesAsync));
+				_logger.LogError(ex, "{Method} {Controller} {Action} had an error.", HttpContext.Request.Method, nameof(IdentityController), nameof(GetAllRolesAsync));
 			}
 
 			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
@@ -367,35 +378,23 @@ public class IdentityController(ILogger<IdentityController> logger, UserManager<
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Controller} {Action} {Id}", nameof(IdentityController), nameof(GetRoleAsync), id);
+				_logger.LogDebug("{Method} {Controller} {Action} {Id} called.", HttpContext.Request.Method, nameof(IdentityController), nameof(GetRoleAsync), id);
 			}
 
-			IdentityRole? role = _roleManager.Roles.Where(r => r.Id == id).FirstOrDefault();
+			IdentityRole? role = _roleManager.Roles.FirstOrDefault(r => r.Id == id);
 
-			if (role is null)
+			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				if (_logger.IsEnabled(LogLevel.Warning))
-				{
-					_logger.LogWarning("{Controller} {Action} {Id} failed to return a valid roleData", nameof(IdentityController), nameof(GetRoleAsync), id);
-				}
-
-				return BadRequest($"No Role exists with the supplied Id {id}.");
+				_logger.LogDebug("{Method} {Controller} {Action} {Id} returning {ModelName} {Model}.", HttpContext.Request.Method, nameof(IdentityController), nameof(GetRoleAsync), id, nameof(IdentityRole), role);
 			}
-			else
-			{
-				if (_logger.IsEnabled(LogLevel.Trace))
-				{
-					_logger.LogTrace("{Controller} {Action} {Id} returned roleData {Role}", nameof(IdentityController), nameof(GetRoleAsync), id, role);
-				}
 
-				return Ok(role);
-			}
+			return role is null ? (ActionResult<IdentityRole>)NotFound($"No Role exists with the supplied Id {id}.") : (ActionResult<IdentityRole>)Ok(role);
 		}
 		catch (Exception ex)
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Controller} {Action} {Id} had an error", nameof(IdentityController), nameof(GetRoleAsync), id);
+				_logger.LogError(ex, "{Method} {Controller} {Action} {Id} had an error.", HttpContext.Request.Method, nameof(IdentityController), nameof(GetRoleAsync), id);
 			}
 
 			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
@@ -418,35 +417,39 @@ public class IdentityController(ILogger<IdentityController> logger, UserManager<
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Controller} {Action} {RoleData}", nameof(IdentityController), nameof(CreateRoleAsync), roleData);
+				_logger.LogDebug("{Method} {Controller} {Action} called with {ModelName} {Model}.", HttpContext.Request.Method, nameof(IdentityController), nameof(CreateRoleAsync), nameof(RoleData), roleData);
 			}
 
-			if (roleData is null)
+			ArgumentNullException.ThrowIfNull(roleData, nameof(roleData));
+
+			IdentityResult result = await _roleManager.CreateAsync(new IdentityRole
 			{
-				throw new ArgumentNullException(nameof(roleData), $"The parameter {nameof(roleData)} cannot be null.");
-			}
-
-			IdentityResult result = await _roleManager.CreateAsync(new IdentityRole { Name = roleData.RoleName }).ConfigureAwait(false);
+				Name = roleData.RoleName
+			}).ConfigureAwait(false);
 
 			if (result.Succeeded)
 			{
-				IdentityRole createdRole = _roleManager.Roles.Where(r => r.Name == roleData.RoleName).First();
+				IdentityRole createdRole = _roleManager.Roles.First(r => r.Name == roleData.RoleName);
 
-				if (_logger.IsEnabled(LogLevel.Trace))
+				if (_logger.IsEnabled(LogLevel.Debug))
 				{
-					_logger.LogTrace("{Controller} {Action} {RoleData} returned created roleData {CreatedRole}", nameof(IdentityController), nameof(CreateRoleAsync), roleData, createdRole);
+					_logger.LogDebug("{Method} {Controller} {Action} returning {ModelName} {Model}.", HttpContext.Request.Method, nameof(IdentityController), nameof(CreateRoleAsync), nameof(IdentityRole), createdRole);
 				}
 
 				return CreatedAtAction(nameof(CreateRoleAsync), RouteData.Values, createdRole);
 			}
 			else
 			{
+				StringBuilder sb = new();
+
 				foreach (IdentityError item in result.Errors)
 				{
-					if (_logger.IsEnabled(LogLevel.Warning))
-					{
-						_logger.LogWarning("{Controller} {Action} {RoleData} failed with error {Code} {Description}", nameof(IdentityController), nameof(CreateRoleAsync), roleData, item.Code, item.Description);
-					}
+					_ = sb.AppendLine(CultureInfo.InvariantCulture, $"\t{item.Code}: {item.Description}");
+				}
+
+				if (_logger.IsEnabled(LogLevel.Warning))
+				{
+					_logger.LogWarning("{Method} {Controller} {Action} called with {ModelName} {Model} had one or more identity errors occur:\n{IdentityErrors}", HttpContext.Request.Method, nameof(IdentityController), nameof(CreateUserAsync), nameof(RoleData), roleData, sb.ToString());
 				}
 
 				return BadRequest(result.Errors);
@@ -456,7 +459,7 @@ public class IdentityController(ILogger<IdentityController> logger, UserManager<
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Controller} {Action} {RoleData} had an error", nameof(IdentityController), nameof(CreateRoleAsync), roleData);
+				_logger.LogError(ex, "{Method} {Controller} {Action} called with {ModelName} {Model} had an error.", HttpContext.Request.Method, nameof(IdentityController), nameof(CreateRoleAsync), nameof(RoleData), roleData);
 			}
 
 			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
@@ -480,7 +483,7 @@ public class IdentityController(ILogger<IdentityController> logger, UserManager<
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Controller} {Action} {Id} {Role}", nameof(IdentityController), nameof(UpdateRoleAsync), id, role);
+				_logger.LogDebug("{Method} {Controller} {Action} {Id} called with {ModelName} {Model}.", HttpContext.Request.Method, nameof(IdentityController), nameof(UpdateRoleAsync), id, nameof(IdentityRole), role);
 			}
 
 			if (role?.Id == id)
@@ -489,23 +492,27 @@ public class IdentityController(ILogger<IdentityController> logger, UserManager<
 
 				if (result.Succeeded)
 				{
-					IdentityRole updatedRole = _roleManager.Roles.Where(r => r.Id == id).First();
+					IdentityRole updatedRole = _roleManager.Roles.First(r => r.Id == id);
 
-					if (_logger.IsEnabled(LogLevel.Trace))
+					if (_logger.IsEnabled(LogLevel.Debug))
 					{
-						_logger.LogTrace("{Controller} {Action} {Id} {Role} returned updated roleData {UpdatedRole}", nameof(IdentityController), nameof(UpdateRoleAsync), id, role, updatedRole);
+						_logger.LogDebug("{Method} {Controller} {Action} {Id} returning {ModelName} {Model}.", HttpContext.Request.Method, nameof(IdentityController), nameof(UpdateRoleAsync), id, nameof(IdentityRole), updatedRole);
 					}
 
 					return Ok(updatedRole);
 				}
 				else
 				{
+					StringBuilder sb = new();
+
 					foreach (IdentityError item in result.Errors)
 					{
-						if (_logger.IsEnabled(LogLevel.Warning))
-						{
-							_logger.LogWarning("{Controller} {Action} {Role} failed with error {Code} {Description}", nameof(IdentityController), nameof(UpdateRoleAsync), role, item.Code, item.Description);
-						}
+						_ = sb.AppendLine(CultureInfo.InvariantCulture, $"\t{item.Code}: {item.Description}");
+					}
+
+					if (_logger.IsEnabled(LogLevel.Warning))
+					{
+						_logger.LogWarning("{Method} {Controller} {Action} {Id} called with {ModelName} {Model} had one or more identity errors occur:\n{IdentityErrors}", HttpContext.Request.Method, nameof(IdentityController), nameof(UpdateRoleAsync), id, nameof(IdentityRole), role, sb.ToString());
 					}
 
 					return BadRequest(result.Errors);
@@ -515,17 +522,17 @@ public class IdentityController(ILogger<IdentityController> logger, UserManager<
 			{
 				if (_logger.IsEnabled(LogLevel.Warning))
 				{
-					_logger.LogWarning("{Controller} {Action} {Id} {Role} has ID Mismatch", nameof(IdentityController), nameof(UpdateRoleAsync), id, role);
+					_logger.LogWarning("{Method} {Controller} {Action} {Id} called with {ModelName} {Model} has a mismatching Id.", HttpContext.Request.Method, nameof(IdentityController), nameof(UpdateRoleAsync), id, nameof(IdentityRole), role);
 				}
 
-				return BadRequest($"The route parameter ID {id} does not match the roleData Id {role?.Id} from the request body.");
+				return BadRequest($"The route parameter Id {id} does not match the Role Id {role?.Id} from the request body.");
 			}
 		}
 		catch (Exception ex)
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Controller} {Action} {Id} {Role} had an error", nameof(IdentityController), nameof(UpdateRoleAsync), id, role);
+				_logger.LogError(ex, "{Method} {Controller} {Action} {Id} called with {ModelName} {Model} had an error.", HttpContext.Request.Method, nameof(IdentityController), nameof(UpdateRoleAsync), id, nameof(IdentityRole), role);
 			}
 
 			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
@@ -548,28 +555,33 @@ public class IdentityController(ILogger<IdentityController> logger, UserManager<
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Controller} {Action} {Id}", nameof(IdentityController), nameof(DeleteRoleAsync), id);
+				_logger.LogDebug("{Method} {Controller} {Action} {Id} called.", HttpContext.Request.Method, nameof(IdentityController), nameof(DeleteRoleAsync), id);
 			}
 
-			IdentityRole role = _roleManager.Roles.Where(r => r.Id == id).First();
+			IdentityRole role = _roleManager.Roles.First(r => r.Id == id);
 			IdentityResult result = await _roleManager.DeleteAsync(role).ConfigureAwait(false);
+
 			if (result.Succeeded)
 			{
-				if (_logger.IsEnabled(LogLevel.Trace))
+				if (_logger.IsEnabled(LogLevel.Debug))
 				{
-					_logger.LogTrace("{Controller} {Action} {Id} returned success", nameof(IdentityController), nameof(DeleteRoleAsync), id);
+					_logger.LogDebug("{Method} {Controller} {Action} {Id} returning.", HttpContext.Request.Method, nameof(IdentityController), nameof(DeleteRoleAsync), id);
 				}
 
 				return Ok();
 			}
 			else
 			{
+				StringBuilder sb = new();
+
 				foreach (IdentityError item in result.Errors)
 				{
-					if (_logger.IsEnabled(LogLevel.Warning))
-					{
-						_logger.LogWarning("{Controller} {Action} {Id} failed with error {Code} {Description}", nameof(IdentityController), nameof(DeleteRoleAsync), id, item.Code, item.Description);
-					}
+					_ = sb.AppendLine(CultureInfo.InvariantCulture, $"\t{item.Code}: {item.Description}");
+				}
+
+				if (_logger.IsEnabled(LogLevel.Warning))
+				{
+					_logger.LogWarning("{Method} {Controller} {Action} had one or more identity errors occur:\n{IdentityErrors}", HttpContext.Request.Method, nameof(IdentityController), nameof(DeleteRoleAsync), sb.ToString());
 				}
 
 				return BadRequest(result.Errors);
@@ -579,7 +591,7 @@ public class IdentityController(ILogger<IdentityController> logger, UserManager<
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Controller} {Action} {Id} had an error", nameof(IdentityController), nameof(DeleteRoleAsync), id);
+				_logger.LogError(ex, "{Method} {Controller} {Action} {Id} had an error.", HttpContext.Request.Method, nameof(IdentityController), nameof(DeleteRoleAsync), id);
 			}
 
 			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
@@ -601,25 +613,25 @@ public class IdentityController(ILogger<IdentityController> logger, UserManager<
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Controller} {Action} {UserId}", nameof(IdentityController), nameof(GetAllUserClaimsAsync), userId);
+				_logger.LogDebug("{Method} {Controller} {UserId} {Action} called.", HttpContext.Request.Method, nameof(IdentityController), userId, nameof(GetAllUserClaimsAsync));
 			}
 
-			IdentityUser user = _userManager.Users.Where(u => u.Id == userId).First();
+			IdentityUser user = _userManager.Users.First(u => u.Id == userId);
 			IList<Claim> result = await _userManager.GetClaimsAsync(user).ConfigureAwait(false);
+			List<Claim> output = [.. result];
 
-			if (_logger.IsEnabled(LogLevel.Trace))
+			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogTrace("{Controller} {Action} {UserId} returned {ClaimCount},", nameof(IdentityController), nameof(GetAllUserClaimsAsync), userId, result.Count);
+				_logger.LogDebug("{Method} {Controller} {UserId} {Action} returning {ModelCount} {Model}.", HttpContext.Request.Method, nameof(IdentityController), userId, nameof(GetAllUserClaimsAsync), output.Count, nameof(Claim));
 			}
 
-			List<Claim> output = [.. result];
 			return Ok(output);
 		}
 		catch (Exception ex)
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Controller} {Action} {UserId} had an error", nameof(IdentityController), nameof(GetAllUserClaimsAsync), userId);
+				_logger.LogError(ex, "{Method} {Controller} {UserId} {Action} had an error.", HttpContext.Request.Method, nameof(IdentityController), userId, nameof(GetAllUserClaimsAsync));
 			}
 
 			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
@@ -637,31 +649,27 @@ public class IdentityController(ILogger<IdentityController> logger, UserManager<
 	/// <response code="500">If an internal server error occurs.</response>
 	// POST api/v1/Identity/Users/f755eafe-b9d1-4028-b060-ee12002b8c0c/Claims
 	[HttpPost("Users/{userId}/Claims")]
-	public async Task<ActionResult<List<Claim>>> AddUserClaimAsync(string userId, [FromBody] ClaimData userClaim)
+	public async Task<ActionResult<Claim>> AddUserClaimAsync(string userId, [FromBody] ClaimData userClaim)
 	{
 		try
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Controller} {Action} {UserId} {UserClaim}", nameof(IdentityController), nameof(AddUserClaimAsync), userId, userClaim);
+				_logger.LogDebug("{Method} {Controller} {UserId} {Action} called with {ModelName} {Model}.", HttpContext.Request.Method, nameof(IdentityController), userId, nameof(AddUserClaimAsync), nameof(ClaimData), userClaim);
 			}
 
-			if (userClaim is null)
-			{
-				throw new ArgumentNullException(nameof(userClaim), $"The parameter {nameof(userClaim)} cannot be null.");
-			}
-
-			IdentityUser user = _userManager.Users.Where(u => u.Id == userId).First();
+			ArgumentNullException.ThrowIfNull(userClaim, nameof(userClaim));
+			IdentityUser user = _userManager.Users.First(u => u.Id == userId);
 			IList<Claim> existingClaims = await _userManager.GetClaimsAsync(user).ConfigureAwait(false);
 
-			if (existingClaims.Where(c => c.Type == userClaim.ClaimType).Any())
+			if (existingClaims.Any(c => c.Type == userClaim.ClaimType))
 			{
 				if (_logger.IsEnabled(LogLevel.Warning))
 				{
-					_logger.LogWarning("{Controller} {Action} {UserId} {UserClaim}: Claim Already Exists", nameof(IdentityController), nameof(AddUserClaimAsync), userId, userClaim);
+					_logger.LogWarning("{Method} {Controller} {UserId} {Action} called with {ModelName} {Model} tried to add claim that already exists.", HttpContext.Request.Method, nameof(IdentityController), userId, nameof(AddUserClaimAsync), nameof(ClaimData), userClaim);
 				}
 
-				return BadRequest($"Claim {userClaim} for {userId} already exists");
+				return BadRequest($"Claim {userClaim} for {userId} already exists.");
 			}
 			else
 			{
@@ -671,23 +679,27 @@ public class IdentityController(ILogger<IdentityController> logger, UserManager<
 				if (result.Succeeded)
 				{
 					IList<Claim> newClaims = await _userManager.GetClaimsAsync(user).ConfigureAwait(false);
+					Claim output = newClaims.First(c => c.Type == userClaim.ClaimType);
 
-					if (_logger.IsEnabled(LogLevel.Trace))
+					if (_logger.IsEnabled(LogLevel.Debug))
 					{
-						_logger.LogTrace("{Controller} {Action} {UserId} {UserClaim} returned {ClaimCount},", nameof(IdentityController), nameof(AddUserClaimAsync), userId, userClaim, newClaims.Count);
+						_logger.LogDebug("{Method} {Controller} {UserId} {Action} returning {ModelName} {Model}.", HttpContext.Request.Method, nameof(IdentityController), userId, nameof(AddUserClaimAsync), nameof(Claim), output);
 					}
 
-					List<Claim> output = [.. newClaims];
 					return Ok(output);
 				}
 				else
 				{
+					StringBuilder sb = new();
+
 					foreach (IdentityError item in result.Errors)
 					{
-						if (_logger.IsEnabled(LogLevel.Warning))
-						{
-							_logger.LogWarning("{Controller} {Action} {UserId} {UserClaim} failed with error {Code} {Description}", nameof(IdentityController), nameof(AddUserClaimAsync), userId, userClaim, item.Code, item.Description);
-						}
+						_ = sb.AppendLine(CultureInfo.InvariantCulture, $"\t{item.Code}: {item.Description}");
+					}
+
+					if (_logger.IsEnabled(LogLevel.Warning))
+					{
+						_logger.LogWarning("{Method} {Controller} {UserId} {Action} called with {ModelName} {Model} had one or more identity errors occur:\n{IdentityErrors}", HttpContext.Request.Method, nameof(IdentityController), userId, nameof(AddUserClaimAsync), nameof(ClaimData), userClaim, sb.ToString());
 					}
 
 					return BadRequest(result.Errors);
@@ -698,7 +710,7 @@ public class IdentityController(ILogger<IdentityController> logger, UserManager<
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Controller} {Action} {UserId} {UserClaim} had an error", nameof(IdentityController), nameof(AddUserClaimAsync), userId, userClaim);
+				_logger.LogError(ex, "{Method} {Controller} {UserId} {Action} called with {ModelName} {Model} had an error.", HttpContext.Request.Method, nameof(IdentityController), userId, nameof(AddUserClaimAsync), nameof(ClaimData), userClaim);
 			}
 
 			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
@@ -716,32 +728,28 @@ public class IdentityController(ILogger<IdentityController> logger, UserManager<
 	/// <response code="500">If an internal server error occurs.</response>
 	// PUT api/v1/Identity/Users/f755eafe-b9d1-4028-b060-ee12002b8c0c/Claims
 	[HttpPut("Users/{userId}/Claims")]
-	public async Task<ActionResult<List<Claim>>> ReplaceUserClaimAsync(string userId, [FromBody] ClaimData userClaim)
+	public async Task<ActionResult<Claim>> ReplaceUserClaimAsync(string userId, [FromBody] ClaimData userClaim)
 	{
 		try
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Controller} {Action} {UserId} {UserClaim}", nameof(IdentityController), nameof(ReplaceUserClaimAsync), userId, userClaim);
+				_logger.LogDebug("{Method} {Controller} {UserId} {Action} called with {ModelName} {Model}.", HttpContext.Request.Method, nameof(IdentityController), userId, nameof(ReplaceUserClaimAsync), nameof(ClaimData), userClaim);
 			}
 
-			if (userClaim is null)
-			{
-				throw new ArgumentNullException(nameof(userClaim), $"The parameter {nameof(userClaim)} cannot be null.");
-			}
-
-			IdentityUser user = _userManager.Users.Where(u => u.Id == userId).First();
+			ArgumentNullException.ThrowIfNull(userClaim, nameof(userClaim));
+			IdentityUser user = _userManager.Users.First(u => u.Id == userId);
 			IList<Claim> existingClaims = await _userManager.GetClaimsAsync(user).ConfigureAwait(false);
-			Claim? claimToReplace = existingClaims.Where(c => c.Type == userClaim.ClaimType).FirstOrDefault();
+			Claim? claimToReplace = existingClaims.FirstOrDefault(c => c.Type == userClaim.ClaimType);
 
 			if (claimToReplace is null)
 			{
 				if (_logger.IsEnabled(LogLevel.Warning))
 				{
-					_logger.LogWarning("{Controller} {Action} {UserId} {UserClaim}: Claim Does Not Exist", nameof(IdentityController), nameof(ReplaceUserClaimAsync), userId, userClaim);
+					_logger.LogWarning("{Method} {Controller} {UserId} {Action} called with {ModelName} {Model} tried to replace claim that does not exist.", HttpContext.Request.Method, nameof(IdentityController), userId, nameof(ReplaceUserClaimAsync), nameof(ClaimData), userClaim);
 				}
 
-				return BadRequest($"Claim {userClaim} for {userId} does not exist");
+				return BadRequest($"Claim {userClaim} for {userId} does not exist.");
 			}
 			else
 			{
@@ -751,23 +759,27 @@ public class IdentityController(ILogger<IdentityController> logger, UserManager<
 				if (result.Succeeded)
 				{
 					IList<Claim> newClaims = await _userManager.GetClaimsAsync(user).ConfigureAwait(false);
+					Claim output = newClaims.Where(c => c.Type == userClaim.ClaimType).First();
 
-					if (_logger.IsEnabled(LogLevel.Trace))
+					if (_logger.IsEnabled(LogLevel.Debug))
 					{
-						_logger.LogTrace("{Controller} {Action} {UserId} {UserClaim} returned {ClaimCount},", nameof(IdentityController), nameof(ReplaceUserClaimAsync), userId, userClaim, newClaims.Count);
+						_logger.LogDebug("{Method} {Controller} {UserId} {Action} returning {ModelName} {Model}.", HttpContext.Request.Method, nameof(IdentityController), userId, nameof(ReplaceUserClaimAsync), nameof(Claim), output);
 					}
 
-					List<Claim> output = [.. newClaims];
 					return Ok(output);
 				}
 				else
 				{
+					StringBuilder sb = new();
+
 					foreach (IdentityError item in result.Errors)
 					{
-						if (_logger.IsEnabled(LogLevel.Warning))
-						{
-							_logger.LogWarning("{Controller} {Action} {UserId} {UserClaim} failed with error {Code} {Description}", nameof(IdentityController), nameof(ReplaceUserClaimAsync), userId, userClaim, item.Code, item.Description);
-						}
+						_ = sb.AppendLine(CultureInfo.InvariantCulture, $"\t{item.Code}: {item.Description}");
+					}
+
+					if (_logger.IsEnabled(LogLevel.Warning))
+					{
+						_logger.LogWarning("{Method} {Controller} {UserId} {Action} called with {ModelName} {Model} had one or more identity errors occur:\n{IdentityErrors}", HttpContext.Request.Method, nameof(IdentityController), userId, nameof(ReplaceUserClaimAsync), nameof(ClaimData), userClaim, sb.ToString());
 					}
 
 					return BadRequest(result.Errors);
@@ -778,7 +790,7 @@ public class IdentityController(ILogger<IdentityController> logger, UserManager<
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Controller} {Action} {UserId} {UserClaim} had an error", nameof(IdentityController), nameof(ReplaceUserClaimAsync), userId, userClaim);
+				_logger.LogError(ex, "{Method} {Controller} {UserId} {Action} called with {ModelName} {Model} had an error.", HttpContext.Request.Method, nameof(IdentityController), userId, nameof(ReplaceUserClaimAsync), nameof(ClaimData), userClaim);
 			}
 
 			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
@@ -796,15 +808,16 @@ public class IdentityController(ILogger<IdentityController> logger, UserManager<
 	/// <response code="500">If an internal server error occurs.</response>
 	// DELETE api/v1/Identity/Users/f755eafe-b9d1-4028-b060-ee12002b8c0c/Claims
 	[HttpDelete("Users/{userId}/Claims")]
-	public async Task<ActionResult<List<Claim>>> RemoveUserClaimAsync(string userId, [FromBody] ClaimData userClaim)
+	public async Task<ActionResult> RemoveUserClaimAsync(string userId, [FromBody] ClaimData userClaim)
 	{
 		try
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Controller} {Action} {UserId} {UserClaim}", nameof(IdentityController), nameof(RemoveUserClaimAsync), userId, userClaim);
+				_logger.LogDebug("{Method} {Controller} {UserId} {Action} called with {ModelName} {Model}.", HttpContext.Request.Method, nameof(IdentityController), userId, nameof(RemoveUserClaimAsync), nameof(ClaimData), userClaim);
 			}
 
+			ArgumentNullException.ThrowIfNull(userClaim, nameof(userClaim));
 			IdentityUser user = _userManager.Users.Where(u => u.Id == userId).First();
 			IList<Claim> existingClaims = await _userManager.GetClaimsAsync(user).ConfigureAwait(false);
 			Claim? claimToRemove = existingClaims.Where(c => c.Type == userClaim.ClaimType).FirstOrDefault();
@@ -813,10 +826,10 @@ public class IdentityController(ILogger<IdentityController> logger, UserManager<
 			{
 				if (_logger.IsEnabled(LogLevel.Warning))
 				{
-					_logger.LogWarning("{Controller} {Action} {UserId} {UserClaim}: Claim Does Not Exist", nameof(IdentityController), nameof(RemoveUserClaimAsync), userId, userClaim);
+					_logger.LogWarning("{Method} {Controller} {UserId} {Action} called with {ModelName} {Model} tried to remove claim that does not exist.", HttpContext.Request.Method, nameof(IdentityController), userId, nameof(RemoveUserClaimAsync), nameof(ClaimData), userClaim);
 				}
 
-				return BadRequest($"Claim {userClaim} for {userId} does not exist");
+				return BadRequest($"Claim {userClaim} for {userId} does not exist.");
 			}
 			else
 			{
@@ -824,24 +837,25 @@ public class IdentityController(ILogger<IdentityController> logger, UserManager<
 
 				if (result.Succeeded)
 				{
-					IList<Claim> newClaims = await _userManager.GetClaimsAsync(user).ConfigureAwait(false);
-
-					if (_logger.IsEnabled(LogLevel.Trace))
+					if (_logger.IsEnabled(LogLevel.Debug))
 					{
-						_logger.LogTrace("{Controller} {Action} {UserId} {UserClaim} returned {ClaimCount},", nameof(IdentityController), nameof(RemoveUserClaimAsync), userId, userClaim, newClaims.Count);
+						_logger.LogDebug("{Method} {Controller} {UserId} {Action} returning.", HttpContext.Request.Method, nameof(IdentityController), userId, nameof(RemoveUserClaimAsync));
 					}
 
-					List<Claim> output = [.. newClaims];
-					return Ok(output);
+					return Ok();
 				}
 				else
 				{
+					StringBuilder sb = new();
+
 					foreach (IdentityError item in result.Errors)
 					{
-						if (_logger.IsEnabled(LogLevel.Warning))
-						{
-							_logger.LogWarning("{Controller} {Action} {UserId} {UserClaim} failed with error {Code} {Description}", nameof(IdentityController), nameof(RemoveUserClaimAsync), userId, userClaim, item.Code, item.Description);
-						}
+						_ = sb.AppendLine(CultureInfo.InvariantCulture, $"\t{item.Code}: {item.Description}");
+					}
+
+					if (_logger.IsEnabled(LogLevel.Warning))
+					{
+						_logger.LogWarning("{Method} {Controller} {UserId} {Action} called with {ModelName} {Model} had one or more identity errors occur:\n{IdentityErrors}", HttpContext.Request.Method, nameof(IdentityController), userId, nameof(RemoveUserClaimAsync), nameof(ClaimData), userClaim, sb.ToString());
 					}
 
 					return BadRequest(result.Errors);
@@ -852,7 +866,7 @@ public class IdentityController(ILogger<IdentityController> logger, UserManager<
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Controller} {Action} {UserId} {UserClaim} had an error", nameof(IdentityController), nameof(RemoveUserClaimAsync), userId, userClaim);
+				_logger.LogError(ex, "{Method} {Controller} {UserId} {Action} called with {ModelName} {Model} had an error.", HttpContext.Request.Method, nameof(IdentityController), userId, nameof(RemoveUserClaimAsync), nameof(ClaimData), userClaim);
 			}
 
 			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
@@ -874,25 +888,25 @@ public class IdentityController(ILogger<IdentityController> logger, UserManager<
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Controller} {Action} {RoleId}", nameof(IdentityController), nameof(GetAllRoleClaimsAsync), roleId);
+				_logger.LogDebug("{Method} {Controller} {RoleId} {Action} called.", HttpContext.Request.Method, nameof(IdentityController), roleId, nameof(GetAllRoleClaimsAsync));
 			}
 
-			IdentityRole role = _roleManager.Roles.Where(r => r.Id == roleId).First();
+			IdentityRole role = _roleManager.Roles.Where(u => u.Id == roleId).First();
 			IList<Claim> result = await _roleManager.GetClaimsAsync(role).ConfigureAwait(false);
+			List<Claim> output = [.. result];
 
-			if (_logger.IsEnabled(LogLevel.Trace))
+			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogTrace("{Controller} {Action} {RoleId} returned {ClaimCount},", nameof(IdentityController), nameof(GetAllRoleClaimsAsync), roleId, result.Count);
+				_logger.LogDebug("{Method} {Controller} {RoleId} {Action} returning {ModelCount} {Model}.", HttpContext.Request.Method, nameof(IdentityController), roleId, nameof(GetAllRoleClaimsAsync), output.Count, nameof(Claim));
 			}
 
-			List<Claim> output = [.. result];
 			return Ok(output);
 		}
 		catch (Exception ex)
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Controller} {Action} {RoleId} had an error", nameof(IdentityController), nameof(GetAllRoleClaimsAsync), roleId);
+				_logger.LogError(ex, "{Method} {Controller} {RoleId} {Action} had an error.", HttpContext.Request.Method, nameof(IdentityController), roleId, nameof(GetAllRoleClaimsAsync));
 			}
 
 			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
@@ -916,25 +930,21 @@ public class IdentityController(ILogger<IdentityController> logger, UserManager<
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Controller} {Action} {RoleId} {RoleClaim}", nameof(IdentityController), nameof(AddRoleClaimAsync), roleId, roleClaim);
+				_logger.LogDebug("{Method} {Controller} {RoleId} {Action} called with {ModelName} {Model}.", HttpContext.Request.Method, nameof(IdentityController), roleId, nameof(AddRoleClaimAsync), nameof(ClaimData), roleClaim);
 			}
 
-			if (roleClaim is null)
-			{
-				throw new ArgumentNullException(nameof(roleClaim), $"The parameter {nameof(roleClaim)} cannot be null.");
-			}
-
-			IdentityRole role = _roleManager.Roles.Where(r => r.Id == roleId).First();
+			ArgumentNullException.ThrowIfNull(roleClaim, nameof(roleClaim));
+			IdentityRole role = _roleManager.Roles.Where(u => u.Id == roleId).First();
 			IList<Claim> existingClaims = await _roleManager.GetClaimsAsync(role).ConfigureAwait(false);
 
 			if (existingClaims.Where(c => c.Type == roleClaim.ClaimType).Any())
 			{
 				if (_logger.IsEnabled(LogLevel.Warning))
 				{
-					_logger.LogWarning("{Controller} {Action} {RoleId} {RoleClaim}: Claim Already Exists", nameof(IdentityController), nameof(AddRoleClaimAsync), roleId, roleClaim);
+					_logger.LogWarning("{Method} {Controller} {RoleId} {Action} called with {ModelName} {Model} tried to add claim that already exists.", HttpContext.Request.Method, nameof(IdentityController), roleId, nameof(AddRoleClaimAsync), nameof(ClaimData), roleClaim);
 				}
 
-				return BadRequest($"Claim {roleClaim} for {roleId} already exists");
+				return BadRequest($"Claim {roleClaim} for {roleId} already exists.");
 			}
 			else
 			{
@@ -944,23 +954,27 @@ public class IdentityController(ILogger<IdentityController> logger, UserManager<
 				if (result.Succeeded)
 				{
 					IList<Claim> newClaims = await _roleManager.GetClaimsAsync(role).ConfigureAwait(false);
+					Claim output = newClaims.Where(c => c.Type == roleClaim.ClaimType).First();
 
-					if (_logger.IsEnabled(LogLevel.Trace))
+					if (_logger.IsEnabled(LogLevel.Debug))
 					{
-						_logger.LogTrace("{Controller} {Action} {RoleId} {RoleClaim} returned {ClaimCount},", nameof(IdentityController), nameof(AddRoleClaimAsync), roleId, roleClaim, newClaims.Count);
+						_logger.LogDebug("{Method} {Controller} {RoleId} {Action} returning {ModelName} {Model}.", HttpContext.Request.Method, nameof(IdentityController), roleId, nameof(AddRoleClaimAsync), nameof(Claim), output);
 					}
 
-					List<Claim> output = [.. newClaims];
 					return Ok(output);
 				}
 				else
 				{
+					StringBuilder sb = new();
+
 					foreach (IdentityError item in result.Errors)
 					{
-						if (_logger.IsEnabled(LogLevel.Warning))
-						{
-							_logger.LogWarning("{Controller} {Action} {RoleId} {RoleClaim} failed with error {Code} {Description}", nameof(IdentityController), nameof(AddRoleClaimAsync), roleId, roleClaim, item.Code, item.Description);
-						}
+						_ = sb.AppendLine(CultureInfo.InvariantCulture, $"\t{item.Code}: {item.Description}");
+					}
+
+					if (_logger.IsEnabled(LogLevel.Warning))
+					{
+						_logger.LogWarning("{Method} {Controller} {RoleId} {Action} called with {ModelName} {Model} had one or more identity errors occur:\n{IdentityErrors}", HttpContext.Request.Method, nameof(IdentityController), roleId, nameof(AddRoleClaimAsync), nameof(ClaimData), roleClaim, sb.ToString());
 					}
 
 					return BadRequest(result.Errors);
@@ -971,7 +985,7 @@ public class IdentityController(ILogger<IdentityController> logger, UserManager<
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Controller} {Action} {RoleId} {RoleClaim} had an error", nameof(IdentityController), nameof(AddRoleClaimAsync), roleId, roleClaim);
+				_logger.LogError(ex, "{Method} {Controller} {RoleId} {Action} called with {ModelName} {Model} had an error.", HttpContext.Request.Method, nameof(IdentityController), roleId, nameof(AddRoleClaimAsync), nameof(ClaimData), roleClaim);
 			}
 
 			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
@@ -995,9 +1009,10 @@ public class IdentityController(ILogger<IdentityController> logger, UserManager<
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Controller} {Action} {RoleId} {RoleClaim}", nameof(IdentityController), nameof(RemoveRoleClaimAsync), roleId, roleClaim);
+				_logger.LogDebug("{Method} {Controller} {RoleId} {Action} called with {ModelName} {Model}.", HttpContext.Request.Method, nameof(IdentityController), roleId, nameof(RemoveRoleClaimAsync), nameof(ClaimData), roleClaim);
 			}
 
+			ArgumentNullException.ThrowIfNull(roleClaim, nameof(roleClaim));
 			IdentityRole role = _roleManager.Roles.Where(u => u.Id == roleId).First();
 			IList<Claim> existingClaims = await _roleManager.GetClaimsAsync(role).ConfigureAwait(false);
 			Claim? claimToRemove = existingClaims.Where(c => c.Type == roleClaim.ClaimType).FirstOrDefault();
@@ -1006,10 +1021,10 @@ public class IdentityController(ILogger<IdentityController> logger, UserManager<
 			{
 				if (_logger.IsEnabled(LogLevel.Warning))
 				{
-					_logger.LogWarning("{Controller} {Action} {RoleId} {RoleClaim}: Claim Does Not Exist", nameof(IdentityController), nameof(RemoveRoleClaimAsync), roleId, roleClaim);
+					_logger.LogWarning("{Method} {Controller} {RoleId} {Action} called with {ModelName} {Model} tried to remove claim that does not exist.", HttpContext.Request.Method, nameof(IdentityController), roleId, nameof(RemoveRoleClaimAsync), nameof(ClaimData), roleClaim);
 				}
 
-				return BadRequest($"Claim {roleClaim} for {roleId} does not exist");
+				return BadRequest($"Claim {roleClaim} for {roleId} does not exist.");
 			}
 			else
 			{
@@ -1017,24 +1032,25 @@ public class IdentityController(ILogger<IdentityController> logger, UserManager<
 
 				if (result.Succeeded)
 				{
-					IList<Claim> newClaims = await _roleManager.GetClaimsAsync(role).ConfigureAwait(false);
-
-					if (_logger.IsEnabled(LogLevel.Trace))
+					if (_logger.IsEnabled(LogLevel.Debug))
 					{
-						_logger.LogTrace("{Controller} {Action} {RoleId} {RoleClaim} returned {ClaimCount},", nameof(IdentityController), nameof(RemoveRoleClaimAsync), roleId, roleClaim, newClaims.Count);
+						_logger.LogDebug("{Method} {Controller} {RoleId} {Action} returning.", HttpContext.Request.Method, nameof(IdentityController), roleId, nameof(RemoveRoleClaimAsync));
 					}
 
-					List<Claim> output = [.. newClaims];
-					return Ok(output);
+					return Ok();
 				}
 				else
 				{
+					StringBuilder sb = new();
+
 					foreach (IdentityError item in result.Errors)
 					{
-						if (_logger.IsEnabled(LogLevel.Warning))
-						{
-							_logger.LogWarning("{Controller} {Action} {RoleId} {RoleClaim} failed with error {Code} {Description}", nameof(IdentityController), nameof(RemoveRoleClaimAsync), roleId, roleClaim, item.Code, item.Description);
-						}
+						_ = sb.AppendLine(CultureInfo.InvariantCulture, $"\t{item.Code}: {item.Description}");
+					}
+
+					if (_logger.IsEnabled(LogLevel.Warning))
+					{
+						_logger.LogWarning("{Method} {Controller} {RoleId} {Action} called with {ModelName} {Model} had one or more identity errors occur:\n{IdentityErrors}", HttpContext.Request.Method, nameof(IdentityController), roleId, nameof(RemoveRoleClaimAsync), nameof(ClaimData), roleClaim, sb.ToString());
 					}
 
 					return BadRequest(result.Errors);
@@ -1045,7 +1061,7 @@ public class IdentityController(ILogger<IdentityController> logger, UserManager<
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Controller} {Action} {RoleId} {RoleClaim} had an error", nameof(IdentityController), nameof(RemoveRoleClaimAsync), roleId, roleClaim);
+				_logger.LogError(ex, "{Method} {Controller} {RoleId} {Action} called with {ModelName} {Model} had an error.", HttpContext.Request.Method, nameof(IdentityController), roleId, nameof(RemoveRoleClaimAsync), nameof(ClaimData), roleClaim);
 			}
 
 			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
@@ -1067,17 +1083,11 @@ public class IdentityController(ILogger<IdentityController> logger, UserManager<
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Controller} {Action} {UserId}", nameof(IdentityController), nameof(GetAllUserRolesAsync), userId);
+				_logger.LogDebug("{Method} {Controller} {UserId} {Action} called.", HttpContext.Request.Method, nameof(IdentityController), userId, nameof(GetAllUserRolesAsync));
 			}
 
 			IdentityUser user = _userManager.Users.Where(u => u.Id == userId).First();
 			IList<string> result = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
-
-			if (_logger.IsEnabled(LogLevel.Trace))
-			{
-				_logger.LogTrace("{Controller} {Action} {UserId} returned {RoleCount},", nameof(IdentityController), nameof(GetAllUserRolesAsync), userId, result.Count);
-			}
-
 			List<IdentityRole> output = [];
 
 			foreach (string item in result)
@@ -1086,13 +1096,18 @@ public class IdentityController(ILogger<IdentityController> logger, UserManager<
 				output.Add(role);
 			}
 
+			if (_logger.IsEnabled(LogLevel.Debug))
+			{
+				_logger.LogDebug("{Method} {Controller} {UserId} {Action} returning {ModelCount} {Model}.", HttpContext.Request.Method, nameof(IdentityController), userId, nameof(GetAllUserRolesAsync), output.Count, nameof(IdentityRole));
+			}
+
 			return Ok(output);
 		}
 		catch (Exception ex)
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Controller} {Action} {UserId} had an error", nameof(IdentityController), nameof(GetAllUserRolesAsync), userId);
+				_logger.LogError(ex, "{Method} {Controller} {UserId} {Action} had an error.", HttpContext.Request.Method, nameof(IdentityController), userId, nameof(GetAllUserRolesAsync));
 			}
 
 			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
@@ -1103,65 +1118,63 @@ public class IdentityController(ILogger<IdentityController> logger, UserManager<
 	/// Assigns a roleData to a user.
 	/// </summary>
 	/// <param name="userId">The unique identifier of the user.</param>
-	/// <param name="roleName">The name of the roleData to assign.</param>
+	/// <param name="roleData">The name of the roleData to assign.</param>
 	/// <returns>The updated list of user roles.</returns>
 	/// <response code="200">Returns the updated list of user roles.</response>
 	/// <response code="400">If the user is already in the roleData or the operation fails.</response>
 	/// <response code="500">If an internal server error occurs.</response>
 	// POST api/v1/Identity/Users/f755eafe-b9d1-4028-b060-ee12002b8c0c/Roles
 	[HttpPost("Users/{userId}/Roles")]
-	public async Task<ActionResult<List<IdentityRole>>> AddUserToRoleAsync(string userId, [FromBody] string roleName)
+	public async Task<ActionResult<IdentityRole>> AddUserToRoleAsync(string userId, [FromBody] RoleData roleData)
 	{
 		try
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Controller} {Action} {UserId} {RoleName}", nameof(IdentityController), nameof(AddUserToRoleAsync), userId, roleName);
+				_logger.LogDebug("{Method} {Controller} {UserId} {Action} called with {ModelName} {Model}.", HttpContext.Request.Method, nameof(IdentityController), userId, nameof(AddUserToRoleAsync), nameof(RoleData), roleData);
 			}
 
+			ArgumentNullException.ThrowIfNull(roleData, nameof(roleData));
 			IdentityUser user = _userManager.Users.Where(u => u.Id == userId).First();
 			IList<string> existingRoles = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
 
-			if (existingRoles.Contains(roleName))
+			if (existingRoles.Contains(roleData.RoleName))
 			{
 				if (_logger.IsEnabled(LogLevel.Warning))
 				{
-					_logger.LogWarning("{Controller} {Action} {UserId} {RoleName}: User is already in Role", nameof(IdentityController), nameof(AddUserToRoleAsync), userId, roleName);
+					_logger.LogWarning("{Method} {Controller} {UserId} {Action} called with {ModelName} {Model} tried to add User to a Role in which the User already is.", HttpContext.Request.Method, nameof(IdentityController), userId, nameof(AddUserToRoleAsync), nameof(RoleData), roleData);
 				}
 
-				return BadRequest($"User {userId} is already ir Role {roleName}");
+				return BadRequest($"User {userId} is already in Role {roleData.RoleName}");
 			}
 			else
 			{
-				IdentityResult result = await _userManager.AddToRoleAsync(user, roleName).ConfigureAwait(false);
+				IdentityResult result = await _userManager.AddToRoleAsync(user, roleData.RoleName).ConfigureAwait(false);
 
 				if (result.Succeeded)
 				{
 					IList<string> newRoles = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
+					IdentityRole output = _roleManager.Roles.Where(r => r.Name == roleData.RoleName).First();
 
-					if (_logger.IsEnabled(LogLevel.Trace))
+					if (_logger.IsEnabled(LogLevel.Debug))
 					{
-						_logger.LogTrace("{Controller} {Action} {UserId} {RoleName} returned {ClaimCount},", nameof(IdentityController), nameof(AddUserToRoleAsync), userId, roleName, newRoles.Count);
-					}
-
-					List<IdentityRole> output = [];
-
-					foreach (string item in newRoles)
-					{
-						IdentityRole role = _roleManager.Roles.Where(r => r.Name == item).First();
-						output.Add(role);
+						_logger.LogDebug("{Method} {Controller} {UserId} {Action} returning {ModelName} {Model}.", HttpContext.Request.Method, nameof(IdentityController), userId, nameof(AddUserToRoleAsync), nameof(IdentityRole), output);
 					}
 
 					return Ok(output);
 				}
 				else
 				{
+					StringBuilder sb = new();
+
 					foreach (IdentityError item in result.Errors)
 					{
-						if (_logger.IsEnabled(LogLevel.Warning))
-						{
-							_logger.LogWarning("{Controller} {Action} {UserId} {RoleName} failed with error {Code} {Description}", nameof(IdentityController), nameof(AddUserToRoleAsync), userId, roleName, item.Code, item.Description);
-						}
+						_ = sb.AppendLine(CultureInfo.InvariantCulture, $"\t{item.Code}: {item.Description}");
+					}
+
+					if (_logger.IsEnabled(LogLevel.Warning))
+					{
+						_logger.LogWarning("{Method} {Controller} {UserId} {Action} called with {ModelName} {Model} had one or more identity errors occur:\n{IdentityErrors}", HttpContext.Request.Method, nameof(IdentityController), userId, nameof(AddUserToRoleAsync), nameof(RoleData), roleData, sb.ToString());
 					}
 
 					return BadRequest(result.Errors);
@@ -1172,7 +1185,7 @@ public class IdentityController(ILogger<IdentityController> logger, UserManager<
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Controller} {Action} {UserId} {RoleName} had an error", nameof(IdentityController), nameof(AddUserToRoleAsync), userId, roleName);
+				_logger.LogError(ex, "{Method} {Controller} {UserId} {Action} called with {ModelName} {Model} had an error.", HttpContext.Request.Method, nameof(IdentityController), userId, nameof(AddUserToRoleAsync), nameof(RoleData), roleData);
 			}
 
 			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
@@ -1183,56 +1196,51 @@ public class IdentityController(ILogger<IdentityController> logger, UserManager<
 	/// Removes a roleData from a user.
 	/// </summary>
 	/// <param name="userId">The unique identifier of the user.</param>
-	/// <param name="roleName">The name of the roleData to remove.</param>
+	/// <param name="roleData"></param>
 	/// <returns>The updated list of user roles.</returns>
 	/// <response code="200">Returns the updated list of user roles.</response>
 	/// <response code="400">If the user is not in the roleData or the operation fails.</response>
 	/// <response code="500">If an internal server error occurs.</response>
 	// DELETE api/v1/Identity/Users/f755eafe-b9d1-4028-b060-ee12002b8c0c/Roles
 	[HttpDelete("Users/{userId}/Roles")]
-	public async Task<ActionResult<List<IdentityRole>>> RemoveUserFromRoleAsync(string userId, [FromBody] string roleName)
+	public async Task<ActionResult> RemoveUserFromRoleAsync(string userId, [FromBody] RoleData roleData)
 	{
 		try
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Controller} {Action} {UserId} {RoleName}", nameof(IdentityController), nameof(RemoveUserFromRoleAsync), userId, roleName);
+				_logger.LogDebug("{Method} {Controller} {UserId} {Action} called with {ModelName} {Model}.", HttpContext.Request.Method, nameof(IdentityController), userId, nameof(RemoveUserFromRoleAsync), nameof(RoleData), roleData);
 			}
 
+			ArgumentNullException.ThrowIfNull(roleData, nameof(roleData));
 			IdentityUser user = _userManager.Users.Where(u => u.Id == userId).First();
 			IList<string> existingRoles = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
 
-			if (existingRoles.Contains(roleName))
+			if (existingRoles.Contains(roleData.RoleName))
 			{
-				IdentityResult result = await _userManager.RemoveFromRoleAsync(user, roleName).ConfigureAwait(false);
+				IdentityResult result = await _userManager.RemoveFromRoleAsync(user, roleData.RoleName).ConfigureAwait(false);
 
 				if (result.Succeeded)
 				{
-					IList<string> newRoles = await _userManager.GetRolesAsync(user).ConfigureAwait(false);
-
-					if (_logger.IsEnabled(LogLevel.Trace))
+					if (_logger.IsEnabled(LogLevel.Debug))
 					{
-						_logger.LogTrace("{Controller} {Action} {UserId} {RoleName} returned {ClaimCount},", nameof(IdentityController), nameof(RemoveUserFromRoleAsync), userId, roleName, newRoles.Count);
+						_logger.LogDebug("{Method} {Controller} {UserId} {Action} returning.", HttpContext.Request.Method, nameof(IdentityController), userId, nameof(RemoveUserFromRoleAsync));
 					}
 
-					List<IdentityRole> output = [];
-
-					foreach (string item in newRoles)
-					{
-						IdentityRole role = _roleManager.Roles.Where(r => r.Name == item).First();
-						output.Add(role);
-					}
-
-					return Ok(output);
+					return Ok();
 				}
 				else
 				{
+					StringBuilder sb = new();
+
 					foreach (IdentityError item in result.Errors)
 					{
-						if (_logger.IsEnabled(LogLevel.Warning))
-						{
-							_logger.LogWarning("{Controller} {Action} {UserId} {RoleName} failed with error {Code} {Description}", nameof(IdentityController), nameof(RemoveUserFromRoleAsync), userId, roleName, item.Code, item.Description);
-						}
+						_ = sb.AppendLine(CultureInfo.InvariantCulture, $"\t{item.Code}: {item.Description}");
+					}
+
+					if (_logger.IsEnabled(LogLevel.Warning))
+					{
+						_logger.LogWarning("{Method} {Controller} {UserId} {Action} called with {ModelName} {Model} had one or more identity errors occur:\n{IdentityErrors}", HttpContext.Request.Method, nameof(IdentityController), userId, nameof(RemoveUserFromRoleAsync), nameof(RoleData), roleData, sb.ToString());
 					}
 
 					return BadRequest(result.Errors);
@@ -1242,17 +1250,17 @@ public class IdentityController(ILogger<IdentityController> logger, UserManager<
 			{
 				if (_logger.IsEnabled(LogLevel.Warning))
 				{
-					_logger.LogWarning("{Controller} {Action} {UserId} {RoleName}: User is already in Role", nameof(IdentityController), nameof(RemoveUserFromRoleAsync), userId, roleName);
+					_logger.LogWarning("{Method} {Controller} {UserId} {Action} called with {ModelName} {Model} tried to remove User from a Role in which the User is not.", HttpContext.Request.Method, nameof(IdentityController), userId, nameof(RemoveUserFromRoleAsync), nameof(RoleData), roleData);
 				}
 
-				return BadRequest($"User {userId} is already ir Role {roleName}");
+				return BadRequest($"User {userId} is not in Role {roleData.RoleName}");
 			}
 		}
 		catch (Exception ex)
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Controller} {Action} {UserId} {RoleName} had an error", nameof(IdentityController), nameof(RemoveUserFromRoleAsync), userId, roleName);
+				_logger.LogError(ex, "{Method} {Controller} {UserId} {Action} called with {ModelName} {Model} had an error.", HttpContext.Request.Method, nameof(IdentityController), userId, nameof(RemoveUserFromRoleAsync), nameof(RoleData), roleData);
 			}
 
 			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);

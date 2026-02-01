@@ -1,9 +1,5 @@
 ﻿@model GaussianMVC.Models.BaseMethodViewModel
 
-@*
-	For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-
 @{
 	ViewData["Title"] = "Edit Base Method";
 }
@@ -19,28 +15,39 @@
 		<div class="col-md-4">
 			<form asp-action="Edit">
 				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+				<input type="hidden" asp-for="Id" />
+				<input type="hidden" asp-for="CreatedDate" />
+				<input type="hidden" asp-for="LastUpdatedDate" />
+
 				<div class="form-group">
 					<label asp-for="Keyword" class="control-label"></label>
 					<input asp-for="Keyword" class="form-control" />
 					<span asp-validation-for="Keyword" class="text-danger"></span>
 				</div>
+
 				<div class="form-group">
-					<label asp-for="MethodFamily" class="control-label"></label>
-					<select asp-for="MethodFamily" asp-items="Model.MethodFamilyList" class="form-control">
+					<label asp-for="MethodFamilyId" class="control-label"></label>
+					<select asp-for="MethodFamilyId" asp-items="Model.MethodFamilyList" class="form-control">
 						<option value="">-- Select Method Family --</option>
 					</select>
-					<span asp-validation-for="MethodFamily" class="text-danger"></span>
+					<span asp-validation-for="MethodFamilyId" class="text-danger"></span>
 				</div>
+
 				<div class="form-group">
-					<label asp-for="DescriptionRtf" class="control-label"></label>
-					<textarea asp-for="DescriptionRtf" class="form-control"></textarea>
-					<span asp-validation-for="DescriptionRtf" class="text-danger"></span>
+					<label asp-for="DescriptionHtml" class="control-label"></label>
+					<ejs-richtexteditor id="descriptionRTE" ejs-for="DescriptionHtml" value="@Model.DescriptionHtml" class="form-control">
+						<e-richtexteditor-toolbarsettings items="@Constants.SyncfusionToolbarItems"></e-richtexteditor-toolbarsettings>
+					</ejs-richtexteditor>
+					<textarea asp-for="DescriptionHtml" class="form-control"></textarea>
+					<span asp-validation-for="DescriptionHtml" class="text-danger"></span>
 				</div>
-				<div class="form-group">
-					<label asp-for="DescriptionText" class="control-label"></label>
-					<textarea asp-for="DescriptionText" class="form-control"></textarea>
-					<span asp-validation-for="DescriptionText" class="text-danger"></span>
+
+				<div class="form-group form-check">
+					<label class="form-check-label">
+						<input class="form-check-input" asp-for="Archived" /> @Html.DisplayNameFor(model => model.Archived)
+					</label>
 				</div>
+
 				<div class="form-group">
 					<input type="submit" value="Save" class="btn btn-primary" />
 				</div>

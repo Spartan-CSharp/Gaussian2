@@ -2,8 +2,11 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using System.Text.Json;
 
 using Asp.Versioning;
+
+using GaussianCommonLibrary.Models;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -32,20 +35,6 @@ public class AuthenticationController(UserManager<IdentityUser> userManager, Rol
 	private DateTimeOffset _loginTime;
 
 	/// <summary>
-	/// Represents a request to obtain an authentication token.
-	/// </summary>
-	/// <param name="Email">The user's email address used for authentication.</param>
-	/// <param name="Password">The user's password for credential validation.</param>
-	public record TokenRequest(string Email, string Password);
-
-	/// <summary>
-	/// Represents the response containing the generated authentication token.
-	/// </summary>
-	/// <param name="AccessToken">The JWT access token string used for subsequent API requests.</param>
-	/// <param name="UserName">The authenticated user's username.</param>
-	public record TokenResponse(string AccessToken, string UserName);
-
-	/// <summary>
 	/// Authenticates a user and generates a JWT access token for API authorization.
 	/// This endpoint validates user credentials and returns a bearer token that can be used
 	/// for subsequent authenticated API requests.
@@ -62,24 +51,6 @@ public class AuthenticationController(UserManager<IdentityUser> userManager, Rol
 	/// <response code="400">Bad Request if the request body is null.</response>
 	/// <response code="401">Unauthorized if the credentials are invalid.</response>
 	/// <response code="500">Internal Server Error if an unexpected error occurs during token generation.</response>
-	/// <remarks>
-	/// This endpoint is publicly accessible (no authentication required) and follows the OAuth 2.0 token endpoint pattern.
-	/// The generated JWT token includes user identity claims, role claims, and custom claims from the identity system.
-	/// Token expiration is set to 24 hours from the time of generation.
-	/// 
-	/// Example request:
-	/// POST /api/authentication/token
-	/// {
-	///   "Email": "user@example.com",
-	///   "Password": "SecurePassword123!"
-	/// }
-	/// 
-	/// Example response:
-	/// {
-	///   "AccessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
-	///   "UserName": "user@example.com"
-	/// }
-	/// </remarks>
 	// POST api/Authentication/token
 	[HttpPost("token")]
 	[AllowAnonymous]
@@ -87,52 +58,67 @@ public class AuthenticationController(UserManager<IdentityUser> userManager, Rol
 	{
 		try
 		{
+			// TODO add password obfuscation for logging.
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Controller} {Action} {RequstBody}", nameof(AuthenticationController), nameof(PostAsync), request);
+				_logger.LogDebug("{Controller} {Action} called with {ModelName} {Model}.", nameof(AuthenticationController), nameof(PostAsync), nameof(TokenRequest), request);
 			}
 
-			if (request is null)
+			ArgumentNullException.ThrowIfNull(request, nameof(request));
+
+			if (ModelState.IsValid)
 			{
+				IdentityUser? user = ValidateCredentials(request);
+
+				if (user is null)
+				{
+					if (_logger.IsEnabled(LogLevel.Warning))
+					{
+						_logger.LogWarning("{Controller} {Action} called with {ModelName} {Model} returning unauthorized.", nameof(AuthenticationController), nameof(PostAsync), nameof(TokenRequest), request);
+					}
+
+					return Unauthorized();
+				}
+				else
+				{
+					TokenResponse token = GenerateToken(user);
+
+					if (_logger.IsEnabled(LogLevel.Debug))
+					{
+						_logger.LogDebug("{Controller} {Action} returning {ModelName} {Model}.", nameof(AuthenticationController), nameof(PostAsync), nameof(TokenResponse), token);
+					}
+
+					return Ok(token);
+				}
+			}
+			else
+			{
+				Dictionary<string, List<string>> modelValidationErrors = ModelState.Where(kvp => kvp.Value?.Errors.Count > 0).ToDictionary(kvp => kvp.Key, kvp => kvp.Value!.Errors.Select(e => e.ErrorMessage).ToList());
+				StringBuilder sb = new();
+
+				foreach (KeyValuePair<string, List<string>> validationErrors in modelValidationErrors)
+				{
+					_ = sb.AppendLine(validationErrors.Key);
+
+					foreach (string validationError in validationErrors.Value)
+					{
+						_ = sb.AppendLine(CultureInfo.InvariantCulture, $"\t{validationError}");
+					}
+				}
+
 				if (_logger.IsEnabled(LogLevel.Warning))
 				{
-					_logger.LogWarning("{Controller} {Action} {RequstBody} has a null request", nameof(AuthenticationController), nameof(PostAsync), request);
+					_logger.LogWarning("{Method} {Controller} {Action} called with {ModelName} {Model} had one or more validation errors occur:\n{ValidationErrors}", HttpContext.Request.Method, nameof(AuthenticationController), nameof(PostAsync), nameof(TokenRequest), request, sb.ToString());
 				}
 
-				return BadRequest($"The request body {nameof(request)} cannot be null.");
+				return BadRequest(new ValidationProblemDetails(ModelState));
 			}
-
-			IdentityUser? user = ValidateCredentials(request);
-
-			if (user is null)
-			{
-				if (_logger.IsEnabled(LogLevel.Information))
-				{
-					_logger.LogInformation("{Controller} {Action} {RequstBody} {Method} returned null", nameof(AuthenticationController), nameof(PostAsync), request, nameof(ValidateCredentials));
-				}
-
-				return Unauthorized();
-			}
-
-			if (_logger.IsEnabled(LogLevel.Trace))
-			{
-				_logger.LogTrace("{Controller} {Action} {RequstBody} {Method} returned {User}", nameof(AuthenticationController), nameof(PostAsync), request, nameof(ValidateCredentials), user.UserName);
-			}
-
-			TokenResponse token = GenerateToken(user);
-
-			if (_logger.IsEnabled(LogLevel.Trace))
-			{
-				_logger.LogTrace("{Controller} {Action} {RequstBody} {Method} returned {User}", nameof(AuthenticationController), nameof(PostAsync), request, nameof(GenerateToken), token);
-			}
-
-			return Ok(token);
 		}
 		catch (Exception ex)
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Controller} {Action} {RequstBody} had an error", nameof(AuthenticationController), nameof(PostAsync), request);
+				_logger.LogError(ex, "{Method} {Controller} {Action} called with {ModelName} {Model} had an error.", HttpContext.Request.Method, nameof(AuthenticationController), nameof(PostAsync), nameof(TokenRequest), request);
 			}
 
 			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
@@ -143,8 +129,22 @@ public class AuthenticationController(UserManager<IdentityUser> userManager, Rol
 	{
 		if (_logger.IsEnabled(LogLevel.Trace))
 		{
-			_logger.LogTrace("{Method} Called with {User}", nameof(GenerateToken), user.UserName);
+			_logger.LogTrace("{Class} {Method} called with User = {User}.", nameof(AuthenticationController), nameof(GenerateToken), user);
 		}
+
+		Dictionary<string, object> userData = new()
+		{
+			{ "Id", user.Id },
+			{ "UserName", user.UserName ?? string.Empty },
+			{ "Email", user.Email ?? string.Empty },
+			{ "EmailConfirmed", user.EmailConfirmed },
+			{ "PhoneNumber", user.PhoneNumber ?? string.Empty },
+			{ "PhoneNumberConfirmed", user.PhoneNumberConfirmed },
+			{ "TwoFactorEnabled", user.TwoFactorEnabled },
+			{ "LockoutEnd", user.LockoutEnd is null ? new { } : user.LockoutEnd },
+			{ "LockoutEnabled", user.LockoutEnabled },
+			{ "AccessFailedCount", user.AccessFailedCount }
+		};
 
 		string secretKey = _config.GetValue<string>("Authentication:SecretKey") ?? throw new InvalidOperationException("Authentication Secret Key Not Found!");
 		string issuer = _config.GetValue<string>("Authentication:Issuer") ?? throw new InvalidOperationException("Authentication Issuer Not Found!");
@@ -172,50 +172,96 @@ public class AuthenticationController(UserManager<IdentityUser> userManager, Rol
 
 		IList<string> userRoleNames = _userManager.GetRolesAsync(user).Result;
 		List<IdentityRole> userRoles = [];
+		List<Dictionary<string, object>> userRoleDictionary = [];
 
 		foreach (string item in userRoleNames)
 		{
-			IdentityRole role = _roleManager.Roles.Where(r => r.Name == item).First();
+			IdentityRole role = _roleManager.Roles.First(r => r.Name == item);
 			userRoles.Add(role);
 		}
 
 		foreach (IdentityRole role in userRoles)
 		{
+			Dictionary<string, object> roleData = new()
+			{
+				{ "Id", role.Id ?? string.Empty },
+				{ "Name", role.Name ?? string.Empty }
+			};
+
 			if (!string.IsNullOrEmpty(role.Name))
 			{
 				claims.Add(new Claim(ClaimTypes.Role, role.Name));
 			}
 
 			IList<Claim> roleClaims = _roleManager.GetClaimsAsync(role).Result;
+			Dictionary<string, object> roleClaimsDictionary = [];
 
 			foreach (Claim? roleClaim in roleClaims)
 			{
 				if (roleClaim is not null)
 				{
 					claims.Add(roleClaim);
+
+					// Try to parse the claim value as JSON
+					object claimValue;
+
+					try
+					{
+						using JsonDocument doc = JsonDocument.Parse(roleClaim.Value);
+						// If parsing succeeds, deserialize to object
+						claimValue = JsonSerializer.Deserialize<object>(roleClaim.Value) ?? roleClaim.Value;
+					}
+					catch (JsonException)
+					{
+						// If parsing fails, it's not JSON - keep as string
+						claimValue = roleClaim.Value;
+					}
+
+					roleClaimsDictionary.Add(roleClaim.Type, claimValue);
 				}
 			}
+
+			roleData.Add("RoleClaims", roleClaimsDictionary);
+			userRoleDictionary.Add(roleData);
 		}
 
+		userData.Add("UserRoles", userRoleDictionary);
 		IList<Claim> userClaims = _userManager.GetClaimsAsync(user).Result;
+		Dictionary<string, object> userClaimsDictionary = [];
 
 		foreach (Claim? userClaim in userClaims)
 		{
 			if (userClaim is not null)
 			{
 				claims.Add(userClaim);
+
+				// Try to parse the claim value as JSON
+				object claimValue;
+
+				try
+				{
+					using JsonDocument doc = JsonDocument.Parse(userClaim.Value);
+					// If parsing succeeds, deserialize to object
+					claimValue = JsonSerializer.Deserialize<object>(userClaim.Value) ?? userClaim.Value;
+				}
+				catch (JsonException)
+				{
+					// If parsing fails, it's not JSON - keep as string
+					claimValue = userClaim.Value;
+				}
+
+				userClaimsDictionary.Add(userClaim.Type, claimValue);
 			}
 		}
 
+		userData.Add("UserClaims", userClaimsDictionary);
 		JwtSecurityToken token = new(new JwtHeader(signingCredentials), new JwtPayload(claims));
-
 		string tokenString = new JwtSecurityTokenHandler().WriteToken(token);
-
-		TokenResponse output = new(AccessToken: tokenString, UserName: user.UserName ?? string.Empty);
+		TokenResponse output = new(AccessToken: tokenString, UserData: userData);
 
 		if (_logger.IsEnabled(LogLevel.Trace))
 		{
-			_logger.LogTrace("{Method} Returning {TokenResponse}", nameof(GenerateToken), output);
+			_logger.LogTrace("{Class} {Method} returning TokenResponse {TokenResponse}.", nameof(AuthenticationController), nameof(GenerateToken), output);
 		}
 
 		return output;
@@ -223,9 +269,10 @@ public class AuthenticationController(UserManager<IdentityUser> userManager, Rol
 
 	private IdentityUser? ValidateCredentials(TokenRequest request)
 	{
+		// TODO add password obfuscation for logging.
 		if (_logger.IsEnabled(LogLevel.Trace))
 		{
-			_logger.LogTrace("{Method} Called with {TokenRequest}", nameof(ValidateCredentials), request);
+			_logger.LogTrace("{Class} {Method} called with TokenRequest = {TokenRequest}", nameof(AuthenticationController), nameof(ValidateCredentials), request);
 		}
 
 		IdentityUser? user = _userManager.FindByEmailAsync(request.Email).Result;
@@ -234,7 +281,7 @@ public class AuthenticationController(UserManager<IdentityUser> userManager, Rol
 		{
 			if (_logger.IsEnabled(LogLevel.Trace))
 			{
-				_logger.LogTrace("{Method} Authentication Failed with {Email}: user is null", nameof(ValidateCredentials), request.Email);
+				_logger.LogTrace("{Class} {Method} returning User = {User} as no user found with that email.", nameof(AuthenticationController), nameof(ValidateCredentials), user);
 			}
 
 			return null;
@@ -244,19 +291,24 @@ public class AuthenticationController(UserManager<IdentityUser> userManager, Rol
 
 		if (!isPasswordValid)
 		{
+			// Increment access failed count
+			_userManager.AccessFailedAsync(user).Wait();
+
 			if (_logger.IsEnabled(LogLevel.Trace))
 			{
-				_logger.LogTrace("{Method} Authentication Failed for {User}: {Password} is invalid", nameof(ValidateCredentials), user.UserName, request.Password);
+				_logger.LogTrace("{Class} {Method} returning User = null instead of {User} because password was invalid.", nameof(AuthenticationController), nameof(ValidateCredentials), user);
 			}
 
 			return null;
 		}
 
+		// Reset access failed count on successful login
+		_userManager.ResetAccessFailedCountAsync(user).Wait();
 		_loginTime = new DateTimeOffset(DateTime.Now);
 
 		if (_logger.IsEnabled(LogLevel.Trace))
 		{
-			_logger.LogTrace("{Method} Authentication Succeeded for {User}", nameof(ValidateCredentials), user.UserName);
+			_logger.LogTrace("{Class} {Method} returning User = {User} with valid password.", nameof(AuthenticationController), nameof(ValidateCredentials), user);
 		}
 
 		return user;

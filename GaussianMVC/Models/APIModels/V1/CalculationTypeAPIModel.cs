@@ -2,36 +2,35 @@
 
 using GaussianCommonLibrary.Models;
 
-using GaussianMVCLibrary.Converters;
-
-namespace GaussianMVC.Models;
+namespace GaussianMVC.Models.APIModels.V1;
 
 /// <summary>
-/// View model representing a Calculation Type for the Gaussian MVC application.
-/// Provides data transfer and validation between the view layer and the business logic.
+/// API model representing a Calculation Type for REST API operations.
+/// Provides data transfer and validation for Calculation Type entities in API v1.
 /// </summary>
-public class CalculationTypeViewModel
+public class CalculationTypeAPIModel
 {
 	/// <summary>
-	/// Initializes a new instance of the <see cref="CalculationTypeViewModel"/> class.
+	/// Initializes a new instance of the <see cref="CalculationTypeAPIModel"/> class.
 	/// </summary>
-	public CalculationTypeViewModel()
+	public CalculationTypeAPIModel()
 	{
 	}
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="CalculationTypeViewModel"/> class
+	/// Initializes a new instance of the <see cref="CalculationTypeAPIModel"/> class
 	/// from a <see cref="CalculationTypeFullModel"/>.
 	/// </summary>
 	/// <param name="model">The full model containing Calculation Type data.</param>
 	/// <exception cref="ArgumentNullException">Thrown when <paramref name="model"/> is null.</exception>
-	public CalculationTypeViewModel(CalculationTypeFullModel model)
+	public CalculationTypeAPIModel(CalculationTypeFullModel model)
 	{
 		ArgumentNullException.ThrowIfNull(model, nameof(model));
 		Id = model.Id;
 		Name = model.Name;
 		Keyword = model.Keyword;
-		DescriptionHtml = RtfConverter.RtfToHtml(model.DescriptionRtf);
+		DescriptionRtf = model.DescriptionRtf;
+		DescriptionText = model.DescriptionText;
 		CreatedDate = model.CreatedDate;
 		LastUpdatedDate = model.LastUpdatedDate;
 		Archived = model.Archived;
@@ -63,11 +62,19 @@ public class CalculationTypeViewModel
 	public string Keyword { get; set; } = string.Empty;
 
 	/// <summary>
-	/// Gets or sets the description in HTML format.
+	/// Gets or sets the description in Rich Text Format (RTF).
 	/// </summary>
 	[DataType(DataType.MultilineText)]
-	[Display(Name = "Description")]
-	public string? DescriptionHtml { get; set; }
+	[Display(Name = "Description (RTF)")]
+	public string? DescriptionRtf { get; set; }
+
+	/// <summary>
+	/// Gets or sets the plain text description of the Calculation Type.
+	/// </summary>
+	[DataType(DataType.MultilineText)]
+	[Display(Name = "Description (Text)")]
+	[MaxLength(2000)]
+	public string? DescriptionText { get; set; }
 
 	/// <summary>
 	/// Gets or sets the date and time when the Calculation Type was created.
@@ -90,9 +97,9 @@ public class CalculationTypeViewModel
 	public bool Archived { get; set; }
 
 	/// <summary>
-	/// Converts this view model to a <see cref="CalculationTypeFullModel"/> instance.
+	/// Converts this API model to a <see cref="CalculationTypeFullModel"/> instance.
 	/// </summary>
-	/// <returns>A new <see cref="CalculationTypeFullModel"/> with values copied from this view model.</returns>
+	/// <returns>A new <see cref="CalculationTypeFullModel"/> with values copied from this API model.</returns>
 	public CalculationTypeFullModel ToFullModel()
 	{
 		return new CalculationTypeFullModel
@@ -100,8 +107,8 @@ public class CalculationTypeViewModel
 			Id = Id,
 			Name = Name,
 			Keyword = Keyword,
-			DescriptionRtf = RtfConverter.HtmlToRtf(DescriptionHtml),
-			DescriptionText = RtfConverter.HtmlToPlainText(DescriptionHtml),
+			DescriptionRtf = DescriptionRtf,
+			DescriptionText = DescriptionText,
 			CreatedDate = CreatedDate,
 			LastUpdatedDate = LastUpdatedDate,
 			Archived = Archived

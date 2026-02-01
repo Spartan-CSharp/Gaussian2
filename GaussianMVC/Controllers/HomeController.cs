@@ -21,13 +21,18 @@ public class HomeController(ILogger<HomeController> logger) : Controller
 	/// </summary>
 	/// <returns>The Index view.</returns>
 	[HttpGet]
-	public IActionResult Index()
+	public ActionResult Index()
 	{
 		try
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Method} {Controller} {Action}", HttpContext.Request.Method, nameof(HomeController), nameof(Index));
+				_logger.LogDebug("{Method} {Controller} {Action} called.", HttpContext.Request.Method, nameof(HomeController), nameof(Index));
+			}
+
+			if (_logger.IsEnabled(LogLevel.Debug))
+			{
+				_logger.LogDebug("{Method} {Controller} {Action} returning.", HttpContext.Request.Method, nameof(HomeController), nameof(Index));
 			}
 
 			return View();
@@ -39,7 +44,18 @@ public class HomeController(ILogger<HomeController> logger) : Controller
 				_logger.LogError(ex, "{Method} {Controller} {Action} had an error.", HttpContext.Request.Method, nameof(HomeController), nameof(Index));
 			}
 
-			return RedirectToAction(nameof(Error));
+			Response.StatusCode = StatusCodes.Status500InternalServerError;
+
+			ErrorViewModel evm = new()
+			{
+				RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
+				StatusCode = StatusCodes.Status500InternalServerError,
+				StatusPhrase = "Internal Server Error",
+				ExceptionType = ex.GetType().Name,
+				ExceptionMessage = ex.Message
+			};
+
+			return View("Error", evm);
 		}
 	}
 
@@ -48,13 +64,18 @@ public class HomeController(ILogger<HomeController> logger) : Controller
 	/// </summary>
 	/// <returns>The Privacy view.</returns>
 	[HttpGet]
-	public IActionResult Privacy()
+	public ActionResult Privacy()
 	{
 		try
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Method} {Controller} {Action}", HttpContext.Request.Method, nameof(HomeController), nameof(Privacy));
+				_logger.LogDebug("{Method} {Controller} {Action} called.", HttpContext.Request.Method, nameof(HomeController), nameof(Privacy));
+			}
+
+			if (_logger.IsEnabled(LogLevel.Debug))
+			{
+				_logger.LogDebug("{Method} {Controller} {Action} returning.", HttpContext.Request.Method, nameof(HomeController), nameof(Privacy));
 			}
 
 			return View();
@@ -66,7 +87,18 @@ public class HomeController(ILogger<HomeController> logger) : Controller
 				_logger.LogError(ex, "{Method} {Controller} {Action} had an error.", HttpContext.Request.Method, nameof(HomeController), nameof(Privacy));
 			}
 
-			return RedirectToAction(nameof(Error));
+			Response.StatusCode = StatusCodes.Status500InternalServerError;
+
+			ErrorViewModel evm = new()
+			{
+				RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
+				StatusCode = StatusCodes.Status500InternalServerError,
+				StatusPhrase = "Internal Server Error",
+				ExceptionType = ex.GetType().Name,
+				ExceptionMessage = ex.Message
+			};
+
+			return View("Error", evm);
 		}
 	}
 
@@ -75,13 +107,18 @@ public class HomeController(ILogger<HomeController> logger) : Controller
 	/// </summary>
 	/// <returns>The About view.</returns>
 	[HttpGet]
-	public IActionResult About()
+	public ActionResult About()
 	{
 		try
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Method} {Controller} {Action}", HttpContext.Request.Method, nameof(HomeController), nameof(About));
+				_logger.LogDebug("{Method} {Controller} {Action} called.", HttpContext.Request.Method, nameof(HomeController), nameof(About));
+			}
+
+			if (_logger.IsEnabled(LogLevel.Debug))
+			{
+				_logger.LogDebug("{Method} {Controller} {Action} returning.", HttpContext.Request.Method, nameof(HomeController), nameof(About));
 			}
 
 			return View();
@@ -93,7 +130,18 @@ public class HomeController(ILogger<HomeController> logger) : Controller
 				_logger.LogError(ex, "{Method} {Controller} {Action} had an error.", HttpContext.Request.Method, nameof(HomeController), nameof(About));
 			}
 
-			return RedirectToAction(nameof(Error));
+			Response.StatusCode = StatusCodes.Status500InternalServerError;
+
+			ErrorViewModel evm = new()
+			{
+				RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
+				StatusCode = StatusCodes.Status500InternalServerError,
+				StatusPhrase = "Internal Server Error",
+				ExceptionType = ex.GetType().Name,
+				ExceptionMessage = ex.Message
+			};
+
+			return View("Error", evm);
 		}
 	}
 
@@ -102,13 +150,18 @@ public class HomeController(ILogger<HomeController> logger) : Controller
 	/// </summary>
 	/// <returns>The Contact view.</returns>
 	[HttpGet]
-	public IActionResult Contact()
+	public ActionResult Contact()
 	{
 		try
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Method} {Controller} {Action}", HttpContext.Request.Method, nameof(HomeController), nameof(Contact));
+				_logger.LogDebug("{Method} {Controller} {Action} called.", HttpContext.Request.Method, nameof(HomeController), nameof(Contact));
+			}
+
+			if (_logger.IsEnabled(LogLevel.Debug))
+			{
+				_logger.LogDebug("{Method} {Controller} {Action} returning.", HttpContext.Request.Method, nameof(HomeController), nameof(Contact));
 			}
 
 			return View();
@@ -120,7 +173,18 @@ public class HomeController(ILogger<HomeController> logger) : Controller
 				_logger.LogError(ex, "{Method} {Controller} {Action} had an error.", HttpContext.Request.Method, nameof(HomeController), nameof(Contact));
 			}
 
-			return RedirectToAction(nameof(Error));
+			Response.StatusCode = StatusCodes.Status500InternalServerError;
+
+			ErrorViewModel evm = new()
+			{
+				RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
+				StatusCode = StatusCodes.Status500InternalServerError,
+				StatusPhrase = "Internal Server Error",
+				ExceptionType = ex.GetType().Name,
+				ExceptionMessage = ex.Message
+			};
+
+			return View("Error", evm);
 		}
 	}
 
@@ -134,24 +198,23 @@ public class HomeController(ILogger<HomeController> logger) : Controller
 	/// </remarks>
 	[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 	[HttpGet]
-	public IActionResult Error()
+	public ActionResult<ErrorViewModel> Error()
 	{
 		try
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Method} {Controller} {Action}", HttpContext.Request.Method, nameof(HomeController), nameof(Error));
+				_logger.LogDebug("{Method} {Controller} {Action} called.", HttpContext.Request.Method, nameof(HomeController), nameof(Error));
 			}
 
-			string requestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
 			ErrorViewModel errorModel = new()
 			{
-				RequestId = requestId
+				RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
 			};
 
-			if (_logger.IsEnabled(LogLevel.Error))
+			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogError("{Method} {Controller} {Action} {ErrorViewModel}", HttpContext.Request.Method, nameof(HomeController), nameof(Error), errorModel.RequestId);
+				_logger.LogDebug("{Method} {Controller} {Action} returning {ModelName} {Model}.", HttpContext.Request.Method, nameof(HomeController), nameof(Error), nameof(ErrorViewModel), errorModel);
 			}
 
 			return View(errorModel);
@@ -163,7 +226,18 @@ public class HomeController(ILogger<HomeController> logger) : Controller
 				_logger.LogError(ex, "{Method} {Controller} {Action} had an error.", HttpContext.Request.Method, nameof(HomeController), nameof(Error));
 			}
 
-			return View();
+			Response.StatusCode = StatusCodes.Status500InternalServerError;
+
+			ErrorViewModel evm = new()
+			{
+				RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
+				StatusCode = StatusCodes.Status500InternalServerError,
+				StatusPhrase = "Internal Server Error",
+				ExceptionType = ex.GetType().Name,
+				ExceptionMessage = ex.Message
+			};
+
+			return View(evm);
 		}
 	}
 }

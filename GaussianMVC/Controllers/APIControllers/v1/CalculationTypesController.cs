@@ -1,6 +1,11 @@
-﻿using Asp.Versioning;
+﻿using System.Globalization;
+using System.Text;
+
+using Asp.Versioning;
 
 using GaussianCommonLibrary.Models;
+
+using GaussianMVC.Models.APIModels.V1;
 
 using GaussianMVCLibrary.DataAccess;
 
@@ -16,7 +21,7 @@ namespace GaussianMVC.Controllers.APIControllers.V1;
 /// </summary>
 /// <param name="logger">
 /// Logger instance for tracking controller operations, errors, and debugging information.
-/// Supports structured logging with various log levels (Debug, Trace, Error).
+/// Supports structured logging with various log levels (Debug, Debug, Error).
 /// </param>
 /// <param name="crud">
 /// Data access layer service for performing CRUD operations on Calculation Type entities.
@@ -50,21 +55,21 @@ public class CalculationTypesController(ILogger<CalculationTypesController> logg
 	/// <response code="200">Returns the list of Calculation Types.</response>
 	/// <response code="500">If an internal server error occurs.</response>
 	// GET: api/v1/CalculationTypes
-	[HttpGet(Name = "GetCalculationTypes")]
+	[HttpGet()]
 	public async Task<ActionResult<List<CalculationTypeFullModel>>> GetAsync()
 	{
 		try
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Controller} {Action}", nameof(CalculationTypesController), nameof(GetAsync));
+				_logger.LogDebug("{Method} {Controller} {Action} called.", HttpContext.Request.Method, nameof(CalculationTypesController), nameof(GetAsync));
 			}
 
 			List<CalculationTypeFullModel> calculationTypes = await _crud.GetAllCalculationTypesAsync().ConfigureAwait(false);
 
-			if (_logger.IsEnabled(LogLevel.Trace))
+			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogTrace("{Controller} {Action} {Method} returned {Count}", nameof(CalculationTypesController), nameof(GetAsync), nameof(_crud.GetAllCalculationTypesAsync), calculationTypes.Count);
+				_logger.LogDebug("{Method} {Controller} {Action} returning {ModelCount} {ModelName}.", HttpContext.Request.Method, nameof(CalculationTypesController), nameof(GetAsync), calculationTypes.Count, nameof(CalculationTypeFullModel));
 			}
 
 			return Ok(calculationTypes);
@@ -73,7 +78,7 @@ public class CalculationTypesController(ILogger<CalculationTypesController> logg
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Controller} {Action} had an error", nameof(CalculationTypesController), nameof(GetAsync));
+				_logger.LogError(ex, "{Method} {Controller} {Action} had an error.", HttpContext.Request.Method, nameof(CalculationTypesController), nameof(GetAsync));
 			}
 
 			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
@@ -101,14 +106,14 @@ public class CalculationTypesController(ILogger<CalculationTypesController> logg
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Controller} {Action} {Id}", nameof(CalculationTypesController), nameof(GetAsync), id);
+				_logger.LogDebug("{Method} {Controller} {Action} {Id} called.", HttpContext.Request.Method, nameof(CalculationTypesController), nameof(GetAsync), id);
 			}
 
 			CalculationTypeFullModel? calculationType = await _crud.GetCalculationTypeByIdAsync(id).ConfigureAwait(false);
 
-			if (_logger.IsEnabled(LogLevel.Trace))
+			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogTrace("{Controller} {Action} {Id} {Method} returned {Model}", nameof(CalculationTypesController), nameof(GetAsync), id, nameof(_crud.GetCalculationTypeByIdAsync), calculationType);
+				_logger.LogDebug("{Method} {Controller} {Action} {Id} returning {ModelName} {Model}.", HttpContext.Request.Method, nameof(CalculationTypesController), nameof(GetAsync), id, nameof(CalculationTypeFullModel), calculationType);
 			}
 
 			return calculationType is null ? (ActionResult<CalculationTypeFullModel>)NotFound($"No Calculation Type exists with the supplied Id {id}.") : (ActionResult<CalculationTypeFullModel>)Ok(calculationType);
@@ -117,7 +122,7 @@ public class CalculationTypesController(ILogger<CalculationTypesController> logg
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Controller} {Action} had an error", nameof(CalculationTypesController), nameof(GetAsync));
+				_logger.LogError(ex, "{Method} {Controller} {Action} {Id} had an error.", HttpContext.Request.Method, nameof(CalculationTypesController), nameof(GetAsync), id);
 			}
 
 			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
@@ -137,29 +142,56 @@ public class CalculationTypesController(ILogger<CalculationTypesController> logg
 	/// <response code="500">If an internal server error occurs.</response>
 	// POST api/v1/CalculationTypes
 	[HttpPost]
-	public async Task<ActionResult<CalculationTypeFullModel>> PostAsync([FromBody] CalculationTypeFullModel model)
+	public async Task<ActionResult<CalculationTypeFullModel>> PostAsync([FromBody] CalculationTypeAPIModel model)
 	{
 		try
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Controller} {Action} {Model}", nameof(CalculationTypesController), nameof(PostAsync), model);
+				_logger.LogDebug("{Method} {Controller} {Action} called with {ModelName} {Model}.", HttpContext.Request.Method, nameof(CalculationTypesController), nameof(PostAsync), nameof(CalculationTypeAPIModel), model);
 			}
 
-			CalculationTypeFullModel calculationType = await _crud.CreateNewCalculationTypeAsync(model).ConfigureAwait(false);
+			ArgumentNullException.ThrowIfNull(model, nameof(model));
 
-			if (_logger.IsEnabled(LogLevel.Trace))
+			if (ModelState.IsValid)
 			{
-				_logger.LogTrace("{Controller} {Action} {Model} {Method} returned {Model}", nameof(CalculationTypesController), nameof(PostAsync), model, nameof(_crud.CreateNewCalculationTypeAsync), calculationType);
-			}
+				CalculationTypeFullModel calculationType = await _crud.CreateNewCalculationTypeAsync(model.ToFullModel()).ConfigureAwait(false);
 
-			return CreatedAtAction(nameof(PostAsync), RouteData.Values, calculationType);
+				if (_logger.IsEnabled(LogLevel.Debug))
+				{
+					_logger.LogDebug("{Method} {Controller} {Action} returning {ModelName} {Model}.", HttpContext.Request.Method, nameof(CalculationTypesController), nameof(PostAsync), nameof(CalculationTypeFullModel), calculationType);
+				}
+
+				return CreatedAtAction(nameof(PostAsync), RouteData.Values, calculationType);
+			}
+			else
+			{
+				Dictionary<string, List<string>> modelValidationErrors = ModelState.Where(kvp => kvp.Value?.Errors.Count > 0).ToDictionary(kvp => kvp.Key, kvp => kvp.Value!.Errors.Select(e => e.ErrorMessage).ToList());
+				StringBuilder sb = new();
+
+				foreach (KeyValuePair<string, List<string>> validationErrors in modelValidationErrors)
+				{
+					_ = sb.AppendLine(validationErrors.Key);
+
+					foreach (string validationError in validationErrors.Value)
+					{
+						_ = sb.AppendLine(CultureInfo.InvariantCulture, $"\t{validationError}");
+					}
+				}
+
+				if (_logger.IsEnabled(LogLevel.Warning))
+				{
+					_logger.LogWarning("{Method} {Controller} {Action} called with {ModelName} {Model} had one or more validation errors occur:\n{ValidationErrors}", HttpContext.Request.Method, nameof(CalculationTypesController), nameof(PostAsync), nameof(CalculationTypeAPIModel), model, sb.ToString());
+				}
+
+				return BadRequest(new ValidationProblemDetails(ModelState));
+			}
 		}
 		catch (Exception ex)
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Controller} {Action} had an error", nameof(CalculationTypesController), nameof(PostAsync));
+				_logger.LogError(ex, "{Method} {Controller} {Action} called with {ModelName} {Model} had an error.", HttpContext.Request.Method, nameof(CalculationTypesController), nameof(PostAsync), nameof(CalculationTypeAPIModel), model);
 			}
 
 			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
@@ -182,41 +214,67 @@ public class CalculationTypesController(ILogger<CalculationTypesController> logg
 	/// <response code="500">If an internal server error occurs.</response>
 	// PUT api/V1/CalculationTypes/5
 	[HttpPut("{id}")]
-	public async Task<ActionResult<CalculationTypeFullModel>> PutAsync(int id, [FromBody] CalculationTypeFullModel model)
+	public async Task<ActionResult<CalculationTypeFullModel>> PutAsync(int id, [FromBody] CalculationTypeAPIModel model)
 	{
 		try
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Controller} {Action} {Id} {Model}", nameof(CalculationTypesController), nameof(PutAsync), id, model);
+				_logger.LogDebug("{Method} {Controller} {Action} {Id} called with {ModelName} {Model}.", HttpContext.Request.Method, nameof(CalculationTypesController), nameof(PutAsync), id, nameof(CalculationTypeAPIModel), model);
 			}
 
-			if (id == model?.Id)
-			{
-				CalculationTypeFullModel calculationType = await _crud.UpdateCalculationTypeAsync(model).ConfigureAwait(false);
+			ArgumentNullException.ThrowIfNull(model, nameof(model));
 
-				if (_logger.IsEnabled(LogLevel.Trace))
+			if (ModelState.IsValid && id == model.Id)
+			{
+				CalculationTypeFullModel calculationType = await _crud.UpdateCalculationTypeAsync(model.ToFullModel()).ConfigureAwait(false);
+
+				if (_logger.IsEnabled(LogLevel.Debug))
 				{
-					_logger.LogTrace("{Controller} {Action} {Id} {Model} {Method} returned {Model}", nameof(CalculationTypesController), nameof(PutAsync), id, model, nameof(_crud.UpdateCalculationTypeAsync), calculationType);
+					_logger.LogDebug("{Method} {Controller} {Action} {Id} returning {ModelName} {Model}.", HttpContext.Request.Method, nameof(CalculationTypesController), nameof(PutAsync), id, nameof(CalculationTypeFullModel), calculationType);
 				}
 
 				return Ok(calculationType);
 			}
 			else
 			{
-				if (_logger.IsEnabled(LogLevel.Trace))
+				if (id != model.Id)
 				{
-					_logger.LogTrace("{Controller} {Action} {Id} {Model} route parameter Id does not match the model ID", nameof(CalculationTypesController), nameof(PutAsync), id, model);
-				}
+					if (_logger.IsEnabled(LogLevel.Warning))
+					{
+						_logger.LogWarning("{Method} {Controller} {Action} {Id} called with {ModelName} {Model} has a mismatching Id.", HttpContext.Request.Method, nameof(CalculationTypesController), nameof(PutAsync), id, nameof(CalculationTypeAPIModel), model);
+					}
 
-				return BadRequest($"The route parameter ID {id} does not match the model ID {model?.Id} from the request body.");
+					return BadRequest($"The route parameter Id {id} does not match the Model Id {model?.Id} from the request body.");
+				}
+				else
+				{
+					Dictionary<string, List<string>> modelValidationErrors = ModelState.Where(kvp => kvp.Value?.Errors.Count > 0).ToDictionary(kvp => kvp.Key, kvp => kvp.Value!.Errors.Select(e => e.ErrorMessage).ToList());
+					StringBuilder sb = new();
+
+					foreach (KeyValuePair<string, List<string>> validationErrors in modelValidationErrors)
+					{
+						_ = sb.AppendLine(validationErrors.Key);
+						foreach (string validationError in validationErrors.Value)
+						{
+							_ = sb.AppendLine(CultureInfo.InvariantCulture, $"\t{validationError}");
+						}
+					}
+
+					if (_logger.IsEnabled(LogLevel.Warning))
+					{
+						_logger.LogWarning("{Method} {Controller} {Action} {Id} called with {ModelName} {Model} had one or more validation errors occur:\n{ValidationErrors}", HttpContext.Request.Method, nameof(CalculationTypesController), nameof(PutAsync), id, nameof(CalculationTypeAPIModel), model, sb.ToString());
+					}
+
+					return BadRequest(new ValidationProblemDetails(ModelState));
+				}
 			}
 		}
 		catch (Exception ex)
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Controller} {Action} had an error", nameof(CalculationTypesController), nameof(PutAsync));
+				_logger.LogError(ex, "{Method} {Controller} {Action} {Id} called with {ModelName} {Model} had an error.", HttpContext.Request.Method, nameof(CalculationTypesController), nameof(PutAsync), id, nameof(CalculationTypeAPIModel), model);
 			}
 
 			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
@@ -242,17 +300,23 @@ public class CalculationTypesController(ILogger<CalculationTypesController> logg
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Controller} {Action} {Id}", nameof(CalculationTypesController), nameof(DeleteAsync), id);
+				_logger.LogDebug("{Method} {Controller} {Action} {Id} called.", HttpContext.Request.Method, nameof(CalculationTypesController), nameof(DeleteAsync), id);
 			}
 
 			await _crud.DeleteCalculationTypeAsync(id).ConfigureAwait(false);
+
+			if (_logger.IsEnabled(LogLevel.Debug))
+			{
+				_logger.LogDebug("{Method} {Controller} {Action} {Id} returning.", HttpContext.Request.Method, nameof(CalculationTypesController), nameof(DeleteAsync), id);
+			}
+
 			return Ok();
 		}
 		catch (Exception ex)
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Controller} {Action} had an error", nameof(CalculationTypesController), nameof(DeleteAsync));
+				_logger.LogError(ex, "{Method} {Controller} {Action} {Id} had an error.", HttpContext.Request.Method, nameof(CalculationTypesController), nameof(DeleteAsync), id);
 			}
 
 			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);

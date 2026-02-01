@@ -53,17 +53,23 @@ public class HomeController(ILogger<HomeController> logger) : ControllerBase
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Controller} {Action}", nameof(HomeController), nameof(GetIndexAsync));
+				_logger.LogDebug("{Method} {Controller} {Action} called.", HttpContext.Request.Method, nameof(HomeController), nameof(GetIndexAsync));
 			}
 
 			string response = "Welcome to GaussianMVC API v1.0";
+
+			if (_logger.IsEnabled(LogLevel.Debug))
+			{
+				_logger.LogDebug("{Method} {Controller} {Action} returning {Response}.", HttpContext.Request.Method, nameof(HomeController), nameof(GetIndexAsync), response);
+			}
+
 			return Ok(response);
 		}
 		catch (Exception ex)
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Controller} {Action} had an error", nameof(HomeController), nameof(GetIndexAsync));
+				_logger.LogError(ex, "{Method} {Controller} {Action} had an error.", HttpContext.Request.Method, nameof(HomeController), nameof(GetIndexAsync));
 			}
 
 			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
@@ -94,17 +100,23 @@ public class HomeController(ILogger<HomeController> logger) : ControllerBase
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Controller} {Action}", nameof(HomeController), nameof(GetPrivacyAsync));
+				_logger.LogDebug("{Method} {Controller} {Action} called.", HttpContext.Request.Method, nameof(HomeController), nameof(GetPrivacyAsync));
 			}
 
 			string response = "Use this page to detail your site's privacy policy.";
+
+			if (_logger.IsEnabled(LogLevel.Debug))
+			{
+				_logger.LogDebug("{Method} {Controller} {Action} returning {Response}.", HttpContext.Request.Method, nameof(HomeController), nameof(GetPrivacyAsync), response);
+			}
+
 			return Ok(response);
 		}
 		catch (Exception ex)
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Controller} {Action} had an error", nameof(HomeController), nameof(GetPrivacyAsync));
+				_logger.LogError(ex, "{Method} {Controller} {Action} had an error.", HttpContext.Request.Method, nameof(HomeController), nameof(GetPrivacyAsync));
 			}
 
 			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
@@ -139,17 +151,23 @@ public class HomeController(ILogger<HomeController> logger) : ControllerBase
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Controller} {Action}", nameof(HomeController), nameof(GetAboutAsync));
+				_logger.LogDebug("{Method} {Controller} {Action} called.", HttpContext.Request.Method, nameof(HomeController), nameof(GetAboutAsync));
 			}
 
 			string response = "Gaussian Web Application by Pierre J.-L. Plourde & Spartan C#. This C# application & SQL database allow storing and indexing of results of electronic structure calculations performed with the Gaussian series of programs. For more information: https://github.com/Spartan-CSharp/Gaussian2";
+
+			if (_logger.IsEnabled(LogLevel.Debug))
+			{
+				_logger.LogDebug("{Method} {Controller} {Action} returning {Response}.", HttpContext.Request.Method, nameof(HomeController), nameof(GetAboutAsync), response);
+			}
+
 			return Ok(response);
 		}
 		catch (Exception ex)
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Controller} {Action} had an error", nameof(HomeController), nameof(GetAboutAsync));
+				_logger.LogError(ex, "{Method} {Controller} {Action} had an error.", HttpContext.Request.Method, nameof(HomeController), nameof(GetAboutAsync));
 			}
 
 			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
@@ -180,17 +198,23 @@ public class HomeController(ILogger<HomeController> logger) : ControllerBase
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Controller} {Action}", nameof(HomeController), nameof(GetContactAsync));
+				_logger.LogDebug("{Method} {Controller} {Action} called.", HttpContext.Request.Method, nameof(HomeController), nameof(GetContactAsync));
 			}
 
 			string response = "Pierre J.-L. Plourde, Spartan C#, 76 Delwood Drive, Upper Unit, Scarborough, Ontario, Canada M1L 2S7. P: 905.439.7645.  Support: pierre@spartancsharp.net. Marketing: info@spartancsharp.net";
+
+			if (_logger.IsEnabled(LogLevel.Debug))
+			{
+				_logger.LogDebug("{Method} {Controller} {Action} returning {Response}.", HttpContext.Request.Method, nameof(HomeController), nameof(GetContactAsync), response);
+			}
+
 			return Ok(response);
 		}
 		catch (Exception ex)
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Controller} {Action} had an error", nameof(HomeController), nameof(GetContactAsync));
+				_logger.LogError(ex, "{Method} {Controller} {Action} had an error.", HttpContext.Request.Method, nameof(HomeController), nameof(GetContactAsync));
 			}
 
 			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
@@ -222,7 +246,7 @@ public class HomeController(ILogger<HomeController> logger) : ControllerBase
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Controller} {Action}", nameof(HomeController), nameof(GetErrorAsync));
+				_logger.LogDebug("{Method} {Controller} {Action} called.", HttpContext.Request.Method, nameof(HomeController), nameof(GetErrorAsync));
 			}
 
 			string requestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
@@ -232,9 +256,9 @@ public class HomeController(ILogger<HomeController> logger) : ControllerBase
 				RequestId = requestId
 			};
 
-			if (_logger.IsEnabled(LogLevel.Error))
+			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogError("{Controller} {Action} {ErrorViewModel}", nameof(HomeController), nameof(GetErrorAsync), errorModel);
+				_logger.LogDebug("{Method} {Controller} {Action} returning {ModelName} {Model}.", HttpContext.Request.Method, nameof(HomeController), nameof(GetErrorAsync), nameof(ErrorViewModel), errorModel);
 			}
 
 			return Ok(errorModel);
@@ -243,7 +267,7 @@ public class HomeController(ILogger<HomeController> logger) : ControllerBase
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Controller} {Action} had an error", nameof(HomeController), nameof(GetErrorAsync));
+				_logger.LogError(ex, "{Method} {Controller} {Action} had an error.", HttpContext.Request.Method, nameof(HomeController), nameof(GetErrorAsync));
 			}
 
 			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);

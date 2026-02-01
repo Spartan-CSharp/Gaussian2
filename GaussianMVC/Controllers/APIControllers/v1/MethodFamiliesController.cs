@@ -1,6 +1,11 @@
-﻿using Asp.Versioning;
+﻿using System.Globalization;
+using System.Text;
+
+using Asp.Versioning;
 
 using GaussianCommonLibrary.Models;
+
+using GaussianMVC.Models.APIModels.V1;
 
 using GaussianMVCLibrary.DataAccess;
 
@@ -16,7 +21,7 @@ namespace GaussianMVC.Controllers.APIControllers.V1;
 /// </summary>
 /// <param name="logger">
 /// Logger instance for tracking controller operations, errors, and debugging information.
-/// Supports structured logging with various log levels (Debug, Trace, Error).
+/// Supports structured logging with various log levels (Debug, Debug, Error).
 /// </param>
 /// <param name="crud">
 /// Data access layer service for performing CRUD operations on Method Family entities.
@@ -50,21 +55,21 @@ public class MethodFamiliesController(ILogger<MethodFamiliesController> logger, 
 	/// <response code="200">Returns the list of Method Families.</response>
 	/// <response code="500">If an internal server error occurs.</response>
 	// GET: api/v1/MethodFamilies
-	[HttpGet(Name = "GetMethodFamilies")]
+	[HttpGet()]
 	public async Task<ActionResult<List<MethodFamilyFullModel>>> GetAsync()
 	{
 		try
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Controller} {Action}", nameof(MethodFamiliesController), nameof(GetAsync));
+				_logger.LogDebug("{Method} {Controller} {Action} called.", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(GetAsync));
 			}
 
 			List<MethodFamilyFullModel> methodFamilies = await _crud.GetAllMethodFamiliesAsync().ConfigureAwait(false);
 
-			if (_logger.IsEnabled(LogLevel.Trace))
+			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogTrace("{Controller} {Action} {Method} returned {Count}", nameof(MethodFamiliesController), nameof(GetAsync), nameof(_crud.GetAllMethodFamiliesAsync), methodFamilies.Count);
+				_logger.LogDebug("{Method} {Controller} {Action} returning {ModelCount} {ModelName}.", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(GetAsync), methodFamilies.Count, nameof(MethodFamilyFullModel));
 			}
 
 			return Ok(methodFamilies);
@@ -73,7 +78,7 @@ public class MethodFamiliesController(ILogger<MethodFamiliesController> logger, 
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Controller} {Action} had an error", nameof(MethodFamiliesController), nameof(GetAsync));
+				_logger.LogError(ex, "{Method} {Controller} {Action} had an error.", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(GetAsync));
 			}
 
 			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
@@ -98,14 +103,14 @@ public class MethodFamiliesController(ILogger<MethodFamiliesController> logger, 
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Controller} {Action}", nameof(MethodFamiliesController), nameof(GetListAsync));
+				_logger.LogDebug("{Method} {Controller} {Action} called.", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(GetListAsync));
 			}
 
 			List<MethodFamilyRecord> methodFamilies = await _crud.GetMethodFamilyListAsync().ConfigureAwait(false);
 
-			if (_logger.IsEnabled(LogLevel.Trace))
+			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogTrace("{Controller} {Action} {Method} returned {Count}", nameof(MethodFamiliesController), nameof(GetListAsync), nameof(_crud.GetMethodFamilyListAsync), methodFamilies.Count);
+				_logger.LogDebug("{Method} {Controller} {Action} returning {ModelCount} {Model}", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(GetListAsync), methodFamilies.Count, nameof(MethodFamilyRecord));
 			}
 
 			return Ok(methodFamilies);
@@ -114,7 +119,7 @@ public class MethodFamiliesController(ILogger<MethodFamiliesController> logger, 
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Controller} {Action} had an error", nameof(MethodFamiliesController), nameof(GetListAsync));
+				_logger.LogError(ex, "{Method} {Controller} {Action} had an error.", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(GetListAsync));
 			}
 
 			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
@@ -142,14 +147,14 @@ public class MethodFamiliesController(ILogger<MethodFamiliesController> logger, 
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Controller} {Action} {Id}", nameof(MethodFamiliesController), nameof(GetAsync), id);
+				_logger.LogDebug("{Method} {Controller} {Action} {Id} called.", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(GetAsync), id);
 			}
 
 			MethodFamilyFullModel? methodFamily = await _crud.GetMethodFamilyByIdAsync(id).ConfigureAwait(false);
 
-			if (_logger.IsEnabled(LogLevel.Trace))
+			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogTrace("{Controller} {Action} {Id} {Method} returned {Model}", nameof(MethodFamiliesController), nameof(GetAsync), id, nameof(_crud.GetMethodFamilyByIdAsync), methodFamily);
+				_logger.LogDebug("{Method} {Controller} {Action} {Id} returning {ModelName} {Model}", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(GetAsync), id, nameof(MethodFamilyFullModel), methodFamily);
 			}
 
 			return methodFamily is null ? (ActionResult<MethodFamilyFullModel>)NotFound($"No Method Family exists with the supplied Id {id}.") : (ActionResult<MethodFamilyFullModel>)Ok(methodFamily);
@@ -158,7 +163,7 @@ public class MethodFamiliesController(ILogger<MethodFamiliesController> logger, 
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Controller} {Action} had an error", nameof(MethodFamiliesController), nameof(GetAsync));
+				_logger.LogError(ex, "{Method} {Controller} {Action} {Id} had an error.", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(GetAsync), id);
 			}
 
 			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
@@ -178,29 +183,56 @@ public class MethodFamiliesController(ILogger<MethodFamiliesController> logger, 
 	/// <response code="500">If an internal server error occurs.</response>
 	// POST api/v1/MethodFamilies
 	[HttpPost]
-	public async Task<ActionResult<MethodFamilyFullModel>> PostAsync([FromBody] MethodFamilyFullModel model)
+	public async Task<ActionResult<MethodFamilyFullModel>> PostAsync([FromBody] MethodFamilyAPIModel model)
 	{
 		try
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Controller} {Action} {Model}", nameof(MethodFamiliesController), nameof(PostAsync), model);
+				_logger.LogDebug("{Method} {Controller} {Action} called with {ModelName} {Model}.", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(PostAsync), nameof(MethodFamilyAPIModel), model);
 			}
 
-			MethodFamilyFullModel methodFamily = await _crud.CreateNewMethodFamilyAsync(model).ConfigureAwait(false);
+			ArgumentNullException.ThrowIfNull(model, nameof(model));
 
-			if (_logger.IsEnabled(LogLevel.Trace))
+			if (ModelState.IsValid)
 			{
-				_logger.LogTrace("{Controller} {Action} {Model} {Method} returned {Model}", nameof(MethodFamiliesController), nameof(PostAsync), model, nameof(_crud.CreateNewMethodFamilyAsync), methodFamily);
-			}
+				MethodFamilyFullModel methodFamily = await _crud.CreateNewMethodFamilyAsync(model.ToFullModel()).ConfigureAwait(false);
 
-			return CreatedAtAction(nameof(PostAsync), RouteData.Values, methodFamily);
+				if (_logger.IsEnabled(LogLevel.Debug))
+				{
+					_logger.LogDebug("{Method} {Controller} {Action} returning {ModelName} {Model}.", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(PostAsync), nameof(MethodFamilyFullModel), methodFamily);
+				}
+
+				return CreatedAtAction(nameof(PostAsync), RouteData.Values, methodFamily);
+			}
+			else
+			{
+				Dictionary<string, List<string>> modelValidationErrors = ModelState.Where(kvp => kvp.Value?.Errors.Count > 0).ToDictionary(kvp => kvp.Key, kvp => kvp.Value!.Errors.Select(e => e.ErrorMessage).ToList());
+				StringBuilder sb = new();
+
+				foreach (KeyValuePair<string, List<string>> validationErrors in modelValidationErrors)
+				{
+					_ = sb.AppendLine(validationErrors.Key);
+
+					foreach (string validationError in validationErrors.Value)
+					{
+						_ = sb.AppendLine(CultureInfo.InvariantCulture, $"\t{validationError}");
+					}
+				}
+
+				if (_logger.IsEnabled(LogLevel.Warning))
+				{
+					_logger.LogWarning("{Method} {Controller} {Action} called with {ModelName} {Model} had one or more validation errors occur:\n{ValidationErrors}", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(PostAsync), nameof(MethodFamilyAPIModel), model, sb.ToString());
+				}
+
+				return BadRequest(new ValidationProblemDetails(ModelState));
+			}
 		}
 		catch (Exception ex)
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Controller} {Action} had an error", nameof(MethodFamiliesController), nameof(PostAsync));
+				_logger.LogError(ex, "{Method} {Controller} {Action} called with {ModelName} {Model} had an error.", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(PostAsync), nameof(MethodFamilyAPIModel), model);
 			}
 
 			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
@@ -223,41 +255,67 @@ public class MethodFamiliesController(ILogger<MethodFamiliesController> logger, 
 	/// <response code="500">If an internal server error occurs.</response>
 	// PUT api/V1/MethodFamilies/5
 	[HttpPut("{id}")]
-	public async Task<ActionResult<MethodFamilyFullModel>> PutAsync(int id, [FromBody] MethodFamilyFullModel model)
+	public async Task<ActionResult<MethodFamilyFullModel>> PutAsync(int id, [FromBody] MethodFamilyAPIModel model)
 	{
 		try
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Controller} {Action} {Id} {Model}", nameof(MethodFamiliesController), nameof(PutAsync), id, model);
+				_logger.LogDebug("{Method} {Controller} {Action} {Id} called with {ModelName} {Model}.", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(PutAsync), id, nameof(MethodFamilyAPIModel), model);
 			}
 
-			if (id == model?.Id)
-			{
-				MethodFamilyFullModel methodFamily = await _crud.UpdateMethodFamilyAsync(model).ConfigureAwait(false);
+			ArgumentNullException.ThrowIfNull(model, nameof(model));
 
-				if (_logger.IsEnabled(LogLevel.Trace))
+			if (ModelState.IsValid && id == model.Id)
+			{
+				MethodFamilyFullModel methodFamily = await _crud.UpdateMethodFamilyAsync(model.ToFullModel()).ConfigureAwait(false);
+
+				if (_logger.IsEnabled(LogLevel.Debug))
 				{
-					_logger.LogTrace("{Controller} {Action} {Id} {Model} {Method} returned {Model}", nameof(MethodFamiliesController), nameof(PutAsync), id, model, nameof(_crud.UpdateMethodFamilyAsync), methodFamily);
+					_logger.LogDebug("{Method} {Controller} {Action} {Id} returning {ModelName} {Model}.", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(PutAsync), id, nameof(MethodFamilyFullModel), methodFamily);
 				}
 
 				return Ok(methodFamily);
 			}
 			else
 			{
-				if (_logger.IsEnabled(LogLevel.Trace))
+				if (id != model.Id)
 				{
-					_logger.LogTrace("{Controller} {Action} {Id} {Model} route parameter Id does not match the model ID", nameof(MethodFamiliesController), nameof(PutAsync), id, model);
-				}
+					if (_logger.IsEnabled(LogLevel.Warning))
+					{
+						_logger.LogWarning("{Method} {Controller} {Action} {Id} called with {ModelName} {Model} has a mismatching Id.", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(PutAsync), id, nameof(MethodFamilyAPIModel), model);
+					}
 
-				return BadRequest($"The route parameter ID {id} does not match the model ID {model?.Id} from the request body.");
+					return BadRequest($"The route parameter Id {id} does not match the Model Id {model?.Id} from the request body.");
+				}
+				else
+				{
+					Dictionary<string, List<string>> modelValidationErrors = ModelState.Where(kvp => kvp.Value?.Errors.Count > 0).ToDictionary(kvp => kvp.Key, kvp => kvp.Value!.Errors.Select(e => e.ErrorMessage).ToList());
+					StringBuilder sb = new();
+
+					foreach (KeyValuePair<string, List<string>> validationErrors in modelValidationErrors)
+					{
+						_ = sb.AppendLine(validationErrors.Key);
+						foreach (string validationError in validationErrors.Value)
+						{
+							_ = sb.AppendLine(CultureInfo.InvariantCulture, $"\t{validationError}");
+						}
+					}
+
+					if (_logger.IsEnabled(LogLevel.Warning))
+					{
+						_logger.LogWarning("{Method} {Controller} {Action} {Id} called with {ModelName} {Model} had one or more validation errors occur:\n{ValidationErrors}", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(PutAsync), id, nameof(MethodFamilyAPIModel), model, sb.ToString());
+					}
+
+					return BadRequest(new ValidationProblemDetails(ModelState));
+				}
 			}
 		}
 		catch (Exception ex)
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Controller} {Action} had an error", nameof(MethodFamiliesController), nameof(PutAsync));
+				_logger.LogError(ex, "{Method} {Controller} {Action} {Id} called with {ModelName} {Model} had an error.", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(PutAsync), id, nameof(MethodFamilyAPIModel), model);
 			}
 
 			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
@@ -283,17 +341,23 @@ public class MethodFamiliesController(ILogger<MethodFamiliesController> logger, 
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Controller} {Action} {Id}", nameof(MethodFamiliesController), nameof(DeleteAsync), id);
+				_logger.LogDebug("{Method} {Controller} {Action} {Id} called.", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(DeleteAsync), id);
 			}
 
 			await _crud.DeleteMethodFamilyAsync(id).ConfigureAwait(false);
+
+			if (_logger.IsEnabled(LogLevel.Debug))
+			{
+				_logger.LogDebug("{Method} {Controller} {Action} {Id} returning.", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(DeleteAsync), id);
+			}
+
 			return Ok();
 		}
 		catch (Exception ex)
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Controller} {Action} had an error", nameof(MethodFamiliesController), nameof(DeleteAsync));
+				_logger.LogError(ex, "{Method} {Controller} {Action} {Id} had an error.", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(DeleteAsync), id);
 			}
 
 			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);

@@ -1,11 +1,7 @@
 ﻿@model GaussianMVC.Models.CalculationTypeViewModel
 
-@*
-	For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-
 @{
-	ViewData["Title"] = "Create Calculation Type";
+	ViewData["Title"] = "CreateAsync Calculation Type";
 }
 
 <h1>Create</h1>
@@ -16,6 +12,10 @@
 	<div class="col-md-4">
 		<form asp-action="Create">
 			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<input type="hidden" asp-for="Id" />
+			<input type="hidden" asp-for="CreatedDate" />
+			<input type="hidden" asp-for="LastUpdatedDate" />
+
 			<div class="form-group">
 				<label asp-for="Name" class="control-label"></label>
 				<input asp-for="Name" class="form-control" />
@@ -26,16 +26,22 @@
 				<input asp-for="Keyword" class="form-control" />
 				<span asp-validation-for="Keyword" class="text-danger"></span>
 			</div>
+
 			<div class="form-group">
-				<label asp-for="DescriptionRtf" class="control-label"></label>
-				<textarea asp-for="DescriptionRtf" class="form-control"></textarea>
-				<span asp-validation-for="DescriptionRtf" class="text-danger"></span>
+				<label asp-for="DescriptionHtml" class="control-label"></label>
+				<ejs-richtexteditor id="descriptionRTE" ejs-for="DescriptionHtml" value="@Model.DescriptionHtml" class="form-control">
+					<e-richtexteditor-toolbarsettings items="@Constants.SyncfusionToolbarItems"></e-richtexteditor-toolbarsettings>
+				</ejs-richtexteditor>
+				<textarea asp-for="DescriptionHtml" class="form-control"></textarea>
+				<span asp-validation-for="DescriptionHtml" class="text-danger"></span>
 			</div>
-			<div class="form-group">
-				<label asp-for="DescriptionText" class="control-label"></label>
-				<textarea asp-for="DescriptionText" class="form-control"></textarea>
-				<span asp-validation-for="DescriptionText" class="text-danger"></span>
+
+			<div class="form-group form-check">
+				<label class="form-check-label">
+					<input class="form-check-input" asp-for="Archived" /> @Html.DisplayNameFor(model => model.Archived)
+				</label>
 			</div>
+
 			<div class="form-group">
 				<input type="submit" value="Create" class="btn btn-primary" />
 			</div>
