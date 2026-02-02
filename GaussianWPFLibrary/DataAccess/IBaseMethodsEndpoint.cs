@@ -3,74 +3,61 @@
 namespace GaussianWPFLibrary.DataAccess;
 
 /// <summary>
-/// Defines the contract for base methods data access operations.
-/// Provides CRUD operations for managing base method entities.
+/// Defines the contract for API operations related to base methods.
 /// </summary>
 public interface IBaseMethodsEndpoint
 {
 	/// <summary>
-	/// Creates a new base method asynchronously.
+	/// Creates a new base method.
 	/// </summary>
-	/// <param name="model">The simple model containing the base method data to create.</param>
-	/// <returns>
-	/// A task that represents the asynchronous operation. 
-	/// The task result contains the created base method as a full model, or null if creation failed.
-	/// </returns>
+	/// <param name="model">The base method data to create.</param>
+	/// <returns>The created base method with full details, or <see langword="null"/> if the operation failed.</returns>
 	Task<BaseMethodFullModel?> CreateAsync(BaseMethodSimpleModel model);
 
 	/// <summary>
-	/// Deletes a base method by its identifier asynchronously.
+	/// Deletes a base method by its identifier.
 	/// </summary>
 	/// <param name="id">The unique identifier of the base method to delete.</param>
 	/// <returns>A task that represents the asynchronous delete operation.</returns>
 	Task DeleteAsync(int id);
 
 	/// <summary>
-	/// Retrieves all base methods as full models asynchronously.
+	/// Retrieves all base methods with full details.
 	/// </summary>
-	/// <returns>
-	/// A task that represents the asynchronous operation. 
-	/// The task result contains a list of all base methods as full models, or null if retrieval failed.
-	/// </returns>
+	/// <returns>A list of all base methods with full details, or <see langword="null"/> if none exist.</returns>
 	Task<List<BaseMethodFullModel>?> GetAllFullAsync();
 
 	/// <summary>
-	/// Retrieves all base methods as simple models asynchronously.
+	/// Retrieves all base methods with intermediate details.
 	/// </summary>
-	/// <returns>
-	/// A task that represents the asynchronous operation. 
-	/// The task result contains a list of all base methods as simple models, or null if retrieval failed.
-	/// </returns>
+	/// <returns>A list of all base methods with intermediate details, or <see langword="null"/> if none exist.</returns>
+	Task<List<BaseMethodIntermediateModel>?> GetAllIntermediateAsync();
+	
+	/// <summary>
+	/// Retrieves all base methods with simple details.
+	/// </summary>
+	/// <returns>A list of all base methods with simple details, or <see langword="null"/> if none exist.</returns>
 	Task<List<BaseMethodSimpleModel>?> GetAllSimpleAsync();
 
 	/// <summary>
-	/// Retrieves all base methods that belong to a specific method family asynchronously.
+	/// Retrieves all base methods that belong to a specific method family.
 	/// </summary>
-	/// <param name="methodFamilyId">The unique identifier of the method family to filter by.</param>
-	/// <returns>
-	/// A task that represents the asynchronous operation. 
-	/// The task result contains a list of base methods belonging to the specified family, or null if retrieval failed.
-	/// </returns>
+	/// <param name="methodFamilyId">The unique identifier of the method family.</param>
+	/// <returns>A list of base methods with full details for the specified family, or <see langword="null"/> if none exist.</returns>
 	Task<List<BaseMethodFullModel>?> GetByFamilyAsync(int methodFamilyId);
 
 	/// <summary>
-	/// Retrieves a single base method by its identifier asynchronously.
+	/// Retrieves a specific base method by its identifier.
 	/// </summary>
-	/// <param name="id">The unique identifier of the base method to retrieve.</param>
-	/// <returns>
-	/// A task that represents the asynchronous operation. 
-	/// The task result contains the base method as a full model, or null if not found.
-	/// </returns>
+	/// <param name="id">The unique identifier of the base method.</param>
+	/// <returns>The base method with full details, or <see langword="null"/> if not found.</returns>
 	Task<BaseMethodFullModel?> GetByIdAsync(int id);
 
 	/// <summary>
-	/// Updates an existing base method asynchronously.
+	/// Updates an existing base method.
 	/// </summary>
 	/// <param name="id">The unique identifier of the base method to update.</param>
-	/// <param name="model">The simple model containing the updated base method data.</param>
-	/// <returns>
-	/// A task that represents the asynchronous operation. 
-	/// The task result contains the updated base method as a full model, or null if update failed.
-	/// </returns>
+	/// <param name="model">The updated base method data.</param>
+	/// <returns>The updated base method with full details, or <see langword="null"/> if the operation failed.</returns>
 	Task<BaseMethodFullModel?> UpdateAsync(int id, BaseMethodSimpleModel model);
 }

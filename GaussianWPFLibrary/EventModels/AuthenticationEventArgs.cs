@@ -12,5 +12,5 @@ public class AuthenticationEventArgs(bool isAuthenticated) : EventArgs()
 	/// <summary>
 	/// Gets a value indicating whether the authentication was successful.
 	/// </summary>
-	public bool IsAuthenticated { get; } = isAuthenticated;
+	public bool IsAuthenticated { get; private set; } = isAuthenticated;
 }

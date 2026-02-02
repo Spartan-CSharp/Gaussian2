@@ -10,265 +10,158 @@ using Microsoft.Extensions.Logging;
 namespace GaussianWPFLibrary.DataAccess;
 
 /// <summary>
-/// Provides HTTP endpoint access for managing Calculation Types through the API.
+/// Provides API endpoint operations for managing Calculation Types.
 /// </summary>
-/// <remarks>
-/// This class handles all CRUD operations for Calculation Types, including retrieving,
-/// creating, updating, and deleting Calculation Type records via HTTP requests.
-/// All methods include comprehensive logging and error handling.
-/// </remarks>
-/// <remarks>
-/// Initializes a new instance of the <see cref="CalculationTypesEndpoint"/> class.
-/// </remarks>
-/// <param name="logger">The logger instance for diagnostic logging.</param>
-/// <param name="apiHelper">The API helper providing configured HTTP client access.</param>
+/// <param name="logger">The logger instance for logging endpoint operations.</param>
+/// <param name="apiHelper">The API helper for HTTP client operations.</param>
 public class CalculationTypesEndpoint(ILogger<CalculationTypesEndpoint> logger, IApiHelper apiHelper) : ICalculationTypesEndpoint
 {
 	private readonly ILogger<CalculationTypesEndpoint> _logger = logger;
 	private readonly IApiHelper _apiHelper = apiHelper;
 
-	/// <summary>
-	/// Retrieves all Calculation Types from the API.
-	/// </summary>
-	/// <returns>
-	/// A task that represents the asynchronous operation. The task result contains
-	/// a list of <see cref="CalculationTypeFullModel"/> objects, or <c>null</c> if the response is empty.
-	/// </returns>
-	/// <exception cref="HttpIOException">
-	/// Thrown when the HTTP response does not indicate success.
-	/// </exception>
+	/// <inheritdoc/>
+	/// <exception cref="HttpIOException">Thrown when the API request fails or returns an unsuccessful status code.</exception>
 	public async Task<List<CalculationTypeFullModel>?> GetAllAsync()
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{Method} Called", nameof(GetAllAsync));
+			_logger.LogDebug("{Class} {Method} called.", nameof(CalculationTypesEndpoint), nameof(GetAllAsync));
 		}
 
+		_apiHelper.ApiClient.DefaultRequestHeaders.Date = DateTimeOffset.UtcNow;
 		Uri apiEndpoint = new(Resources.CalculationTypesEndpoint, UriKind.Relative);
-
 		using HttpResponseMessage response = await _apiHelper.ApiClient.GetAsync(apiEndpoint).ConfigureAwait(false);
 
 		if (response.IsSuccessStatusCode)
 		{
-			if (_logger.IsEnabled(LogLevel.Trace))
-			{
-				_logger.LogTrace("{Method} HttpResponse Had a Success Code: {ResponseCode} {ResponsePhrase}", nameof(GetAllAsync), response.StatusCode, response.ReasonPhrase);
-			}
-
 			List<CalculationTypeFullModel>? result = await response.Content.ReadFromJsonAsync<List<CalculationTypeFullModel>>().ConfigureAwait(false);
 
 			if (_logger.IsEnabled(LogLevel.Trace))
 			{
-				_logger.LogTrace("{Method} received {ResponseContent}", nameof(GetAllAsync), result);
+				_logger.LogTrace("{Class} {Method} returning {ModelCount} {ModelName}.", nameof(CalculationTypesEndpoint), nameof(GetAllAsync), result?.Count, nameof(CalculationTypeFullModel));
 			}
 
 			return result;
 		}
 		else
 		{
-			HttpIOException ex = new(HttpRequestError.InvalidResponse, response.ReasonPhrase);
-
-			if (_logger.IsEnabled(LogLevel.Error))
-			{
-				_logger.LogError(ex, "{Method} HttpResponse Did Not Have a Success Code: {ResponseCode} {ResponsePhrase}", nameof(GetAllAsync), response.StatusCode, response.ReasonPhrase);
-			}
-
-			throw ex;
+			throw new HttpIOException(HttpRequestError.InvalidResponse, response.ReasonPhrase);
 		}
 	}
 
-	/// <summary>
-	/// Retrieves a specific Calculation Type by its unique identifier.
-	/// </summary>
-	/// <param name="id">The unique identifier of the Calculation Type to retrieve.</param>
-	/// <returns>
-	/// A task that represents the asynchronous operation. The task result contains
-	/// the <see cref="CalculationTypeFullModel"/> if found, or <c>null</c> if not found.
-	/// </returns>
-	/// <exception cref="HttpIOException">
-	/// Thrown when the HTTP response does not indicate success.
-	/// </exception>
+	/// <inheritdoc/>
+	/// <exception cref="HttpIOException">Thrown when the API request fails or returns an unsuccessful status code.</exception>
 	public async Task<CalculationTypeFullModel?> GetByIdAsync(int id)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{Method} Called with {Id}", nameof(GetByIdAsync), id);
+			_logger.LogDebug("{Class} {Method} called with Id = {Id}.", nameof(CalculationTypesEndpoint), nameof(GetByIdAsync), id);
 		}
 
+		_apiHelper.ApiClient.DefaultRequestHeaders.Date = DateTimeOffset.UtcNow;
 		Uri apiEndpoint = new($"{Resources.CalculationTypesEndpoint}/{id}", UriKind.Relative);
-
 		using HttpResponseMessage response = await _apiHelper.ApiClient.GetAsync(apiEndpoint).ConfigureAwait(false);
 
 		if (response.IsSuccessStatusCode)
 		{
-			if (_logger.IsEnabled(LogLevel.Trace))
-			{
-				_logger.LogTrace("{Method} HttpResponse Had a Success Code: {ResponseCode} {ResponsePhrase}", nameof(GetByIdAsync), response.StatusCode, response.ReasonPhrase);
-			}
-
 			CalculationTypeFullModel? result = await response.Content.ReadFromJsonAsync<CalculationTypeFullModel>().ConfigureAwait(false);
 
 			if (_logger.IsEnabled(LogLevel.Trace))
 			{
-				_logger.LogTrace("{Method} received {ResponseContent}", nameof(GetByIdAsync), result);
+				_logger.LogTrace("{Class} {Method} returning {ModelName} {Model}.", nameof(CalculationTypesEndpoint), nameof(GetByIdAsync), nameof(CalculationTypeFullModel), result);
 			}
 
 			return result;
 		}
 		else
 		{
-			HttpIOException ex = new(HttpRequestError.InvalidResponse, response.ReasonPhrase);
-
-			if (_logger.IsEnabled(LogLevel.Error))
-			{
-				_logger.LogError(ex, "{Method} HttpResponse Did Not Have a Success Code: {ResponseCode} {ResponsePhrase}", nameof(GetAllAsync), response.StatusCode, response.ReasonPhrase);
-			}
-
-			throw ex;
+			throw new HttpIOException(HttpRequestError.InvalidResponse, response.ReasonPhrase);
 		}
 	}
 
-	/// <summary>
-	/// Creates a new Calculation Type via the API.
-	/// </summary>
-	/// <param name="model">The Calculation Type model containing the data for the new record.</param>
-	/// <returns>
-	/// A task that represents the asynchronous operation. The task result contains
-	/// the created <see cref="CalculationTypeFullModel"/> with server-generated values, or <c>null</c>.
-	/// </returns>
-	/// <exception cref="HttpIOException">
-	/// Thrown when the HTTP response does not indicate success.
-	/// </exception>
+	/// <inheritdoc/>
+	/// <exception cref="HttpIOException">Thrown when the API request fails or returns an unsuccessful status code.</exception>
 	public async Task<CalculationTypeFullModel?> CreateAsync(CalculationTypeFullModel model)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{Method} Called with {Model}", nameof(CreateAsync), model);
+			_logger.LogDebug("{Class} {Method} called with {ModelName} {Model}.", nameof(CalculationTypesEndpoint), nameof(CreateAsync), nameof(CalculationTypeFullModel), model);
 		}
 
+		_apiHelper.ApiClient.DefaultRequestHeaders.Date = DateTimeOffset.UtcNow;
 		Uri apiEndpoint = new(Resources.CalculationTypesEndpoint, UriKind.Relative);
-
 		using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync(apiEndpoint, model).ConfigureAwait(false);
 
 		if (response.IsSuccessStatusCode)
 		{
-			if (_logger.IsEnabled(LogLevel.Trace))
-			{
-				_logger.LogTrace("{Method} HttpResponse Had a Success Code: {ResponseCode} {ResponsePhrase}", nameof(CreateAsync), response.StatusCode, response.ReasonPhrase);
-			}
-
 			CalculationTypeFullModel? result = await response.Content.ReadFromJsonAsync<CalculationTypeFullModel>().ConfigureAwait(false);
 
 			if (_logger.IsEnabled(LogLevel.Trace))
 			{
-				_logger.LogTrace("{Method} received {ResponseContent}", nameof(CreateAsync), result);
+				_logger.LogTrace("{Class} {Method} returning {ModelName} {Model}.", nameof(CalculationTypesEndpoint), nameof(CreateAsync), nameof(CalculationTypeFullModel), result);
 			}
 
 			return result;
 		}
 		else
 		{
-			HttpIOException ex = new(HttpRequestError.InvalidResponse, response.ReasonPhrase);
-
-			if (_logger.IsEnabled(LogLevel.Error))
-			{
-				_logger.LogError(ex, "{Method} HttpResponse Did Not Have a Success Code: {ResponseCode} {ResponsePhrase}", nameof(CreateAsync), response.StatusCode, response.ReasonPhrase);
-			}
-
-			throw ex;
+			throw new HttpIOException(HttpRequestError.InvalidResponse, response.ReasonPhrase);
 		}
 	}
 
-	/// <summary>
-	/// Updates an existing Calculation Type via the API.
-	/// </summary>
-	/// <param name="id">The unique identifier of the Calculation Type to update.</param>
-	/// <param name="model">The Calculation Type model containing the updated data.</param>
-	/// <returns>
-	/// A task that represents the asynchronous operation. The task result contains
-	/// the updated <see cref="CalculationTypeFullModel"/>, or <c>null</c>.
-	/// </returns>
-	/// <exception cref="HttpIOException">
-	/// Thrown when the HTTP response does not indicate success.
-	/// </exception>
+	/// <inheritdoc/>
+	/// <exception cref="HttpIOException">Thrown when the API request fails or returns an unsuccessful status code.</exception>
 	public async Task<CalculationTypeFullModel?> UpdateAsync(int id, CalculationTypeFullModel model)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{Method} Called with {Id} and {Model}", nameof(UpdateAsync), id, model);
+			_logger.LogDebug("{Class} {Method} called with Id = {Id} and {ModelName} {Model}.", nameof(CalculationTypesEndpoint), nameof(UpdateAsync), id, nameof(CalculationTypeFullModel), model);
 		}
 
+		_apiHelper.ApiClient.DefaultRequestHeaders.Date = DateTimeOffset.UtcNow;
 		Uri apiEndpoint = new($"{Resources.CalculationTypesEndpoint}/{id}", UriKind.Relative);
-
 		using HttpResponseMessage response = await _apiHelper.ApiClient.PutAsJsonAsync(apiEndpoint, model).ConfigureAwait(false);
 
 		if (response.IsSuccessStatusCode)
 		{
-			if (_logger.IsEnabled(LogLevel.Trace))
-			{
-				_logger.LogTrace("{Method} HttpResponse Had a Success Code: {ResponseCode} {ResponsePhrase}", nameof(UpdateAsync), response.StatusCode, response.ReasonPhrase);
-			}
-
 			CalculationTypeFullModel? result = await response.Content.ReadFromJsonAsync<CalculationTypeFullModel>().ConfigureAwait(false);
 
 			if (_logger.IsEnabled(LogLevel.Trace))
 			{
-				_logger.LogTrace("{Method} received {ResponseContent}", nameof(UpdateAsync), result);
+				_logger.LogTrace("{Class} {Method} returning {ModelName} {Model}.", nameof(CalculationTypesEndpoint), nameof(UpdateAsync), nameof(CalculationTypeFullModel), result);
 			}
 
 			return result;
 		}
 		else
 		{
-			HttpIOException ex = new(HttpRequestError.InvalidResponse, response.ReasonPhrase);
-
-			if (_logger.IsEnabled(LogLevel.Error))
-			{
-				_logger.LogError(ex, "{Method} HttpResponse Did Not Have a Success Code: {ResponseCode} {ResponsePhrase}", nameof(CreateAsync), response.StatusCode, response.ReasonPhrase);
-			}
-
-			throw ex;
+			throw new HttpIOException(HttpRequestError.InvalidResponse, response.ReasonPhrase);
 		}
 	}
 
-	/// <summary>
-	/// Deletes a Calculation Type from the API.
-	/// </summary>
-	/// <param name="id">The unique identifier of the Calculation Type to delete.</param>
-	/// <returns>
-	/// A task that represents the asynchronous operation.
-	/// </returns>
-	/// <exception cref="HttpIOException">
-	/// Thrown when the HTTP response does not indicate success.
-	/// </exception>
+	/// <inheritdoc/>
+	/// <exception cref="HttpIOException">Thrown when the API request fails or returns an unsuccessful status code.</exception>
 	public async Task DeleteAsync(int id)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{Method} Called with {Id}", nameof(DeleteAsync), id);
+			_logger.LogDebug("{Class} {Method} called with Id = {Id}.", nameof(CalculationTypesEndpoint), nameof(DeleteAsync), id);
 		}
 
+		_apiHelper.ApiClient.DefaultRequestHeaders.Date = DateTimeOffset.UtcNow;
 		Uri apiEndpoint = new($"{Resources.CalculationTypesEndpoint}/{id}", UriKind.Relative);
-
 		using HttpResponseMessage response = await _apiHelper.ApiClient.DeleteAsync(apiEndpoint).ConfigureAwait(false);
 
 		if (response.IsSuccessStatusCode)
 		{
 			if (_logger.IsEnabled(LogLevel.Trace))
 			{
-				_logger.LogTrace("{Method} HttpResponse Had a Success Code: {ResponseCode} {ResponsePhrase}", nameof(DeleteAsync), response.StatusCode, response.ReasonPhrase);
+				_logger.LogTrace("{Class} {Method} returning.", nameof(CalculationTypesEndpoint), nameof(DeleteAsync));
 			}
 		}
 		else
 		{
-			HttpIOException ex = new(HttpRequestError.InvalidResponse, response.ReasonPhrase);
-
-			if (_logger.IsEnabled(LogLevel.Error))
-			{
-				_logger.LogError(ex, "{Method} HttpResponse Did Not Have a Success Code: {ResponseCode} {ResponsePhrase}", nameof(DeleteAsync), response.StatusCode, response.ReasonPhrase);
-			}
-
-			throw ex;
+			throw new HttpIOException(HttpRequestError.InvalidResponse, response.ReasonPhrase);
 		}
 	}
 }

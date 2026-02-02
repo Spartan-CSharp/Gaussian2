@@ -3,57 +3,42 @@
 namespace GaussianWPFLibrary.DataAccess;
 
 /// <summary>
-/// Defines the contract for interacting with the Calculation Types API endpoint.
-/// Provides methods for CRUD operations on Calculation Type resources.
+/// Defines the contract for API operations related to calculation types.
 /// </summary>
 public interface ICalculationTypesEndpoint
 {
 	/// <summary>
-	/// Creates a new Calculation Type via the API.
+	/// Creates a new calculation type.
 	/// </summary>
-	/// <param name="model">The Calculation Type model containing the data for the new record.</param>
-	/// <returns>
-	/// A task that represents the asynchronous operation. The task result contains
-	/// the created <see cref="CalculationTypeFullModel"/> with server-generated values, or <c>null</c>.
-	/// </returns>
+	/// <param name="model">The calculation type data to create.</param>
+	/// <returns>The created calculation type with full details, or <see langword="null"/> if the operation failed.</returns>
 	Task<CalculationTypeFullModel?> CreateAsync(CalculationTypeFullModel model);
 
 	/// <summary>
-	/// Deletes a Calculation Type from the API.
+	/// Deletes a calculation type by its identifier.
 	/// </summary>
-	/// <param name="id">The unique identifier of the Calculation Type to delete.</param>
-	/// <returns>
-	/// A task that represents the asynchronous operation.
-	/// </returns>
+	/// <param name="id">The unique identifier of the calculation type to delete.</param>
+	/// <returns>A task that represents the asynchronous delete operation.</returns>
 	Task DeleteAsync(int id);
 
 	/// <summary>
-	/// Retrieves all Calculation Types from the API.
+	/// Retrieves all calculation types with full details.
 	/// </summary>
-	/// <returns>
-	/// A task that represents the asynchronous operation. The task result contains
-	/// a list of <see cref="CalculationTypeFullModel"/> objects, or <c>null</c> if the response is empty.
-	/// </returns>
+	/// <returns>A list of all calculation types with full details, or <see langword="null"/> if none exist.</returns>
 	Task<List<CalculationTypeFullModel>?> GetAllAsync();
 
 	/// <summary>
-	/// Retrieves a specific Calculation Type by its unique identifier.
+	/// Retrieves a specific calculation type by its identifier.
 	/// </summary>
-	/// <param name="id">The unique identifier of the Calculation Type to retrieve.</param>
-	/// <returns>
-	/// A task that represents the asynchronous operation. The task result contains
-	/// the <see cref="CalculationTypeFullModel"/> if found, or <c>null</c> if not found.
-	/// </returns>
+	/// <param name="id">The unique identifier of the calculation type.</param>
+	/// <returns>The calculation type with full details, or <see langword="null"/> if not found.</returns>
 	Task<CalculationTypeFullModel?> GetByIdAsync(int id);
 
 	/// <summary>
-	/// Updates an existing Calculation Type via the API.
+	/// Updates an existing calculation type.
 	/// </summary>
-	/// <param name="id">The unique identifier of the Calculation Type to update.</param>
-	/// <param name="model">The Calculation Type model containing the updated data.</param>
-	/// <returns>
-	/// A task that represents the asynchronous operation. The task result contains
-	/// the updated <see cref="CalculationTypeFullModel"/>, or <c>null</c>.
-	/// </returns>
+	/// <param name="id">The unique identifier of the calculation type to update.</param>
+	/// <param name="model">The updated calculation type data.</param>
+	/// <returns>The updated calculation type with full details, or <see langword="null"/> if the operation failed.</returns>
 	Task<CalculationTypeFullModel?> UpdateAsync(int id, CalculationTypeFullModel model);
 }

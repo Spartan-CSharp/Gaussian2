@@ -3,66 +3,48 @@
 namespace GaussianWPFLibrary.DataAccess;
 
 /// <summary>
-/// Defines the contract for interacting with the Method Families API endpoint.
-/// Provides methods for CRUD operations on Method Family resources.
+/// Defines the contract for API operations related to method families.
 /// </summary>
 public interface IMethodFamiliesEndpoint
 {
 	/// <summary>
-	/// Creates a new Method Family via the API.
+	/// Creates a new method family.
 	/// </summary>
-	/// <param name="model">The Method Family model containing the data for the new record.</param>
-	/// <returns>
-	/// A task that represents the asynchronous operation. The task result contains
-	/// the created <see cref="MethodFamilyFullModel"/> with server-generated values, or <c>null</c>.
-	/// </returns>
+	/// <param name="model">The method family data to create.</param>
+	/// <returns>The created method family with full details, or <see langword="null"/> if the operation failed.</returns>
 	Task<MethodFamilyFullModel?> CreateAsync(MethodFamilyFullModel model);
 
 	/// <summary>
-	/// Deletes a Method Family from the API.
+	/// Deletes a method family by its identifier.
 	/// </summary>
-	/// <param name="id">The unique identifier of the Method Family to delete.</param>
-	/// <returns>
-	/// A task that represents the asynchronous operation.
-	/// </returns>
+	/// <param name="id">The unique identifier of the method family to delete.</param>
+	/// <returns>A task that represents the asynchronous delete operation.</returns>
 	Task DeleteAsync(int id);
 
 	/// <summary>
-	/// Retrieves all Method Families from the API.
+	/// Retrieves all method families with full details.
 	/// </summary>
-	/// <returns>
-	/// A task that represents the asynchronous operation. The task result contains
-	/// a list of <see cref="MethodFamilyFullModel"/> objects, or <c>null</c> if the response is empty.
-	/// </returns>
+	/// <returns>A list of all method families with full details, or <see langword="null"/> if none exist.</returns>
 	Task<List<MethodFamilyFullModel>?> GetAllAsync();
 
 	/// <summary>
-	/// Retrieves a specific Method Family by its unique identifier.
+	/// Retrieves a specific method family by its identifier.
 	/// </summary>
-	/// <param name="id">The unique identifier of the Method Family to retrieve.</param>
-	/// <returns>
-	/// A task that represents the asynchronous operation. The task result contains
-	/// the <see cref="MethodFamilyFullModel"/> if found, or <c>null</c> if not found.
-	/// </returns>
+	/// <param name="id">The unique identifier of the method family.</param>
+	/// <returns>The method family with full details, or <see langword="null"/> if not found.</returns>
 	Task<MethodFamilyFullModel?> GetByIdAsync(int id);
 
 	/// <summary>
-	/// Retrieves a list of Method Family records from the API.
+	/// Retrieves a simplified list of all method families as records.
 	/// </summary>
-	/// <returns>
-	/// A task that represents the asynchronous operation. The task result contains
-	/// a list of <see cref="MethodFamilyRecord"/> objects, or <c>null</c> if the response is empty.
-	/// </returns>
+	/// <returns>A list of all method families as records, or <see langword="null"/> if none exist.</returns>
 	Task<List<MethodFamilyRecord>?> GetListAsync();
 
 	/// <summary>
-	/// Updates an existing Method Family via the API.
+	/// Updates an existing method family.
 	/// </summary>
-	/// <param name="id">The unique identifier of the Method Family to update.</param>
-	/// <param name="model">The Method Family model containing the updated data.</param>
-	/// <returns>
-	/// A task that represents the asynchronous operation. The task result contains
-	/// the updated <see cref="MethodFamilyFullModel"/>, or <c>null</c>.
-	/// </returns>
+	/// <param name="id">The unique identifier of the method family to update.</param>
+	/// <param name="model">The updated method family data.</param>
+	/// <returns>The updated method family with full details, or <see langword="null"/> if the operation failed.</returns>
 	Task<MethodFamilyFullModel?> UpdateAsync(int id, MethodFamilyFullModel model);
 }

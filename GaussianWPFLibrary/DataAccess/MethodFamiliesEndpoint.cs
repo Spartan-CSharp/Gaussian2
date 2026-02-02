@@ -10,315 +10,188 @@ using Microsoft.Extensions.Logging;
 namespace GaussianWPFLibrary.DataAccess;
 
 /// <summary>
-/// Provides HTTP endpoint access for managing Method Families through the API.
+/// Provides API endpoint operations for managing Method Families.
 /// </summary>
-/// <remarks>
-/// This class handles all CRUD operations for Method Families, including retrieving,
-/// creating, updating, and deleting Method Family records via HTTP requests.
-/// All methods include comprehensive logging and error handling.
-/// </remarks>
-/// <remarks>
-/// Initializes a new instance of the <see cref="MethodFamiliesEndpoint"/> class.
-/// </remarks>
-/// <param name="logger">The logger instance for diagnostic logging.</param>
-/// <param name="apiHelper">The API helper providing configured HTTP client access.</param>
+/// <param name="logger">The logger instance for logging endpoint operations.</param>
+/// <param name="apiHelper">The API helper for HTTP client operations.</param>
 public class MethodFamiliesEndpoint(ILogger<MethodFamiliesEndpoint> logger, IApiHelper apiHelper) : IMethodFamiliesEndpoint
 {
 	private readonly ILogger<MethodFamiliesEndpoint> _logger = logger;
 	private readonly IApiHelper _apiHelper = apiHelper;
 
-	/// <summary>
-	/// Retrieves all Method Families from the API.
-	/// </summary>
-	/// <returns>
-	/// A task that represents the asynchronous operation. The task result contains
-	/// a list of <see cref="MethodFamilyFullModel"/> objects, or <c>null</c> if the response is empty.
-	/// </returns>
-	/// <exception cref="HttpIOException">
-	/// Thrown when the HTTP response does not indicate success.
-	/// </exception>
+	/// <inheritdoc/>
+	/// <exception cref="HttpIOException">Thrown when the API request fails or returns an unsuccessful status code.</exception>
 	public async Task<List<MethodFamilyFullModel>?> GetAllAsync()
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{Method} Called", nameof(GetAllAsync));
+			_logger.LogDebug("{Class} {Method} called.", nameof(MethodFamiliesEndpoint), nameof(GetAllAsync));
 		}
 
+		_apiHelper.ApiClient.DefaultRequestHeaders.Date = DateTimeOffset.UtcNow;
 		Uri apiEndpoint = new(Resources.MethodFamiliesEndpoint, UriKind.Relative);
-
 		using HttpResponseMessage response = await _apiHelper.ApiClient.GetAsync(apiEndpoint).ConfigureAwait(false);
 
 		if (response.IsSuccessStatusCode)
 		{
-			if (_logger.IsEnabled(LogLevel.Trace))
-			{
-				_logger.LogTrace("{Method} HttpResponse Had a Success Code: {ResponseCode} {ResponsePhrase}", nameof(GetAllAsync), response.StatusCode, response.ReasonPhrase);
-			}
-
 			List<MethodFamilyFullModel>? result = await response.Content.ReadFromJsonAsync<List<MethodFamilyFullModel>>().ConfigureAwait(false);
 
 			if (_logger.IsEnabled(LogLevel.Trace))
 			{
-				_logger.LogTrace("{Method} received {ResponseContent}", nameof(GetAllAsync), result);
+				_logger.LogTrace("{Class} {Method} returning {ModelCount} {ModelName}.", nameof(MethodFamiliesEndpoint), nameof(GetAllAsync), result?.Count, nameof(MethodFamilyFullModel));
 			}
 
 			return result;
 		}
 		else
 		{
-			HttpIOException ex = new(HttpRequestError.InvalidResponse, response.ReasonPhrase);
-
-			if (_logger.IsEnabled(LogLevel.Error))
-			{
-				_logger.LogError(ex, "{Method} HttpResponse Did Not Have a Success Code: {ResponseCode} {ResponsePhrase}", nameof(GetAllAsync), response.StatusCode, response.ReasonPhrase);
-			}
-
-			throw ex;
+			throw new HttpIOException(HttpRequestError.InvalidResponse, response.ReasonPhrase);
 		}
 	}
 
-	/// <summary>
-	/// Retrieves a list of Method Family records from the API.
-	/// </summary>
-	/// <returns>
-	/// A task that represents the asynchronous operation. The task result contains
-	/// a list of <see cref="MethodFamilyRecord"/> objects, or <c>null</c> if the response is empty.
-	/// </returns>
-	/// <exception cref="HttpIOException">
-	/// Thrown when the HTTP response does not indicate success.
-	/// </exception>
+	/// <inheritdoc/>
+	/// <exception cref="HttpIOException">Thrown when the API request fails or returns an unsuccessful status code.</exception>
 	public async Task<List<MethodFamilyRecord>?> GetListAsync()
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{Method} Called", nameof(GetListAsync));
+			_logger.LogDebug("{Class} {Method} called.", nameof(MethodFamiliesEndpoint), nameof(GetListAsync));
 		}
 
-		Uri apiEndpoint = new($"{Resources.MethodFamiliesEndpoint}/List", UriKind.Relative);
-
+		_apiHelper.ApiClient.DefaultRequestHeaders.Date = DateTimeOffset.UtcNow;
+		Uri apiEndpoint = new($"{Resources.MethodFamiliesEndpoint}/Intermediate", UriKind.Relative);
 		using HttpResponseMessage response = await _apiHelper.ApiClient.GetAsync(apiEndpoint).ConfigureAwait(false);
 
 		if (response.IsSuccessStatusCode)
 		{
-			if (_logger.IsEnabled(LogLevel.Trace))
-			{
-				_logger.LogTrace("{Method} HttpResponse Had a Success Code: {ResponseCode} {ResponsePhrase}", nameof(GetListAsync), response.StatusCode, response.ReasonPhrase);
-			}
-
 			List<MethodFamilyRecord>? result = await response.Content.ReadFromJsonAsync<List<MethodFamilyRecord>>().ConfigureAwait(false);
 
 			if (_logger.IsEnabled(LogLevel.Trace))
 			{
-				_logger.LogTrace("{Method} received {ResponseContent}", nameof(GetListAsync), result);
+				_logger.LogTrace("{Class} {Method} returning {ModelCount} {ModelName}.", nameof(MethodFamiliesEndpoint), nameof(GetListAsync), result?.Count, nameof(MethodFamilyRecord));
 			}
 
 			return result;
 		}
 		else
 		{
-			HttpIOException ex = new(HttpRequestError.InvalidResponse, response.ReasonPhrase);
-
-			if (_logger.IsEnabled(LogLevel.Error))
-			{
-				_logger.LogError(ex, "{Method} HttpResponse Did Not Have a Success Code: {ResponseCode} {ResponsePhrase}", nameof(GetListAsync), response.StatusCode, response.ReasonPhrase);
-			}
-
-			throw ex;
+			throw new HttpIOException(HttpRequestError.InvalidResponse, response.ReasonPhrase);
 		}
 	}
 
-	/// <summary>
-	/// Retrieves a specific Method Family by its unique identifier.
-	/// </summary>
-	/// <param name="id">The unique identifier of the Method Family to retrieve.</param>
-	/// <returns>
-	/// A task that represents the asynchronous operation. The task result contains
-	/// the <see cref="MethodFamilyFullModel"/> if found, or <c>null</c> if not found.
-	/// </returns>
-	/// <exception cref="HttpIOException">
-	/// Thrown when the HTTP response does not indicate success.
-	/// </exception>
+	/// <inheritdoc/>
+	/// <exception cref="HttpIOException">Thrown when the API request fails or returns an unsuccessful status code.</exception>
 	public async Task<MethodFamilyFullModel?> GetByIdAsync(int id)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{Method} Called with {Id}", nameof(GetByIdAsync), id);
+			_logger.LogDebug("{Class} {Method} called with Id = {Id}.", nameof(MethodFamiliesEndpoint), nameof(GetByIdAsync), id);
 		}
 
+		_apiHelper.ApiClient.DefaultRequestHeaders.Date = DateTimeOffset.UtcNow;
 		Uri apiEndpoint = new($"{Resources.MethodFamiliesEndpoint}/{id}", UriKind.Relative);
-
 		using HttpResponseMessage response = await _apiHelper.ApiClient.GetAsync(apiEndpoint).ConfigureAwait(false);
 
 		if (response.IsSuccessStatusCode)
 		{
-			if (_logger.IsEnabled(LogLevel.Trace))
-			{
-				_logger.LogTrace("{Method} HttpResponse Had a Success Code: {ResponseCode} {ResponsePhrase}", nameof(GetByIdAsync), response.StatusCode, response.ReasonPhrase);
-			}
-
 			MethodFamilyFullModel? result = await response.Content.ReadFromJsonAsync<MethodFamilyFullModel>().ConfigureAwait(false);
 
 			if (_logger.IsEnabled(LogLevel.Trace))
 			{
-				_logger.LogTrace("{Method} received {ResponseContent}", nameof(GetByIdAsync), result);
+				_logger.LogTrace("{Class} {Method} returning {ModelName} {Model}.", nameof(MethodFamiliesEndpoint), nameof(GetByIdAsync), nameof(MethodFamilyFullModel), result);
 			}
 
 			return result;
 		}
 		else
 		{
-			HttpIOException ex = new(HttpRequestError.InvalidResponse, response.ReasonPhrase);
-
-			if (_logger.IsEnabled(LogLevel.Error))
-			{
-				_logger.LogError(ex, "{Method} HttpResponse Did Not Have a Success Code: {ResponseCode} {ResponsePhrase}", nameof(GetAllAsync), response.StatusCode, response.ReasonPhrase);
-			}
-
-			throw ex;
+			throw new HttpIOException(HttpRequestError.InvalidResponse, response.ReasonPhrase);
 		}
 	}
 
-	/// <summary>
-	/// Creates a new Method Family via the API.
-	/// </summary>
-	/// <param name="model">The Method Family model containing the data for the new record.</param>
-	/// <returns>
-	/// A task that represents the asynchronous operation. The task result contains
-	/// the created <see cref="MethodFamilyFullModel"/> with server-generated values, or <c>null</c>.
-	/// </returns>
-	/// <exception cref="HttpIOException">
-	/// Thrown when the HTTP response does not indicate success.
-	/// </exception>
+	/// <inheritdoc/>
+	/// <exception cref="HttpIOException">Thrown when the API request fails or returns an unsuccessful status code.</exception>
 	public async Task<MethodFamilyFullModel?> CreateAsync(MethodFamilyFullModel model)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{Method} Called with {Model}", nameof(CreateAsync), model);
+			_logger.LogDebug("{Class} {Method} called with {ModelName} {Model}.", nameof(MethodFamiliesEndpoint), nameof(CreateAsync), nameof(MethodFamilyFullModel), model);
 		}
 
+		_apiHelper.ApiClient.DefaultRequestHeaders.Date = DateTimeOffset.UtcNow;
 		Uri apiEndpoint = new(Resources.MethodFamiliesEndpoint, UriKind.Relative);
-
 		using HttpResponseMessage response = await _apiHelper.ApiClient.PostAsJsonAsync(apiEndpoint, model).ConfigureAwait(false);
 
 		if (response.IsSuccessStatusCode)
 		{
-			if (_logger.IsEnabled(LogLevel.Trace))
-			{
-				_logger.LogTrace("{Method} HttpResponse Had a Success Code: {ResponseCode} {ResponsePhrase}", nameof(CreateAsync), response.StatusCode, response.ReasonPhrase);
-			}
-
 			MethodFamilyFullModel? result = await response.Content.ReadFromJsonAsync<MethodFamilyFullModel>().ConfigureAwait(false);
 
 			if (_logger.IsEnabled(LogLevel.Trace))
 			{
-				_logger.LogTrace("{Method} received {ResponseContent}", nameof(CreateAsync), result);
+				_logger.LogTrace("{Class} {Method} returning {ModelName} {Model}.", nameof(MethodFamiliesEndpoint), nameof(CreateAsync), nameof(MethodFamilyFullModel), result);
 			}
 
 			return result;
 		}
 		else
 		{
-			HttpIOException ex = new(HttpRequestError.InvalidResponse, response.ReasonPhrase);
-
-			if (_logger.IsEnabled(LogLevel.Error))
-			{
-				_logger.LogError(ex, "{Method} HttpResponse Did Not Have a Success Code: {ResponseCode} {ResponsePhrase}", nameof(CreateAsync), response.StatusCode, response.ReasonPhrase);
-			}
-
-			throw ex;
+			throw new HttpIOException(HttpRequestError.InvalidResponse, response.ReasonPhrase);
 		}
 	}
 
-	/// <summary>
-	/// Updates an existing Method Family via the API.
-	/// </summary>
-	/// <param name="id">The unique identifier of the Method Family to update.</param>
-	/// <param name="model">The Method Family model containing the updated data.</param>
-	/// <returns>
-	/// A task that represents the asynchronous operation. The task result contains
-	/// the updated <see cref="MethodFamilyFullModel"/>, or <c>null</c>.
-	/// </returns>
-	/// <exception cref="HttpIOException">
-	/// Thrown when the HTTP response does not indicate success.
-	/// </exception>
+	/// <inheritdoc/>
+	/// <exception cref="HttpIOException">Thrown when the API request fails or returns an unsuccessful status code.</exception>
 	public async Task<MethodFamilyFullModel?> UpdateAsync(int id, MethodFamilyFullModel model)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{Method} Called with {Id} and {Model}", nameof(UpdateAsync), id, model);
+			_logger.LogDebug("{Class} {Method} called with Id = {Id} and {ModelName} {Model}.", nameof(MethodFamiliesEndpoint), nameof(UpdateAsync), id, nameof(MethodFamilyFullModel), model);
 		}
 
+		_apiHelper.ApiClient.DefaultRequestHeaders.Date = DateTimeOffset.UtcNow;
 		Uri apiEndpoint = new($"{Resources.MethodFamiliesEndpoint}/{id}", UriKind.Relative);
-
 		using HttpResponseMessage response = await _apiHelper.ApiClient.PutAsJsonAsync(apiEndpoint, model).ConfigureAwait(false);
 
 		if (response.IsSuccessStatusCode)
 		{
-			if (_logger.IsEnabled(LogLevel.Trace))
-			{
-				_logger.LogTrace("{Method} HttpResponse Had a Success Code: {ResponseCode} {ResponsePhrase}", nameof(UpdateAsync), response.StatusCode, response.ReasonPhrase);
-			}
-
 			MethodFamilyFullModel? result = await response.Content.ReadFromJsonAsync<MethodFamilyFullModel>().ConfigureAwait(false);
 
 			if (_logger.IsEnabled(LogLevel.Trace))
 			{
-				_logger.LogTrace("{Method} received {ResponseContent}", nameof(UpdateAsync), result);
+				_logger.LogTrace("{Class} {Method} returning {ModelName} {Model}.", nameof(MethodFamiliesEndpoint), nameof(UpdateAsync), nameof(MethodFamilyFullModel), result);
 			}
 
 			return result;
 		}
 		else
 		{
-			HttpIOException ex = new(HttpRequestError.InvalidResponse, response.ReasonPhrase);
-
-			if (_logger.IsEnabled(LogLevel.Error))
-			{
-				_logger.LogError(ex, "{Method} HttpResponse Did Not Have a Success Code: {ResponseCode} {ResponsePhrase}", nameof(CreateAsync), response.StatusCode, response.ReasonPhrase);
-			}
-
-			throw ex;
+			throw new HttpIOException(HttpRequestError.InvalidResponse, response.ReasonPhrase);
 		}
 	}
 
-	/// <summary>
-	/// Deletes a Method Family from the API.
-	/// </summary>
-	/// <param name="id">The unique identifier of the Method Family to delete.</param>
-	/// <returns>
-	/// A task that represents the asynchronous operation.
-	/// </returns>
-	/// <exception cref="HttpIOException">
-	/// Thrown when the HTTP response does not indicate success.
-	/// </exception>
+	/// <inheritdoc/>
+	/// <exception cref="HttpIOException">Thrown when the API request fails or returns an unsuccessful status code.</exception>
 	public async Task DeleteAsync(int id)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{Method} Called with {Id}", nameof(DeleteAsync), id);
+			_logger.LogDebug("{Class} {Method} called with Id = {Id}.", nameof(MethodFamiliesEndpoint), nameof(DeleteAsync), id);
 		}
 
+		_apiHelper.ApiClient.DefaultRequestHeaders.Date = DateTimeOffset.UtcNow;
 		Uri apiEndpoint = new($"{Resources.MethodFamiliesEndpoint}/{id}", UriKind.Relative);
-
 		using HttpResponseMessage response = await _apiHelper.ApiClient.DeleteAsync(apiEndpoint).ConfigureAwait(false);
 
 		if (response.IsSuccessStatusCode)
 		{
 			if (_logger.IsEnabled(LogLevel.Trace))
 			{
-				_logger.LogTrace("{Method} HttpResponse Had a Success Code: {ResponseCode} {ResponsePhrase}", nameof(DeleteAsync), response.StatusCode, response.ReasonPhrase);
+				_logger.LogTrace("{Class} {Method} returning.", nameof(MethodFamiliesEndpoint), nameof(DeleteAsync));
 			}
 		}
 		else
 		{
-			HttpIOException ex = new(HttpRequestError.InvalidResponse, response.ReasonPhrase);
-
-			if (_logger.IsEnabled(LogLevel.Error))
-			{
-				_logger.LogError(ex, "{Method} HttpResponse Did Not Have a Success Code: {ResponseCode} {ResponsePhrase}", nameof(DeleteAsync), response.StatusCode, response.ReasonPhrase);
-			}
-
-			throw ex;
+			throw new HttpIOException(HttpRequestError.InvalidResponse, response.ReasonPhrase);
 		}
 	}
 }

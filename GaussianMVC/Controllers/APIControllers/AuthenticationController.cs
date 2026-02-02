@@ -141,7 +141,7 @@ public class AuthenticationController(UserManager<IdentityUser> userManager, Rol
 			{ "PhoneNumber", user.PhoneNumber ?? string.Empty },
 			{ "PhoneNumberConfirmed", user.PhoneNumberConfirmed },
 			{ "TwoFactorEnabled", user.TwoFactorEnabled },
-			{ "LockoutEnd", user.LockoutEnd is null ? new { } : user.LockoutEnd },
+			{ "LockoutEnd", user.LockoutEnd is not null ? user.LockoutEnd : string.Empty },
 			{ "LockoutEnabled", user.LockoutEnabled },
 			{ "AccessFailedCount", user.AccessFailedCount }
 		};

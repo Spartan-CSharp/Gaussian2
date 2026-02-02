@@ -1,140 +1,379 @@
 using System.Net.Http;
 using System.Net.Http.Headers;
 using System.Net.Http.Json;
+using System.Text.Json;
+
+using GaussianCommonLibrary.Models;
 
 using GaussianWPFLibrary.EventModels;
 using GaussianWPFLibrary.Models;
+using GaussianWPFLibrary.Properties;
 
 using Microsoft.Extensions.Logging;
 
 namespace GaussianWPFLibrary.DataAccess;
 
 /// <summary>
-/// Provides helper methods for API communication, authentication, and user session management.
+/// Provides HTTP client configuration, user authentication, and logged-in user state management for API communication.
 /// </summary>
-public class ApiHelper : IApiHelper
+/// <param name="logger">The logger instance for logging operations.</param>
+/// <param name="loggedInUser">The logged-in user model instance to manage user state.</param>
+public class ApiHelper(ILogger<ApiHelper> logger, ILoggedInUserModel loggedInUser) : IApiHelper
 {
-	private readonly ILogger<ApiHelper> _logger;
-	private readonly MediaTypeWithQualityHeaderValue _acceptHeader = new("application/json");
+	private readonly ILogger<ApiHelper> _logger = logger;
 
-	/// <summary>
-	/// Initializes a new instance of the <see cref="ApiHelper"/> class.
-	/// </summary>
-	/// <param name="logger">The logger instance for logging API operations.</param>
-	/// <param name="loggedInUser">The logged-in user model to track authentication state.</param>
-	public ApiHelper(ILogger<ApiHelper> logger, ILoggedInUserModel loggedInUser)
-	{
-		_logger = logger;
-		LoggedInUser = loggedInUser;
-
-		string apiBaseAddress = "https://localhost:7056/"; // TODO: replace this with settings or appsettings to make user-configurable
-
-		ApiClient = new HttpClient
-		{
-			BaseAddress = new Uri(apiBaseAddress)
-		};
-
-		ApiClient.DefaultRequestHeaders.Accept.Clear();
-		ApiClient.DefaultRequestHeaders.Accept.Add(_acceptHeader);
-	}
-
-	/// <summary>
-	/// Occurs when the authentication state changes (login or logout).
-	/// </summary>
+	/// <inheritdoc/>
 	public event EventHandler<AuthenticationEventArgs>? AuthenticationStateChanged;
 
-	/// <summary>
-	/// Gets the currently logged-in user model containing authentication information.
-	/// </summary>
-	public ILoggedInUserModel LoggedInUser { get; }
+	/// <inheritdoc/>
+	public ILoggedInUserModel LoggedInUser { get; private set; } = loggedInUser;
 
-	/// <summary>
-	/// Gets the HTTP client configured for API communication.
-	/// </summary>
-	public HttpClient ApiClient { get; private set; }
+	/// <inheritdoc/>
+	public HttpClient ApiClient { get; private set; } = new HttpClient();
 
-	/// <summary>
-	/// Authenticates a user asynchronously with the provided credentials.
-	/// </summary>
-	/// <param name="userName">The user's email address or username.</param>
-	/// <param name="password">The user's password.</param>
-	/// <returns>A task that represents the asynchronous operation. The task result contains the logged-in user model.</returns>
-	/// <exception cref="HttpIOException">Thrown when authentication fails or the server returns a non-success status code.</exception>
-	public async Task<ILoggedInUserModel> LoginAsync(string userName, string password)
+	/// <inheritdoc/>
+	public void InitializeApiClient(string apiBaseAddress, string productName, string productVersion)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{Method} Called with {UserName} and {Password}", nameof(LoginAsync), userName, password);
+			_logger.LogDebug("{Class} {Method} called with ApiBaseAddress = {ApiBaseAddress}, ProductName = {ProductName}, and ProductVersion = {ProductVersion}.", nameof(ApiHelper), nameof(InitializeApiClient), apiBaseAddress, productName, productVersion);
 		}
 
-		Uri apiEndpoint = new("api/Authentication/token", UriKind.Relative);
-
-		var data = new
+		ApiClient.BaseAddress = new Uri(apiBaseAddress);
+		ApiClient.DefaultRequestHeaders.Clear();
+		ApiClient.DefaultRequestHeaders.Accept.Clear();
+		ApiClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+		ApiClient.DefaultRequestHeaders.AcceptCharset.Clear();
+		ApiClient.DefaultRequestHeaders.AcceptCharset.Add(new StringWithQualityHeaderValue("UTF-8"));
+		ApiClient.DefaultRequestHeaders.AcceptEncoding.Clear();
+		ApiClient.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("identity", 0.9));
+		ApiClient.DefaultRequestHeaders.AcceptEncoding.Add(new StringWithQualityHeaderValue("*", 0.5));
+		ApiClient.DefaultRequestHeaders.AcceptLanguage.Clear();
+		ApiClient.DefaultRequestHeaders.AcceptLanguage.Add(new StringWithQualityHeaderValue("en-CA", 0.9));
+		ApiClient.DefaultRequestHeaders.AcceptLanguage.Add(new StringWithQualityHeaderValue("en", 0.7));
+		ApiClient.DefaultRequestHeaders.AcceptLanguage.Add(new StringWithQualityHeaderValue("*", 0.5));
+		ApiClient.DefaultRequestHeaders.Authorization = null;
+		ApiClient.DefaultRequestHeaders.CacheControl = new CacheControlHeaderValue
 		{
-			Email = userName,
-			Password = password
+			NoCache = true,
+			NoStore = true,
+			NoTransform = true
 		};
+
+		ApiClient.DefaultRequestHeaders.Connection.Clear();
+		ApiClient.DefaultRequestHeaders.Connection.Add("keep-alive");
+		ApiClient.DefaultRequestHeaders.ConnectionClose = false;
+		ApiClient.DefaultRequestHeaders.Date = DateTimeOffset.UtcNow;
+		ApiClient.DefaultRequestHeaders.Expect.Clear();
+		ApiClient.DefaultRequestHeaders.ExpectContinue = false;
+		ApiClient.DefaultRequestHeaders.From = null;
+		ApiClient.DefaultRequestHeaders.Host = $"{ApiClient.BaseAddress?.Host}:{ApiClient.BaseAddress?.Port}";
+		ApiClient.DefaultRequestHeaders.IfMatch.Clear();
+		ApiClient.DefaultRequestHeaders.IfModifiedSince = null;
+		ApiClient.DefaultRequestHeaders.IfNoneMatch.Clear();
+		ApiClient.DefaultRequestHeaders.IfRange = null;
+		ApiClient.DefaultRequestHeaders.IfUnmodifiedSince = null;
+		ApiClient.DefaultRequestHeaders.MaxForwards = null;
+		ApiClient.DefaultRequestHeaders.Pragma.Clear();
+		ApiClient.DefaultRequestHeaders.Protocol = string.Empty;
+		ApiClient.DefaultRequestHeaders.ProxyAuthorization = null;
+		ApiClient.DefaultRequestHeaders.Range = null;
+		ApiClient.DefaultRequestHeaders.Referrer = null; // TODO see if there is a method we can use to get the IP and port used by the program for external communication.
+		ApiClient.DefaultRequestHeaders.TE.Clear();
+		ApiClient.DefaultRequestHeaders.Trailer.Clear();
+		ApiClient.DefaultRequestHeaders.TransferEncoding.Clear();
+		ApiClient.DefaultRequestHeaders.TransferEncodingChunked = null;
+		ApiClient.DefaultRequestHeaders.Upgrade.Clear();
+		ApiClient.DefaultRequestHeaders.UserAgent.Clear();
+		ApiClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue(productName, productVersion));
+		ApiClient.DefaultRequestHeaders.Via.Clear();
+		ApiClient.DefaultRequestHeaders.Warning.Clear();
+		ApiClient.DefaultRequestVersion = new Version(1, 1);
+		ApiClient.DefaultVersionPolicy = HttpVersionPolicy.RequestVersionOrLower;
+		ApiClient.MaxResponseContentBufferSize = 2147483647;
+		ApiClient.Timeout = TimeSpan.FromSeconds(100);
+
+		if (_logger.IsEnabled(LogLevel.Trace))
+		{
+			_logger.LogTrace("{Class} {Method} returning.", nameof(ApiHelper), nameof(InitializeApiClient));
+		}
+	}
+
+	/// <inheritdoc/>
+	/// <exception cref="HttpIOException">Thrown when authentication fails due to invalid credentials or server errors.</exception>
+	public async Task<ILoggedInUserModel> LoginAsync(string userName, string password)
+	{
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			// TODO add password obfuscation for logging
+			_logger.LogDebug("{Class} {Method} called with UserName = {UserName} and Password = {Password}.", nameof(ApiHelper), nameof(LoginAsync), userName, password);
+		}
+
+		ApiClient.DefaultRequestHeaders.Date = DateTimeOffset.UtcNow;
+		Uri apiEndpoint = new($"{Resources.AuthenticationEndpoint}/token", UriKind.Relative);
+		TokenRequest data = new(userName, password);
 
 		using HttpResponseMessage response = await ApiClient.PostAsJsonAsync(apiEndpoint, data).ConfigureAwait(false);
 
 		if (response.IsSuccessStatusCode)
 		{
-			if (_logger.IsEnabled(LogLevel.Trace))
-			{
-				_logger.LogTrace("{Method} HttpResponse Had a Success Code: {ResponseCode} {ResponsePhrase}", nameof(LoginAsync), response.StatusCode, response.ReasonPhrase);
-			}
-
-			LoggedInUserModel? result = await response.Content.ReadFromJsonAsync<LoggedInUserModel>().ConfigureAwait(false);
+			TokenResponse? result = await response.Content.ReadFromJsonAsync<TokenResponse>().ConfigureAwait(false);
 
 			if (result is not null)
 			{
-				ApiClient.DefaultRequestHeaders.Clear();
-				ApiClient.DefaultRequestHeaders.Accept.Clear();
-				ApiClient.DefaultRequestHeaders.Accept.Add(_acceptHeader);
-				ApiClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {result.AccessToken}");
+				ApiClient.DefaultRequestHeaders.Authorization = null;
+				ApiClient.DefaultRequestHeaders.Authorization = new("Bearer", result.AccessToken);
 				LoggedInUser.AccessToken = result.AccessToken;
-				LoggedInUser.UserName = result.UserName;
+				ProcessUserData(result.UserData);
+				ApiClient.DefaultRequestHeaders.From = LoggedInUser.Email;
 				AuthenticationStateChanged?.Invoke(this, new AuthenticationEventArgs(true));
+			}
+			else
+			{
+				ApiClient.DefaultRequestHeaders.Authorization = null;
+				ApiClient.DefaultRequestHeaders.From = null;
+				LoggedInUser.ResetLoggedInUser();
+				AuthenticationStateChanged?.Invoke(this, new AuthenticationEventArgs(false));
 			}
 
 			if (_logger.IsEnabled(LogLevel.Trace))
 			{
-				_logger.LogTrace("{Method} received {ResponseContent}", nameof(LoginAsync), result);
+				_logger.LogTrace("{Class} {Method} returning {ModelName} {Model}.", nameof(ApiHelper), nameof(LoginAsync), nameof(ILoggedInUserModel), LoggedInUser);
 			}
 
 			return LoggedInUser;
 		}
 		else
 		{
-			HttpIOException ex = new(HttpRequestError.UserAuthenticationError, response.ReasonPhrase);
-
-			if (_logger.IsEnabled(LogLevel.Error))
-			{
-				_logger.LogError(ex, "{Method} HttpResponse Did Not Have a Success Code: {ResponseCode} {ResponsePhrase}", nameof(LoginAsync), response.StatusCode, response.ReasonPhrase);
-			}
-
-			throw ex;
+			throw new HttpIOException(HttpRequestError.UserAuthenticationError, response.ReasonPhrase);
 		}
 	}
 
-	/// <summary>
-	/// Logs out the current user asynchronously by clearing authentication tokens and headers.
-	/// </summary>
-	/// <returns>A task that represents the asynchronous operation. The task result contains the updated logged-in user model with cleared credentials.</returns>
+	/// <inheritdoc/>
 	public async Task<ILoggedInUserModel> LogoutAsync()
+	{
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{Class} {Method} called.", nameof(ApiHelper), nameof(LogoutAsync));
+		}
+
+		ApiClient.DefaultRequestHeaders.Authorization = null;
+		ApiClient.DefaultRequestHeaders.From = null;
+		LoggedInUser.ResetLoggedInUser();
+		AuthenticationStateChanged?.Invoke(this, new AuthenticationEventArgs(false));
+
+		if (_logger.IsEnabled(LogLevel.Trace))
+		{
+			_logger.LogTrace("{Class} {Method} returning {ModelName} {Model}.", nameof(ApiHelper), nameof(LoginAsync), nameof(ILoggedInUserModel), LoggedInUser);
+		}
+
+		return LoggedInUser;
+	}
+
+	private void ProcessUserData(Dictionary<string, object> data)
 	{
 		if (_logger.IsEnabled(LogLevel.Trace))
 		{
-			_logger.LogTrace("{Method} Called", nameof(LogoutAsync));
+			_logger.LogTrace("{Class} {Method} called with data = {Data}.", nameof(ApiHelper), nameof(ProcessUserData), JsonSerializer.Serialize(data));
 		}
 
-		ApiClient.DefaultRequestHeaders.Clear();
-		ApiClient.DefaultRequestHeaders.Accept.Clear();
-		ApiClient.DefaultRequestHeaders.Accept.Add(_acceptHeader);
-		LoggedInUser.AccessToken = string.Empty;
-		LoggedInUser.UserName = string.Empty;
-		AuthenticationStateChanged?.Invoke(this, new AuthenticationEventArgs(false));
+		foreach (KeyValuePair<string, object> kvp in data)
+		{
+			string keyName = kvp.Key;
+			JsonElement value = (JsonElement)kvp.Value;
 
-		return LoggedInUser;
+			switch (keyName)
+			{
+				case "Id":
+					LoggedInUser.UserId = value.GetString() ?? string.Empty; // value?.ToString() ?? string.Empty;
+					break;
+				case "UserName":
+					LoggedInUser.UserName = value.GetString() ?? string.Empty;
+					break;
+				case "Email":
+					LoggedInUser.Email = value.GetString() ?? string.Empty;
+					break;
+				case "EmailConfirmed":
+					LoggedInUser.EmailConfirmed = value.GetBoolean();
+					break;
+				case "PhoneNumber":
+					LoggedInUser.PhoneNumber = value.GetString() ?? string.Empty;
+					break;
+				case "PhoneNumberConfirmed":
+					LoggedInUser.PhoneNumberConfirmed = value.GetBoolean();
+					break;
+				case "TwoFactorEnabled":
+					LoggedInUser.TwoFactorEnabled = value.GetBoolean();
+					break;
+				case "LockoutEnd":
+					LoggedInUser.LockoutEnd = string.IsNullOrWhiteSpace(value.GetString()) ? null : value.GetDateTimeOffset();
+					break;
+				case "LockoutEnabled":
+					LoggedInUser.LockoutEnabled = value.GetBoolean();
+					break;
+				case "AccessFailedCount":
+					LoggedInUser.AccessFailedCount = value.GetInt32();
+					break;
+				case "UserRoles":
+					ProcessUserRoleData(value.Deserialize<List<Dictionary<string, object>>>() ?? []);
+					break;
+				case "UserClaims":
+					ProcessUserClaimData(value.Deserialize<Dictionary<string, object>>() ?? []);
+					break;
+				default:
+					break;
+			}
+		}
+
+		if (_logger.IsEnabled(LogLevel.Trace))
+		{
+			_logger.LogTrace("{Class} {Method} returning.", nameof(ApiHelper), nameof(ProcessUserData));
+		}
+	}
+
+	private void ProcessUserRoleData(List<Dictionary<string, object>> data)
+	{
+		if (_logger.IsEnabled(LogLevel.Trace))
+		{
+			_logger.LogTrace("{Class} {Method} called with data = {Data}.", nameof(ApiHelper), nameof(ProcessUserRoleData), JsonSerializer.Serialize(data));
+		}
+
+		LoggedInUser.UserRoles.Clear();
+
+		foreach (Dictionary<string, object> role in data)
+		{
+			UserRoleModel userRole = new();
+			foreach (KeyValuePair<string, object> kvp in role)
+			{
+				string keyName = kvp.Key;
+				JsonElement value = (JsonElement)kvp.Value;
+
+				switch (keyName)
+				{
+					case "Id":
+						userRole.Id = value.GetString() ?? string.Empty;
+						break;
+					case "Name":
+						userRole.Name = value.GetString() ?? string.Empty;
+						break;
+					case "RoleClaims":
+						ProcessRoleClaimData(userRole, value.Deserialize<Dictionary<string, object>>() ?? []);
+						break;
+					default:
+						break;
+				}
+			}
+
+			LoggedInUser.UserRoles.Add(userRole);
+		}
+
+		if (_logger.IsEnabled(LogLevel.Trace))
+		{
+			_logger.LogTrace("{Class} {Method} returning.", nameof(ApiHelper), nameof(ProcessUserRoleData));
+		}
+	}
+
+	private void ProcessUserClaimData(Dictionary<string, object> data)
+	{
+		if (_logger.IsEnabled(LogLevel.Trace))
+		{
+			_logger.LogTrace("{Class} {Method} called with data = {Data}.", nameof(ApiHelper), nameof(ProcessUserClaimData), JsonSerializer.Serialize(data));
+		}
+
+		foreach (KeyValuePair<string, object> kvp in data)
+		{
+			string keyName = kvp.Key;
+			JsonElement value = (JsonElement)kvp.Value;
+
+			switch (keyName)
+			{
+				case "name":
+					LoggedInUser.Name = value.GetString() ?? string.Empty;
+					break;
+				case "given_name":
+					LoggedInUser.GivenName = value.GetString() ?? string.Empty;
+					break;
+				case "family_name":
+					LoggedInUser.FamilyName = value.GetString() ?? string.Empty;
+					break;
+				case "middle_name":
+					LoggedInUser.MiddleName = value.GetString() ?? string.Empty;
+					break;
+				case "gender":
+					LoggedInUser.Gender = value.GetString() ?? string.Empty;
+					break;
+				case "birthdate":
+					LoggedInUser.BirthDate = DateOnly.FromDateTime(value.GetDateTime());
+					break;
+				case "zoneinfo":
+					LoggedInUser.ZoneInfo = value.GetString() ?? string.Empty;
+					break;
+				case "locale":
+					LoggedInUser.Locale = value.GetString() ?? string.Empty;
+					break;
+				case "address":
+					ProcessUserAddressData(LoggedInUser.Address, value.Deserialize<UserAddressModel>() ?? new UserAddressModel());
+					break;
+				default:
+					break;
+			}
+		}
+
+		if (_logger.IsEnabled(LogLevel.Trace))
+		{
+			_logger.LogTrace("{Class} {Method} returning.", nameof(ApiHelper), nameof(ProcessUserClaimData));
+		}
+	}
+
+	private void ProcessUserAddressData(UserAddressModel address, UserAddressModel? data)
+	{
+		if (_logger.IsEnabled(LogLevel.Trace))
+		{
+			_logger.LogTrace("{Class} {Method} called with address = {Address} and data = {Data}.", nameof(ApiHelper), nameof(ProcessRoleClaimData), address, JsonSerializer.Serialize(data));
+		}
+
+		if (data is null)
+		{
+			address = new();
+		}
+		else
+		{
+			address.StreetAddress = !string.IsNullOrWhiteSpace(data.StreetAddress) ? data.StreetAddress : string.Empty;
+			address.Locality = !string.IsNullOrWhiteSpace(data.Locality) ? data.Locality : string.Empty;
+			address.Region = !string.IsNullOrWhiteSpace(data.Region) ? data.Region : string.Empty;
+			address.PostalCode = !string.IsNullOrWhiteSpace(data.PostalCode) ? data.PostalCode : string.Empty;
+			address.Country = !string.IsNullOrWhiteSpace(data.Country) ? data.Country : string.Empty;
+			address.Formatted = !string.IsNullOrWhiteSpace(data.Formatted) ? data.Formatted : string.Empty;
+		}
+
+		if (_logger.IsEnabled(LogLevel.Trace))
+		{
+			_logger.LogTrace("{Class} {Method} returning.", nameof(ApiHelper), nameof(ProcessUserAddressData));
+		}
+	}
+
+	private void ProcessRoleClaimData(UserRoleModel userRole, Dictionary<string, object> data)
+	{
+		if (_logger.IsEnabled(LogLevel.Trace))
+		{
+			_logger.LogTrace("{Class} {Method} called with userRole = {UserRole} and data = {Data}.", nameof(ApiHelper), nameof(ProcessRoleClaimData), userRole, JsonSerializer.Serialize(data));
+		}
+
+		foreach (KeyValuePair<string, object> kvp in data)
+		{
+			string keyName = kvp.Key;
+			JsonElement value = (JsonElement)kvp.Value;
+
+			switch (keyName)
+			{
+				default:
+					break;
+			}
+		}
+
+		if (_logger.IsEnabled(LogLevel.Trace))
+		{
+			_logger.LogTrace("{Class} {Method} returning.", nameof(ApiHelper), nameof(ProcessRoleClaimData));
+		}
 	}
 }
