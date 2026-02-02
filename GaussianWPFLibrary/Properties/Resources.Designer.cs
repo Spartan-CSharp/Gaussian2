@@ -61,6 +61,15 @@ namespace GaussianWPFLibrary.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to api/Authentication.
+        /// </summary>
+        internal static string AuthenticationEndpoint {
+            get {
+                return ResourceManager.GetString("AuthenticationEndpoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to api/v1/BaseMethods.
         /// </summary>
         internal static string BaseMethodsEndpoint {
@@ -75,6 +84,33 @@ namespace GaussianWPFLibrary.Properties {
         internal static string CalculationTypesEndpoint {
             get {
                 return ResourceManager.GetString("CalculationTypesEndpoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to api/vi/ElectronicStates.
+        /// </summary>
+        internal static string ElectronicStatesEndpoint {
+            get {
+                return ResourceManager.GetString("ElectronicStatesEndpoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to api/v1/Home.
+        /// </summary>
+        internal static string HomeEndpoint {
+            get {
+                return ResourceManager.GetString("HomeEndpoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to api/v1/Identity.
+        /// </summary>
+        internal static string IdentityEndpoint {
+            get {
+                return ResourceManager.GetString("IdentityEndpoint", resourceCulture);
             }
         }
         

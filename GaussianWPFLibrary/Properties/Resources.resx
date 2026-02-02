@@ -117,6 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AuthenticationEndpoint" xml:space="preserve">
+    <value>api/Authentication</value>
+    <comment>The API Endpoint for Authentication</comment>
+  </data>
   <data name="BaseMethodsEndpoint" xml:space="preserve">
     <value>api/v1/BaseMethods</value>
     <comment>The API Endpoint for Base Methods</comment>
@@ -124,6 +128,18 @@
   <data name="CalculationTypesEndpoint" xml:space="preserve">
     <value>api/v1/CalculationTypes</value>
     <comment>The API Endpoint for Calculation Types</comment>
+  </data>
+  <data name="ElectronicStatesEndpoint" xml:space="preserve">
+    <value>api/vi/ElectronicStates</value>
+    <comment>The API Endpoint for Electronic States</comment>
+  </data>
+  <data name="HomeEndpoint" xml:space="preserve">
+    <value>api/v1/Home</value>
+    <comment>The API Endpoint for Home</comment>
+  </data>
+  <data name="IdentityEndpoint" xml:space="preserve">
+    <value>api/v1/Identity</value>
+    <comment>The API Endpoint for Identity Management</comment>
   </data>
   <data name="MethodFamiliesEndpoint" xml:space="preserve">
     <value>api/v1/MethodFamilies</value>
