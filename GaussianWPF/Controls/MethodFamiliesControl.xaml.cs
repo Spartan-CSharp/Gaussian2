@@ -5,30 +5,18 @@ using GaussianCommonLibrary.ErrorModels;
 using GaussianWPF.Controls.MethodFamilies;
 using GaussianWPF.FactoryHelpers;
 
-using GaussianWPFLibrary.DataAccess;
 using GaussianWPFLibrary.EventModels;
-using GaussianWPFLibrary.Models;
 
 using Microsoft.Extensions.Logging;
 
 namespace GaussianWPF.Controls;
 
 /// <summary>
-/// Represents a container control that manages navigation and coordination between different 
-/// MethodFamily-related child controls (Index, Create, Edit, Details, Delete).
-/// This control handles event-driven navigation and maintains the lifecycle of child controls
-/// through dependency injection and abstract factory patterns.
+/// Interaction logic for MethodFamiliesControl.xaml
 /// </summary>
-/// <remarks>
-/// This control acts as a coordinator/container for CRUD operations on MethodFamilies.
-/// It responds to events from child controls to navigate between different views while
-/// maintaining clean separation of concerns.
-/// </remarks>
 public partial class MethodFamiliesControl : UserControl
 {
 	private readonly ILogger<MethodFamiliesControl> _logger;
-	private readonly ILoggedInUserModel _loggedInUser;
-	private readonly IApiHelper _apiHelper;
 	private readonly IAbstractFactory<MethodFamiliesIndexControl> _methodFamiliesIndexFactory;
 	private readonly IAbstractFactory<MethodFamiliesDetailsControl> _methodFamiliesDetailsFactory;
 	private readonly IAbstractFactory<MethodFamiliesCreateControl> _methodFamiliesCreateFactory;
@@ -36,25 +24,17 @@ public partial class MethodFamiliesControl : UserControl
 	private readonly IAbstractFactory<MethodFamiliesDeleteControl> _methodFamiliesDeleteFactory;
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="MethodFamiliesControl"/> class.
+	/// Initializes a new instance of the <see cref="MethodFamiliesControl"/> class with dependency injection.
 	/// </summary>
-	/// <param name="logger">Logger instance for tracing control events.</param>
-	/// <param name="loggedInUser">Model representing the currently logged-in user.</param>
-	/// <param name="apiHelper">Helper for making API requests.</param>
-	/// <param name="methodFamiliesIndexFactory">Factory for creating index controls.</param>
-	/// <param name="methodFamiliesDetailsFactory">Factory for creating details controls.</param>
-	/// <param name="methodFamiliesCreateFactory">Factory for creating create controls.</param>
-	/// <param name="methodFamiliesEditFactory">Factory for creating edit controls.</param>
-	/// <param name="methodFamiliesDeleteFactory">Factory for creating delete controls.</param>
-	/// <remarks>
-	/// This constructor initializes the control and immediately loads the Index view as the default view.
-	/// All dependencies are injected through the constructor to support testability and loose coupling.
-	/// </remarks>
-	public MethodFamiliesControl(ILogger<MethodFamiliesControl> logger, ILoggedInUserModel loggedInUser, IApiHelper apiHelper, IAbstractFactory<MethodFamiliesIndexControl> methodFamiliesIndexFactory, IAbstractFactory<MethodFamiliesDetailsControl> methodFamiliesDetailsFactory, IAbstractFactory<MethodFamiliesCreateControl> methodFamiliesCreateFactory, IAbstractFactory<MethodFamiliesEditControl> methodFamiliesEditFactory, IAbstractFactory<MethodFamiliesDeleteControl> methodFamiliesDeleteFactory)
+	/// <param name="logger">The logger instance for logging control operations.</param>
+	/// <param name="methodFamiliesIndexFactory">The factory for creating method families index controls.</param>
+	/// <param name="methodFamiliesDetailsFactory">The factory for creating method families details controls.</param>
+	/// <param name="methodFamiliesCreateFactory">The factory for creating method families create controls.</param>
+	/// <param name="methodFamiliesEditFactory">The factory for creating method families edit controls.</param>
+	/// <param name="methodFamiliesDeleteFactory">The factory for creating method families delete controls.</param>
+	public MethodFamiliesControl(ILogger<MethodFamiliesControl> logger, IAbstractFactory<MethodFamiliesIndexControl> methodFamiliesIndexFactory, IAbstractFactory<MethodFamiliesDetailsControl> methodFamiliesDetailsFactory, IAbstractFactory<MethodFamiliesCreateControl> methodFamiliesCreateFactory, IAbstractFactory<MethodFamiliesEditControl> methodFamiliesEditFactory, IAbstractFactory<MethodFamiliesDeleteControl> methodFamiliesDeleteFactory)
 	{
 		_logger = logger;
-		_loggedInUser = loggedInUser;
-		_apiHelper = apiHelper;
 		_methodFamiliesIndexFactory = methodFamiliesIndexFactory;
 		_methodFamiliesDetailsFactory = methodFamiliesDetailsFactory;
 		_methodFamiliesCreateFactory = methodFamiliesCreateFactory;
@@ -62,17 +42,35 @@ public partial class MethodFamiliesControl : UserControl
 		_methodFamiliesDeleteFactory = methodFamiliesDeleteFactory;
 
 		InitializeComponent();
+	}
 
+	/// <inheritdoc/>
+	/// <summary>
+	/// Raises the OnInitialized event and displays the method families index control as the initial content.
+	/// </summary>
+	protected override void OnInitialized(EventArgs e)
+	{
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} with {EventArgs}.", nameof(MethodFamiliesControl), nameof(OnInitialized), e);
+		}
+
+		base.OnInitialized(e);
 		MethodFamiliesIndexControl indexControl = _methodFamiliesIndexFactory.Create();
 		indexControl.ChildControlEvent += MethodFamilies_Index_ChildControlEvent;
 		MethodFamiliesContent.Content = indexControl;
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(MethodFamiliesControl), nameof(OnInitialized));
+		}
 	}
 
 	private void MethodFamilies_Index_ChildControlEvent(object? sender, ChildControlEventArgs<MethodFamiliesIndexControl> e)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}", nameof(MethodFamiliesControl), nameof(MethodFamilies_Index_ChildControlEvent), sender, e);
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.", nameof(MethodFamiliesControl), nameof(MethodFamilies_Index_ChildControlEvent), sender, e);
 		}
 
 		switch (e.Action)
@@ -103,53 +101,18 @@ public partial class MethodFamiliesControl : UserControl
 			default:
 				break;
 		}
-	}
 
-	private void MethodFamilies_Create_ChildControlEvent(object? sender, ChildControlEventArgs<MethodFamiliesCreateControl> e)
-	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}", nameof(MethodFamiliesControl), nameof(MethodFamilies_Create_ChildControlEvent), sender, e);
-		}
-
-		switch (e.Action)
-		{
-			case "create":
-			case "index":
-				MethodFamiliesIndexControl indexControl = _methodFamiliesIndexFactory.Create();
-				indexControl.ChildControlEvent += MethodFamilies_Index_ChildControlEvent;
-				MethodFamiliesContent.Content = indexControl;
-				break;
-			default:
-				break;
-		}
-	}
-
-	private void MethodFamilies_Edit_ChildControlEvent(object? sender, ChildControlEventArgs<MethodFamiliesEditControl> e)
-	{
-		if (_logger.IsEnabled(LogLevel.Trace))
-		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}", nameof(MethodFamiliesControl), nameof(MethodFamilies_Edit_ChildControlEvent), sender, e);
-		}
-
-		switch (e.Action)
-		{
-			case "save":
-			case "index":
-				MethodFamiliesIndexControl indexControl = _methodFamiliesIndexFactory.Create();
-				indexControl.ChildControlEvent += MethodFamilies_Index_ChildControlEvent;
-				MethodFamiliesContent.Content = indexControl;
-				break;
-			default:
-				break;
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(MethodFamiliesControl), nameof(MethodFamilies_Index_ChildControlEvent));
 		}
 	}
 
 	private void MethodFamilies_Details_ChildControlEvent(object? sender, ChildControlEventArgs<MethodFamiliesDetailsControl> e)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}", nameof(MethodFamiliesControl), nameof(MethodFamilies_Details_ChildControlEvent), sender, e);
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.", nameof(MethodFamiliesControl), nameof(MethodFamilies_Details_ChildControlEvent), sender, e);
 		}
 
 		switch (e.Action)
@@ -168,12 +131,77 @@ public partial class MethodFamiliesControl : UserControl
 			default:
 				break;
 		}
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(MethodFamiliesControl), nameof(MethodFamilies_Details_ChildControlEvent));
+		}
+	}
+
+	private void MethodFamilies_Create_ChildControlEvent(object? sender, ChildControlEventArgs<MethodFamiliesCreateControl> e)
+	{
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.", nameof(MethodFamiliesControl), nameof(MethodFamilies_Create_ChildControlEvent), sender, e);
+		}
+
+		switch (e.Action)
+		{
+			case "create":
+				MethodFamiliesDetailsControl detailsControl = _methodFamiliesDetailsFactory.Create();
+				detailsControl.MethodFamilyId = e.ItemId ?? throw new NullParameterException(nameof(e.ItemId), $"The {nameof(e.ItemId)} cannot be null.");
+				detailsControl.ChildControlEvent += MethodFamilies_Details_ChildControlEvent;
+				MethodFamiliesContent.Content = detailsControl;
+				break;
+			case "index":
+				MethodFamiliesIndexControl indexControl = _methodFamiliesIndexFactory.Create();
+				indexControl.ChildControlEvent += MethodFamilies_Index_ChildControlEvent;
+				MethodFamiliesContent.Content = indexControl;
+				break;
+			default:
+				break;
+		}
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(MethodFamiliesControl), nameof(MethodFamilies_Create_ChildControlEvent));
+		}
+	}
+
+	private void MethodFamilies_Edit_ChildControlEvent(object? sender, ChildControlEventArgs<MethodFamiliesEditControl> e)
+	{
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.", nameof(MethodFamiliesControl), nameof(MethodFamilies_Edit_ChildControlEvent), sender, e);
+		}
+
+		switch (e.Action)
+		{
+			case "save":
+				MethodFamiliesDetailsControl detailsControl = _methodFamiliesDetailsFactory.Create();
+				detailsControl.MethodFamilyId = e.ItemId ?? throw new NullParameterException(nameof(e.ItemId), $"The {nameof(e.ItemId)} cannot be null.");
+				detailsControl.ChildControlEvent += MethodFamilies_Details_ChildControlEvent;
+				MethodFamiliesContent.Content = detailsControl;
+				break;
+			case "index":
+				MethodFamiliesIndexControl indexControl = _methodFamiliesIndexFactory.Create();
+				indexControl.ChildControlEvent += MethodFamilies_Index_ChildControlEvent;
+				MethodFamiliesContent.Content = indexControl;
+				break;
+			default:
+				break;
+		}
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(MethodFamiliesControl), nameof(MethodFamilies_Edit_ChildControlEvent));
+		}
 	}
 	private void MethodFamilies_Delete_ChildControlEvent(object? sender, ChildControlEventArgs<MethodFamiliesDeleteControl> e)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}", nameof(MethodFamiliesControl), nameof(MethodFamilies_Delete_ChildControlEvent), sender, e);
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.", nameof(MethodFamiliesControl), nameof(MethodFamilies_Delete_ChildControlEvent), sender, e);
 		}
 
 		switch (e.Action)
@@ -186,6 +214,11 @@ public partial class MethodFamiliesControl : UserControl
 				break;
 			default:
 				break;
+		}
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(MethodFamiliesControl), nameof(MethodFamilies_Delete_ChildControlEvent));
 		}
 	}
 }

@@ -11,7 +11,6 @@ using GaussianWPF.WPFHelpers;
 
 using GaussianWPFLibrary.DataAccess;
 using GaussianWPFLibrary.EventModels;
-using GaussianWPFLibrary.Models;
 
 using Microsoft.Extensions.Logging;
 
@@ -19,32 +18,23 @@ namespace GaussianWPF.Controls.MethodFamilies;
 
 /// <summary>
 /// Interaction logic for MethodFamiliesDeleteControl.xaml
-/// Provides a user interface for viewing and deleting Method Families with confirmation.
 /// </summary>
 public partial class MethodFamiliesDeleteControl : UserControl, INotifyPropertyChanged
 {
 	private readonly ILogger<MethodFamiliesDeleteControl> _logger;
-	private readonly ILoggedInUserModel _loggedInUser;
-	private readonly IApiHelper _apiHelper;
 	private readonly IMethodFamiliesEndpoint _endpoint;
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="MethodFamiliesDeleteControl"/> class.
+	/// Initializes a new instance of the <see cref="MethodFamiliesDeleteControl"/> class with dependency injection.
 	/// </summary>
-	/// <param name="logger">Logger for diagnostic and trace information.</param>
-	/// <param name="loggedInUser">The currently logged-in user model.</param>
-	/// <param name="apiHelper">Helper for API interactions.</param>
-	/// <param name="endpoint">Endpoint for Method Families data access operations.</param>
-	public MethodFamiliesDeleteControl(ILogger<MethodFamiliesDeleteControl> logger, ILoggedInUserModel loggedInUser, IApiHelper apiHelper, IMethodFamiliesEndpoint endpoint)
+	/// <param name="logger">The logger instance for logging control operations.</param>
+	/// <param name="endpoint">The endpoint for method family API operations.</param>
+	public MethodFamiliesDeleteControl(ILogger<MethodFamiliesDeleteControl> logger, IMethodFamiliesEndpoint endpoint)
 	{
 		_logger = logger;
-		_loggedInUser = loggedInUser;
-		_apiHelper = apiHelper;
 		_endpoint = endpoint;
 
 		InitializeComponent();
-		DataContext = this;
-		PropertyChanged += MethodFamiliesDeleteControl_PropertyChanged;
 	}
 
 	/// <summary>
@@ -53,27 +43,16 @@ public partial class MethodFamiliesDeleteControl : UserControl, INotifyPropertyC
 	public event PropertyChangedEventHandler? PropertyChanged;
 
 	/// <summary>
-	/// Occurs when a child control event is raised, such as navigation or completion events.
+	/// Occurs when a child control event is raised to request navigation to another view.
 	/// </summary>
 	public event EventHandler<ChildControlEventArgs<MethodFamiliesDeleteControl>>? ChildControlEvent;
 
 	/// <summary>
-	/// Gets or sets the ID of the Method Family to be deleted.
-	/// When set, triggers loading of the Method Family details.
+	/// Gets or sets the method family view model being deleted.
 	/// </summary>
-	public int MethodFamilyId
-	{
-		get;
-		set
-		{
-			field = value;
-			OnPropertyChanged(nameof(MethodFamilyId));
-		}
-	}
-
-	/// <summary>
-	/// Gets or sets the Method Family view model containing the data to be displayed and deleted.
-	/// </summary>
+	/// <remarks>
+	/// When this property is set, the control automatically populates the RTF content and updates the <see cref="ModelIsNotNull"/> property.
+	/// </remarks>
 	public MethodFamilyViewModel? MethodFamily
 	{
 		get;
@@ -85,9 +64,27 @@ public partial class MethodFamiliesDeleteControl : UserControl, INotifyPropertyC
 	}
 
 	/// <summary>
-	/// Gets or sets a value indicating whether the Method Family model is not null.
-	/// Used for controlling UI element visibility.
+	/// Gets or sets the identifier of the method family to delete.
 	/// </summary>
+	/// <remarks>
+	/// When this property is set, the control automatically loads the method family data from the API.
+	/// </remarks>
+	public int MethodFamilyId
+	{
+		get;
+		set
+		{
+			field = value;
+			OnPropertyChanged(nameof(MethodFamilyId));
+		}
+	}
+
+	/// <summary>
+	/// Gets or sets a value indicating whether a valid method family model is loaded.
+	/// </summary>
+	/// <remarks>
+	/// Setting this property also updates the <see cref="ModelIsNull"/> property.
+	/// </remarks>
 	public bool ModelIsNotNull
 	{
 		get;
@@ -100,9 +97,11 @@ public partial class MethodFamiliesDeleteControl : UserControl, INotifyPropertyC
 	}
 
 	/// <summary>
-	/// Gets a value indicating whether the Method Family model is null.
-	/// Computed property based on <see cref="ModelIsNotNull"/>.
+	/// Gets a value indicating whether no method family model is loaded.
 	/// </summary>
+	/// <remarks>
+	/// This property returns the inverse of <see cref="ModelIsNotNull"/>.
+	/// </remarks>
 	public bool ModelIsNull
 	{
 		get { return !ModelIsNotNull; }
@@ -126,8 +125,10 @@ public partial class MethodFamiliesDeleteControl : UserControl, INotifyPropertyC
 
 	/// <summary>
 	/// Gets or sets a value indicating whether the error message should be visible.
-	/// Automatically updated when <see cref="ErrorMessage"/> changes.
 	/// </summary>
+	/// <remarks>
+	/// This property is automatically set based on whether <see cref="ErrorMessage"/> has a value.
+	/// </remarks>
 	public bool IsErrorVisible
 	{
 		get;
@@ -142,59 +143,104 @@ public partial class MethodFamiliesDeleteControl : UserControl, INotifyPropertyC
 	}
 
 	/// <summary>
-	/// Raises the <see cref="PropertyChanged"/> event.
+	/// Raises the <see cref="PropertyChanged"/> event for the specified property.
 	/// </summary>
-	/// <param name="propertyName">Name of the property that changed. Automatically populated by the compiler.</param>
+	/// <param name="propertyName">The name of the property that changed. This parameter is optional and can be automatically populated by the caller member name.</param>
 	protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
 	{
 		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogDebug("{UserControl} {Method} with {PropertyName}", nameof(MethodFamiliesDeleteControl), nameof(OnPropertyChanged), propertyName);
+			_logger.LogDebug("{UserControl} {Method} called with CallerMemberName = {PropertyName}.", nameof(MethodFamiliesDeleteControl), nameof(OnPropertyChanged), propertyName);
 		}
 
 		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {Method} returning.", nameof(MethodFamiliesDeleteControl), nameof(OnPropertyChanged));
+		}
+	}
+
+	/// <inheritdoc/>
+	/// <summary>
+	/// Raises the OnInitialzied event and sets up data binding and property change notifications.
+	/// </summary>
+	protected override void OnInitialized(EventArgs e)
+	{
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} called with {EventArgs}.", nameof(MethodFamiliesDeleteControl), nameof(OnInitialized), e);
+		}
+
+		base.OnInitialized(e);
+		DataContext = this;
+		PropertyChanged += MethodFamiliesDeleteControl_PropertyChanged;
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(MethodFamiliesDeleteControl), nameof(OnInitialized));
+		}
 	}
 
 	private void MethodFamiliesDeleteControl_PropertyChanged(object? sender, PropertyChangedEventArgs e)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}", nameof(MethodFamiliesDeleteControl), nameof(MethodFamiliesDeleteControl_PropertyChanged), sender, e);
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.", nameof(MethodFamiliesDeleteControl), nameof(MethodFamiliesDeleteControl_PropertyChanged), sender, e);
+		}
+
+		if (e.PropertyName is nameof(MethodFamily))
+		{
+			if (MethodFamily is not null)
+			{
+				// Populate the RichTextBox with RTF
+				DescriptionRichTextBox.SetRtfText(MethodFamily.DescriptionRtf);
+				ModelIsNotNull = true;
+			}
+			else
+			{
+				DescriptionRichTextBox.Document.Blocks.Clear();
+				ModelIsNotNull = false;
+			}
 		}
 
 		if (e.PropertyName is nameof(MethodFamilyId))
 		{
 			try
 			{
-				if (MethodFamilyId != 0)
+				if (MethodFamilyId != 0 && (MethodFamily is null || MethodFamily.Id != MethodFamilyId))
 				{
 					MethodFamilyFullModel? results = _endpoint.GetByIdAsync(MethodFamilyId).Result;
-
-					if (_logger.IsEnabled(LogLevel.Trace))
-					{
-						_logger.LogTrace("{Method} returned {Results}", nameof(_endpoint.GetByIdAsync), results);
-					}
 
 					if (results is not null)
 					{
 						MethodFamily = new MethodFamilyViewModel(results);
+						// Populate the RichTextBox with RTF
+						DescriptionRichTextBox.SetRtfText(MethodFamily.DescriptionRtf);
 						ModelIsNotNull = true;
 					}
+					else
+					{
+						MethodFamily = null;
+						DescriptionRichTextBox.Document.Blocks.Clear();
+						ModelIsNotNull = false;
+					}
 				}
-				else
+				else if (MethodFamilyId == 0)
 				{
 					MethodFamily = null;
+					DescriptionRichTextBox.Document.Blocks.Clear();
 					ModelIsNotNull = false;
 				}
 			}
 			catch (HttpIOException ex)
 			{
+				ErrorMessage = ex.Message;
+
 				if (_logger.IsEnabled(LogLevel.Error))
 				{
-					_logger.LogError(ex, "{UserControl} {Method} had an error", nameof(MethodFamiliesEditControl), nameof(OnInitialized));
+					_logger.LogError(ex, "{UserControl} {EventHandler} called with {Sender} and {EventArgs} had an error.", nameof(MethodFamiliesDeleteControl), nameof(MethodFamiliesDeleteControl_PropertyChanged), sender, e);
 				}
-
-				ErrorMessage = ex.Message;
 			}
 			catch (AggregateException ae)
 			{
@@ -202,12 +248,13 @@ public partial class MethodFamiliesDeleteControl : UserControl, INotifyPropertyC
 				{
 					if (ex is HttpIOException)
 					{
+						ErrorMessage = ex.Message;
+
 						if (_logger.IsEnabled(LogLevel.Error))
 						{
-							_logger.LogError(ex, "{UserControl} {Method} had an error", nameof(MethodFamiliesEditControl), nameof(OnInitialized));
+							_logger.LogError(ex, "{UserControl} {EventHandler} called with {Sender} and {EventArgs} had an error.", nameof(MethodFamiliesDeleteControl), nameof(MethodFamiliesDeleteControl_PropertyChanged), sender, e);
 						}
 
-						ErrorMessage = ex.Message;
 						return true;
 					}
 
@@ -217,22 +264,16 @@ public partial class MethodFamiliesDeleteControl : UserControl, INotifyPropertyC
 			}
 		}
 
-		if (e.PropertyName is nameof(MethodFamily))
-		{
-			if (MethodFamily is not null)
-			{
-				// Populate the RichTextBox with RTF
-				DescriptionRichTextBox.SetRtfText(MethodFamily.DescriptionRtf);
-			}
-			else
-			{
-				DescriptionRichTextBox.Document.Blocks.Clear();
-			}
-		}
-
 		if (e.PropertyName == nameof(ErrorMessage))
 		{
 			IsErrorVisible = ErrorMessage?.Length > 0;
+		}
+
+		// Nothing to do for change events of ModelIsNull, ModelIsNotNull, IsErrorVisible and CanSave.
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(MethodFamiliesDeleteControl), nameof(MethodFamiliesDeleteControl_PropertyChanged));
 		}
 	}
 
@@ -240,26 +281,30 @@ public partial class MethodFamiliesDeleteControl : UserControl, INotifyPropertyC
 	{
 		try
 		{
-			if (_logger.IsEnabled(LogLevel.Trace))
+			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}", nameof(MethodFamiliesDeleteControl), nameof(DeleteButton_Click), sender, e);
+				_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.", nameof(MethodFamiliesDeleteControl), nameof(DeleteButton_Click), sender, e);
 			}
 
 			ErrorMessage = string.Empty;
-
 			_endpoint.DeleteAsync(MethodFamilyId).Wait();
 			MethodFamily!.LastUpdatedDate = DateTime.Now;
 			MethodFamily!.Archived = true;
 			ChildControlEvent?.Invoke(this, new ChildControlEventArgs<MethodFamiliesDeleteControl>("delete", null));
+
+			if (_logger.IsEnabled(LogLevel.Debug))
+			{
+				_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(MethodFamiliesDeleteControl), nameof(DeleteButton_Click));
+			}
 		}
 		catch (HttpIOException ex)
 		{
+			ErrorMessage = ex.Message;
+
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{UserControl} {EventHandler} had an error", nameof(MethodFamiliesDeleteControl), nameof(DeleteButton_Click));
+				_logger.LogError(ex, "{UserControl} {EventHandler} called with {Sender} and {EventArgs} had an error.", nameof(MethodFamiliesDeleteControl), nameof(DeleteButton_Click), sender, e);
 			}
-
-			ErrorMessage = ex.Message;
 		}
 		catch (AggregateException ae)
 		{
@@ -267,12 +312,13 @@ public partial class MethodFamiliesDeleteControl : UserControl, INotifyPropertyC
 			{
 				if (ex is HttpIOException)
 				{
+					ErrorMessage = ex.Message;
+
 					if (_logger.IsEnabled(LogLevel.Error))
 					{
-						_logger.LogError(ex, "{UserControl} {EventHandler} had an error", nameof(MethodFamiliesDeleteControl), nameof(DeleteButton_Click));
+						_logger.LogError(ex, "{UserControl} {EventHandler} called with {Sender} and {EventArgs} had an error.", nameof(MethodFamiliesDeleteControl), nameof(DeleteButton_Click), sender, e);
 					}
 
-					ErrorMessage = ex.Message;
 					return true;
 				}
 
@@ -284,11 +330,16 @@ public partial class MethodFamiliesDeleteControl : UserControl, INotifyPropertyC
 
 	private void BackToIndexButton_Click(object sender, RoutedEventArgs e)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}", nameof(MethodFamiliesDeleteControl), nameof(BackToIndexButton_Click), sender, e);
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.", nameof(MethodFamiliesDeleteControl), nameof(BackToIndexButton_Click), sender, e);
 		}
 
 		ChildControlEvent?.Invoke(this, new ChildControlEventArgs<MethodFamiliesDeleteControl>("index", null));
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(MethodFamiliesDeleteControl), nameof(BackToIndexButton_Click));
+		}
 	}
 }

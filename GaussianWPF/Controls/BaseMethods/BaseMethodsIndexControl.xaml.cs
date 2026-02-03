@@ -19,50 +19,27 @@ namespace GaussianWPF.Controls.BaseMethods;
 
 /// <summary>
 /// Interaction logic for BaseMethodsIndexControl.xaml
-/// A WPF UserControl that displays a list of Base Methods and provides CRUD operations.
 /// </summary>
-/// <remarks>
-/// This control implements the INotifyPropertyChanged interface to support data binding
-/// and raises events to notify parent controls of user actions.
-/// </remarks>
 public partial class BaseMethodsIndexControl : UserControl, INotifyPropertyChanged
 {
 	private readonly ILogger<BaseMethodsIndexControl> _logger;
-	private readonly ILoggedInUserModel _loggedInUser;
-	private readonly IApiHelper _apiHelper;
 	private readonly IBaseMethodsEndpoint _baseMethodsEndpoint;
 	private readonly IMethodFamiliesEndpoint _methodFamiliesEndpoint;
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="BaseMethodsIndexControl"/> class.
+	/// Initializes a new instance of the <see cref="BaseMethodsIndexControl"/> class with dependency injection.
 	/// </summary>
-	/// <param name="logger">Logger instance for diagnostic logging.</param>
-	/// <param name="loggedInUser">Model representing the currently logged-in user.</param>
-	/// <param name="apiHelper">Helper for API communication.</param>
-	/// <param name="baseMethodsEndpoint">Endpoint for accessing Base Methods data.</param>
-	/// <param name="methodFamiliesEndpoint">Endpoint for accessing Method Families data.</param>
-	public BaseMethodsIndexControl(ILogger<BaseMethodsIndexControl> logger, ILoggedInUserModel loggedInUser, IApiHelper apiHelper, IBaseMethodsEndpoint baseMethodsEndpoint, IMethodFamiliesEndpoint methodFamiliesEndpoint)
+	/// <param name="logger">The logger instance for logging control operations.</param>
+	/// <param name="baseMethodsEndpoint">The endpoint for base method API operations.</param>
+	/// <param name="methodFamiliesEndpoint">The endpoint for method family API operations.</param>
+	public BaseMethodsIndexControl(ILogger<BaseMethodsIndexControl> logger, IBaseMethodsEndpoint baseMethodsEndpoint, IMethodFamiliesEndpoint methodFamiliesEndpoint)
 	{
 		_logger = logger;
-		_loggedInUser = loggedInUser;
-		_apiHelper = apiHelper;
 		_baseMethodsEndpoint = baseMethodsEndpoint;
 		_methodFamiliesEndpoint = methodFamiliesEndpoint;
-		BaseMethodsList = [];
 
 		InitializeComponent();
-		DataContext = this;
-		PropertyChanged += BaseMethodsIndexControl_PropertyChanged;
 	}
-
-	/// <summary>
-	/// Event raised when a child control action is triggered.
-	/// </summary>
-	/// <remarks>
-	/// This event notifies parent controls when the user initiates create, edit, details, or delete actions.
-	/// The event data includes the action type and the ID of the affected item (if applicable).
-	/// </remarks>
-	public event EventHandler<ChildControlEventArgs<BaseMethodsIndexControl>>? ChildControlEvent;
 
 	/// <summary>
 	/// Occurs when a property value changes.
@@ -70,11 +47,13 @@ public partial class BaseMethodsIndexControl : UserControl, INotifyPropertyChang
 	public event PropertyChangedEventHandler? PropertyChanged;
 
 	/// <summary>
-	/// Gets or sets the collection of Base Methods to display.
+	/// Occurs when a child control event is raised to request navigation to another view.
 	/// </summary>
-	/// <value>
-	/// An observable collection of <see cref="BaseMethodViewModel"/> instances.
-	/// </value>
+	public event EventHandler<ChildControlEventArgs<BaseMethodsIndexControl>>? ChildControlEvent;
+
+	/// <summary>
+	/// Gets or sets the collection of base methods to display in the list.
+	/// </summary>
 	public Collection<BaseMethodViewModel> BaseMethodsList
 	{
 		get;
@@ -86,14 +65,11 @@ public partial class BaseMethodsIndexControl : UserControl, INotifyPropertyChang
 				OnPropertyChanged(nameof(BaseMethodsList));
 			}
 		}
-	}
+	} = [];
 
 	/// <summary>
-	/// Gets or sets the error message to display to the user.
+	/// Gets or sets the error message to display when an operation fails.
 	/// </summary>
-	/// <value>
-	/// A string containing the error message, or <c>null</c> if there is no error.
-	/// </value>
 	public string? ErrorMessage
 	{
 		get;
@@ -110,9 +86,9 @@ public partial class BaseMethodsIndexControl : UserControl, INotifyPropertyChang
 	/// <summary>
 	/// Gets or sets a value indicating whether the error message should be visible.
 	/// </summary>
-	/// <value>
-	/// <c>true</c> if the error message should be visible; otherwise, <c>false</c>.
-	/// </value>
+	/// <remarks>
+	/// This property is automatically set based on whether <see cref="ErrorMessage"/> has a value.
+	/// </remarks>
 	public bool IsErrorVisible
 	{
 		get;
@@ -127,52 +103,84 @@ public partial class BaseMethodsIndexControl : UserControl, INotifyPropertyChang
 	}
 
 	/// <summary>
-	/// Raises the <see cref="OnInitialized"/> event and loads Base Methods from the API.
+	/// Raises the <see cref="PropertyChanged"/> event for the specified property.
 	/// </summary>
-	/// <param name="e">The event data.</param>
-	/// <remarks>
-	/// This method fetches all Base Methods from the baseMethodsEndpoint and populates the <see cref="BaseMethodsList"/>.
-	/// If an error occurs during data retrieval, it sets the <see cref="ErrorMessage"/> property.
-	/// </remarks>
-	/// <exception cref="HttpIOException">Thrown when an HTTP communication error occurs.</exception>
+	/// <param name="propertyName">The name of the property that changed. This parameter is optional and can be automatically populated by the caller member name.</param>
+	protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+	{
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {Method} called with CallerMemberName = {PropertyName}.", nameof(BaseMethodsIndexControl), nameof(OnPropertyChanged), propertyName);
+		}
+
+		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {Method} returning.", nameof(BaseMethodsIndexControl), nameof(OnPropertyChanged));
+		}
+	}
+
+	/// <inheritdoc/>
+	/// <summary>
+	/// Raises the OnInitialized event, sets up data binding, and loads the list of base methods from the API.
+	/// </summary>
 	protected override void OnInitialized(EventArgs e)
 	{
 		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogDebug("{UserControl} {Method} with {EventArgs}", nameof(BaseMethodsIndexControl), nameof(OnInitialized), e);
+			_logger.LogDebug("{UserControl} {EventHandler} called with {EventArgs}.", nameof(BaseMethodsIndexControl), nameof(OnInitialized), e);
 		}
 
 		base.OnInitialized(e);
+		DataContext = this;
+		PropertyChanged += BaseMethodsIndexControl_PropertyChanged;
 
 		try
 		{
 			List<BaseMethodSimpleModel>? results = _baseMethodsEndpoint.GetAllSimpleAsync().Result;
-
-			if (_logger.IsEnabled(LogLevel.Trace))
-			{
-				_logger.LogTrace("{Method} returned {ResultsCount}", nameof(_baseMethodsEndpoint.GetAllSimpleAsync), results?.Count);
-			}
-
 			List<MethodFamilyRecord>? methodFamilies = _methodFamiliesEndpoint.GetListAsync().Result;
 
 			if (results is not null && methodFamilies is not null && methodFamilies.Count > 0)
 			{
 				foreach (BaseMethodSimpleModel item in results)
 				{
-					MethodFamilyRecord methodFamily = methodFamilies.First(mf => mf.Id == item.MethodFamilyId);
-					BaseMethodViewModel model = new(item, methodFamily, methodFamilies);
+					BaseMethodViewModel model = new(item, methodFamilies);
 					BaseMethodsList.Add(model);
 				}
+			}
+			else if (results is not null)
+			{
+				foreach (BaseMethodSimpleModel item in results)
+				{
+					BaseMethodViewModel model = new()
+					{
+						Id = item.Id,
+						Keyword = item.Keyword,
+						MethodFamily = null,
+						DescriptionRtf = item.DescriptionRtf,
+						DescriptionText = item.DescriptionText,
+						CreatedDate = item.CreatedDate,
+						LastUpdatedDate = item.LastUpdatedDate,
+						Archived = item.Archived
+					};
+
+					BaseMethodsList.Add(model);
+				}
+			}
+			else
+			{
+				BaseMethodsList.Clear();
 			}
 		}
 		catch (HttpIOException ex)
 		{
+			ErrorMessage = ex.Message;
+
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{UserControl} {Method} had an error", nameof(BaseMethodsIndexControl), nameof(OnInitialized));
+				_logger.LogError(ex, "{UserControl} {EventHandler} called with {EventArgs} had an error.", nameof(BaseMethodsIndexControl), nameof(OnInitialized), e);
 			}
-
-			ErrorMessage = ex.Message;
 		}
 		catch (AggregateException ae)
 		{
@@ -180,12 +188,13 @@ public partial class BaseMethodsIndexControl : UserControl, INotifyPropertyChang
 			{
 				if (ex is HttpIOException)
 				{
+					ErrorMessage = ex.Message;
+
 					if (_logger.IsEnabled(LogLevel.Error))
 					{
-						_logger.LogError(ex, "{UserControl} {Method} had an error", nameof(BaseMethodsIndexControl), nameof(OnInitialized));
+						_logger.LogError(ex, "{UserControl} {EventHandler} called with {EventArgs} had an error.", nameof(BaseMethodsIndexControl), nameof(OnInitialized), e);
 					}
 
-					ErrorMessage = ex.Message;
 					return true;
 				}
 
@@ -193,96 +202,120 @@ public partial class BaseMethodsIndexControl : UserControl, INotifyPropertyChang
 				return false;
 			});
 		}
-	}
 
-	/// <summary>
-	/// Raises the <see cref="PropertyChanged"/> event.
-	/// </summary>
-	/// <param name="propertyName">The name of the property that changed. This parameter is automatically populated by the compiler.</param>
-	protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-	{
 		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogDebug("{UserControl} {Method} with {PropertyName}", nameof(BaseMethodsIndexControl), nameof(OnPropertyChanged), propertyName);
-		}
-
-		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-	}
-
-	private void CreateNewButton_Click(object sender, RoutedEventArgs e)
-	{
-		if (_logger.IsEnabled(LogLevel.Trace))
-		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}", nameof(BaseMethodsIndexControl), nameof(CreateNewButton_Click), sender, e);
-		}
-
-		ChildControlEvent?.Invoke(this, new ChildControlEventArgs<BaseMethodsIndexControl>("create", null));
-	}
-
-	private void EditButton_Click(object sender, RoutedEventArgs e)
-	{
-		if (_logger.IsEnabled(LogLevel.Trace))
-		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}", nameof(BaseMethodsIndexControl), nameof(EditButton_Click), sender, e);
-		}
-
-		Button? button = sender as Button;
-		if (button is not null)
-		{
-			BaseMethodViewModel? itemToEdit = button.DataContext as BaseMethodViewModel;
-			if (itemToEdit is not null)
-			{
-				ChildControlEvent?.Invoke(this, new ChildControlEventArgs<BaseMethodsIndexControl>("edit", itemToEdit.Id));
-			}
-		}
-	}
-
-	private void DetailsButton_Click(object sender, RoutedEventArgs e)
-	{
-		if (_logger.IsEnabled(LogLevel.Trace))
-		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}", nameof(BaseMethodsIndexControl), nameof(DetailsButton_Click), sender, e);
-		}
-
-		Button? button = sender as Button;
-		if (button is not null)
-		{
-			BaseMethodViewModel? itemToView = button.DataContext as BaseMethodViewModel;
-			if (itemToView is not null)
-			{
-				ChildControlEvent?.Invoke(this, new ChildControlEventArgs<BaseMethodsIndexControl>("details", itemToView.Id));
-			}
-		}
-	}
-
-	private void DeleteButton_Click(object sender, RoutedEventArgs e)
-	{
-		if (_logger.IsEnabled(LogLevel.Trace))
-		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}", nameof(BaseMethodsIndexControl), nameof(DeleteButton_Click), sender, e);
-		}
-
-		Button? button = sender as Button;
-		if (button is not null)
-		{
-			BaseMethodViewModel? itemToDelete = button.DataContext as BaseMethodViewModel;
-			if (itemToDelete is not null)
-			{
-				ChildControlEvent?.Invoke(this, new ChildControlEventArgs<BaseMethodsIndexControl>("delete", itemToDelete.Id));
-			}
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(BaseMethodsIndexControl), nameof(OnInitialized));
 		}
 	}
 
 	private void BaseMethodsIndexControl_PropertyChanged(object? sender, PropertyChangedEventArgs e)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}", nameof(BaseMethodsIndexControl), nameof(BaseMethodsIndexControl_PropertyChanged), sender, e);
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.", nameof(BaseMethodsIndexControl), nameof(BaseMethodsIndexControl_PropertyChanged), sender, e);
 		}
 
 		if (e.PropertyName == nameof(ErrorMessage))
 		{
 			IsErrorVisible = ErrorMessage?.Length > 0;
+		}
+
+		// Nothing to do for change events of BaseMethodList and IsErrorVisible.
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(BaseMethodsIndexControl), nameof(BaseMethodsIndexControl_PropertyChanged));
+		}
+	}
+
+	private void CreateNewButton_Click(object sender, RoutedEventArgs e)
+	{
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.", nameof(BaseMethodsIndexControl), nameof(CreateNewButton_Click), sender, e);
+		}
+
+		ChildControlEvent?.Invoke(this, new ChildControlEventArgs<BaseMethodsIndexControl>("create", null));
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(BaseMethodsIndexControl), nameof(CreateNewButton_Click));
+		}
+	}
+
+	private void EditButton_Click(object sender, RoutedEventArgs e)
+	{
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.", nameof(BaseMethodsIndexControl), nameof(EditButton_Click), sender, e);
+		}
+
+		Button? button = sender as Button;
+
+		if (button is not null)
+		{
+			BaseMethodViewModel? itemToEdit = button.DataContext as BaseMethodViewModel;
+
+			if (itemToEdit is not null)
+			{
+				ChildControlEvent?.Invoke(this, new ChildControlEventArgs<BaseMethodsIndexControl>("edit", itemToEdit.Id));
+			}
+		}
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(BaseMethodsIndexControl), nameof(EditButton_Click));
+		}
+	}
+
+	private void DetailsButton_Click(object sender, RoutedEventArgs e)
+	{
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.", nameof(BaseMethodsIndexControl), nameof(DetailsButton_Click), sender, e);
+		}
+
+		Button? button = sender as Button;
+
+		if (button is not null)
+		{
+			BaseMethodViewModel? itemToView = button.DataContext as BaseMethodViewModel;
+
+			if (itemToView is not null)
+			{
+				ChildControlEvent?.Invoke(this, new ChildControlEventArgs<BaseMethodsIndexControl>("details", itemToView.Id));
+			}
+		}
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(BaseMethodsIndexControl), nameof(DetailsButton_Click));
+		}
+	}
+
+	private void DeleteButton_Click(object sender, RoutedEventArgs e)
+	{
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.", nameof(BaseMethodsIndexControl), nameof(DeleteButton_Click), sender, e);
+		}
+
+		Button? button = sender as Button;
+
+		if (button is not null)
+		{
+			BaseMethodViewModel? itemToDelete = button.DataContext as BaseMethodViewModel;
+
+			if (itemToDelete is not null)
+			{
+				ChildControlEvent?.Invoke(this, new ChildControlEventArgs<BaseMethodsIndexControl>("delete", itemToDelete.Id));
+			}
+		}
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(BaseMethodsIndexControl), nameof(DeleteButton_Click));
 		}
 	}
 }

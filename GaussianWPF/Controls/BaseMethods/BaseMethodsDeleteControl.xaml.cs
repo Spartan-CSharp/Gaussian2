@@ -11,7 +11,6 @@ using GaussianWPF.WPFHelpers;
 
 using GaussianWPFLibrary.DataAccess;
 using GaussianWPFLibrary.EventModels;
-using GaussianWPFLibrary.Models;
 
 using Microsoft.Extensions.Logging;
 
@@ -19,34 +18,26 @@ namespace GaussianWPF.Controls.BaseMethods;
 
 /// <summary>
 /// Interaction logic for BaseMethodsDeleteControl.xaml
-/// Provides a user interface for viewing and deleting Base Methods with confirmation.
 /// </summary>
 public partial class BaseMethodsDeleteControl : UserControl, INotifyPropertyChanged
 {
 	private readonly ILogger<BaseMethodsDeleteControl> _logger;
-	private readonly ILoggedInUserModel _loggedInUser;
-	private readonly IApiHelper _apiHelper;
 	private readonly IBaseMethodsEndpoint _baseMethodsEndpoint;
 	private readonly IMethodFamiliesEndpoint _methodFamiliesEndpoint;
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="BaseMethodsDeleteControl"/> class.
+	/// Initializes a new instance of the <see cref="BaseMethodsDeleteControl"/> class with dependency injection.
 	/// </summary>
-	/// <param name="logger">Logger for diagnostic and trace information.</param>
-	/// <param name="loggedInUser">The currently logged-in user model.</param>
-	/// <param name="apiHelper">Helper for API interactions.</param>
-	/// <param name="baseMethodsEndpoint">Endpoint for Base Methods data access operations.</param>
-	/// <param name="methodFamiliesEndpoint">Endpoint for Method Families data access operations.</param>
-	public BaseMethodsDeleteControl(ILogger<BaseMethodsDeleteControl> logger, ILoggedInUserModel loggedInUser, IApiHelper apiHelper, IBaseMethodsEndpoint baseMethodsEndpoint, IMethodFamiliesEndpoint methodFamiliesEndpoint)
+	/// <param name="logger">The logger instance for logging control operations.</param>
+	/// <param name="baseMethodsEndpoint">The endpoint for base method API operations.</param>
+	/// <param name="methodFamiliesEndpoint">The endpoint for method family API operations.</param>
+	public BaseMethodsDeleteControl(ILogger<BaseMethodsDeleteControl> logger, IBaseMethodsEndpoint baseMethodsEndpoint, IMethodFamiliesEndpoint methodFamiliesEndpoint)
 	{
 		_logger = logger;
-		_loggedInUser = loggedInUser;
-		_apiHelper = apiHelper;
 		_baseMethodsEndpoint = baseMethodsEndpoint;
 		_methodFamiliesEndpoint = methodFamiliesEndpoint;
+
 		InitializeComponent();
-		DataContext = this;
-		PropertyChanged += BaseMethodsDeleteControl_PropertyChanged;
 	}
 
 	/// <summary>
@@ -55,27 +46,16 @@ public partial class BaseMethodsDeleteControl : UserControl, INotifyPropertyChan
 	public event PropertyChangedEventHandler? PropertyChanged;
 
 	/// <summary>
-	/// Occurs when a child control event is raised, such as navigation or completion events.
+	/// Occurs when a child control event is raised to request navigation to another view.
 	/// </summary>
 	public event EventHandler<ChildControlEventArgs<BaseMethodsDeleteControl>>? ChildControlEvent;
 
 	/// <summary>
-	/// Gets or sets the ID of the Base Method to be deleted.
-	/// When set, triggers loading of the Base Method details.
+	/// Gets or sets the base method view model being deleted.
 	/// </summary>
-	public int BaseMethodId
-	{
-		get;
-		set
-		{
-			field = value;
-			OnPropertyChanged(nameof(BaseMethodId));
-		}
-	}
-
-	/// <summary>
-	/// Gets or sets the Base Method view model containing the data to be displayed and deleted.
-	/// </summary>
+	/// <remarks>
+	/// When this property is set, the control automatically populates the RTF content and updates the <see cref="ModelIsNotNull"/> property.
+	/// </remarks>
 	public BaseMethodViewModel? BaseMethod
 	{
 		get;
@@ -87,9 +67,27 @@ public partial class BaseMethodsDeleteControl : UserControl, INotifyPropertyChan
 	}
 
 	/// <summary>
-	/// Gets or sets a value indicating whether the Base Method model is not null.
-	/// Used for controlling UI element visibility.
+	/// Gets or sets the identifier of the base method to delete.
 	/// </summary>
+	/// <remarks>
+	/// When this property is set, the control automatically loads the base method data from the API.
+	/// </remarks>
+	public int BaseMethodId
+	{
+		get;
+		set
+		{
+			field = value;
+			OnPropertyChanged(nameof(BaseMethodId));
+		}
+	}
+
+	/// <summary>
+	/// Gets or sets a value indicating whether a valid base method model is loaded.
+	/// </summary>
+	/// <remarks>
+	/// Setting this property also updates the <see cref="ModelIsNull"/> property.
+	/// </remarks>
 	public bool ModelIsNotNull
 	{
 		get;
@@ -102,9 +100,11 @@ public partial class BaseMethodsDeleteControl : UserControl, INotifyPropertyChan
 	}
 
 	/// <summary>
-	/// Gets a value indicating whether the Base Method model is null.
-	/// Computed property based on <see cref="ModelIsNotNull"/>.
+	/// Gets a value indicating whether no base method model is loaded.
 	/// </summary>
+	/// <remarks>
+	/// This property returns the inverse of <see cref="ModelIsNotNull"/>.
+	/// </remarks>
 	public bool ModelIsNull
 	{
 		get { return !ModelIsNotNull; }
@@ -128,8 +128,10 @@ public partial class BaseMethodsDeleteControl : UserControl, INotifyPropertyChan
 
 	/// <summary>
 	/// Gets or sets a value indicating whether the error message should be visible.
-	/// Automatically updated when <see cref="ErrorMessage"/> changes.
 	/// </summary>
+	/// <remarks>
+	/// This property is automatically set based on whether <see cref="ErrorMessage"/> has a value.
+	/// </remarks>
 	public bool IsErrorVisible
 	{
 		get;
@@ -144,61 +146,129 @@ public partial class BaseMethodsDeleteControl : UserControl, INotifyPropertyChan
 	}
 
 	/// <summary>
-	/// Raises the <see cref="PropertyChanged"/> event.
+	/// Raises the <see cref="PropertyChanged"/> event for the specified property.
 	/// </summary>
-	/// <param name="propertyName">Name of the property that changed. Automatically populated by the compiler.</param>
+	/// <param name="propertyName">The name of the property that changed. This parameter is optional and can be automatically populated by the caller member name.</param>
 	protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
 	{
 		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogDebug("{UserControl} {Method} with {PropertyName}", nameof(BaseMethodsDeleteControl), nameof(OnPropertyChanged), propertyName);
+			_logger.LogDebug("{UserControl} {Method} called with CallerMemberName = {PropertyName}.", nameof(BaseMethodsDeleteControl), nameof(OnPropertyChanged), propertyName);
 		}
 
 		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {Method} returning.", nameof(BaseMethodsDeleteControl), nameof(OnPropertyChanged));
+		}
+	}
+
+	/// <inheritdoc/>
+	/// <summary>
+	/// Raises the OnInitialized event and sets up data binding and property change notifications.
+	/// </summary>
+	protected override void OnInitialized(EventArgs e)
+	{
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} called with {EventArgs}.", nameof(BaseMethodsDeleteControl), nameof(OnInitialized), e);
+		}
+
+		base.OnInitialized(e);
+		DataContext = this;
+		PropertyChanged += BaseMethodsDeleteControl_PropertyChanged;
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(BaseMethodsDeleteControl), nameof(OnInitialized));
+		}
 	}
 
 	private void BaseMethodsDeleteControl_PropertyChanged(object? sender, PropertyChangedEventArgs e)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}", nameof(BaseMethodsDeleteControl), nameof(BaseMethodsDeleteControl_PropertyChanged), sender, e);
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.", nameof(BaseMethodsDeleteControl), nameof(BaseMethodsDeleteControl_PropertyChanged), sender, e);
+		}
+
+		if (e.PropertyName is nameof(BaseMethod))
+		{
+			if (BaseMethod is not null)
+			{
+				// Populate the RichTextBox with RTF
+				DescriptionRichTextBox.SetRtfText(BaseMethod.DescriptionRtf);
+				ModelIsNotNull = true;
+			}
+			else
+			{
+				DescriptionRichTextBox.Document.Blocks.Clear();
+				ModelIsNotNull = false;
+			}
 		}
 
 		if (e.PropertyName is nameof(BaseMethodId))
 		{
 			try
 			{
-				if (BaseMethodId != 0)
+				if (BaseMethodId != 0 && (BaseMethod is null || BaseMethod.Id != BaseMethodId))
 				{
 					BaseMethodFullModel? results = _baseMethodsEndpoint.GetByIdAsync(BaseMethodId).Result;
-
-					if (_logger.IsEnabled(LogLevel.Trace))
-					{
-						_logger.LogTrace("{Method} returned {Results}", nameof(_baseMethodsEndpoint.GetByIdAsync), results);
-					}
-
 					List<MethodFamilyRecord>? methodFamilies = _methodFamiliesEndpoint.GetListAsync().Result;
 
 					if (results is not null && methodFamilies is not null && methodFamilies.Count > 0)
 					{
 						BaseMethod = new BaseMethodViewModel(results, methodFamilies);
+						// Populate the RichTextBox with RTF
+						DescriptionRichTextBox.SetRtfText(BaseMethod.DescriptionRtf);
 						ModelIsNotNull = true;
 					}
+					else if (results is not null)
+					{
+						BaseMethod = new BaseMethodViewModel()
+						{
+							Id = results.Id,
+							Keyword = results.Keyword,
+							MethodFamily = null,
+							DescriptionRtf = results.DescriptionRtf,
+							DescriptionText = results.DescriptionText,
+							CreatedDate = results.CreatedDate,
+							LastUpdatedDate = results.LastUpdatedDate,
+							Archived = results.Archived
+						};
+
+						// Populate the RichTextBox with RTF
+						DescriptionRichTextBox.SetRtfText(BaseMethod.DescriptionRtf);
+						ModelIsNotNull = true;
+					}
+					else if (methodFamilies is not null && methodFamilies.Count > 0)
+					{
+						BaseMethod = null;
+						DescriptionRichTextBox.Document.Blocks.Clear();
+						ModelIsNotNull = false;
+					}
+					else
+					{
+						BaseMethod = null;
+						DescriptionRichTextBox.Document.Blocks.Clear();
+						ModelIsNotNull = false;
+					}
 				}
-				else
+				else if (BaseMethodId == 0)
 				{
 					BaseMethod = null;
+					DescriptionRichTextBox.Document.Blocks.Clear();
 					ModelIsNotNull = false;
 				}
 			}
 			catch (HttpIOException ex)
 			{
+				ErrorMessage = ex.Message;
+
 				if (_logger.IsEnabled(LogLevel.Error))
 				{
-					_logger.LogError(ex, "{UserControl} {Method} had an error", nameof(BaseMethodsEditControl), nameof(OnInitialized));
+					_logger.LogError(ex, "{UserControl} {EventHandler} called with {Sender} and {EventArgs} had an error.", nameof(BaseMethodsDeleteControl), nameof(BaseMethodsDeleteControl_PropertyChanged), sender, e);
 				}
-
-				ErrorMessage = ex.Message;
 			}
 			catch (AggregateException ae)
 			{
@@ -206,12 +276,13 @@ public partial class BaseMethodsDeleteControl : UserControl, INotifyPropertyChan
 				{
 					if (ex is HttpIOException)
 					{
+						ErrorMessage = ex.Message;
+
 						if (_logger.IsEnabled(LogLevel.Error))
 						{
-							_logger.LogError(ex, "{UserControl} {Method} had an error", nameof(BaseMethodsEditControl), nameof(OnInitialized));
+							_logger.LogError(ex, "{UserControl} {EventHandler} called with {Sender} and {EventArgs} had an error.", nameof(BaseMethodsDeleteControl), nameof(BaseMethodsDeleteControl_PropertyChanged), sender, e);
 						}
 
-						ErrorMessage = ex.Message;
 						return true;
 					}
 
@@ -221,22 +292,16 @@ public partial class BaseMethodsDeleteControl : UserControl, INotifyPropertyChan
 			}
 		}
 
-		if (e.PropertyName is nameof(BaseMethod))
-		{
-			if (BaseMethod is not null)
-			{
-				// Populate the RichTextBox with RTF
-				DescriptionRichTextBox.SetRtfText(BaseMethod.DescriptionRtf);
-			}
-			else
-			{
-				DescriptionRichTextBox.Document.Blocks.Clear();
-			}
-		}
-
 		if (e.PropertyName == nameof(ErrorMessage))
 		{
 			IsErrorVisible = ErrorMessage?.Length > 0;
+		}
+
+		// Nothing to do for change events of ModelIsNull, ModelIsNotNull, IsErrorVisible and CanSave.
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(BaseMethodsDeleteControl), nameof(BaseMethodsDeleteControl_PropertyChanged));
 		}
 	}
 
@@ -244,26 +309,30 @@ public partial class BaseMethodsDeleteControl : UserControl, INotifyPropertyChan
 	{
 		try
 		{
-			if (_logger.IsEnabled(LogLevel.Trace))
+			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}", nameof(BaseMethodsDeleteControl), nameof(DeleteButton_Click), sender, e);
+				_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.", nameof(BaseMethodsDeleteControl), nameof(DeleteButton_Click), sender, e);
 			}
 
 			ErrorMessage = string.Empty;
-
 			_baseMethodsEndpoint.DeleteAsync(BaseMethodId).Wait();
 			BaseMethod!.LastUpdatedDate = DateTime.Now;
 			BaseMethod!.Archived = true;
 			ChildControlEvent?.Invoke(this, new ChildControlEventArgs<BaseMethodsDeleteControl>("delete", null));
+
+			if (_logger.IsEnabled(LogLevel.Debug))
+			{
+				_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(BaseMethodsDeleteControl), nameof(DeleteButton_Click));
+			}
 		}
 		catch (HttpIOException ex)
 		{
+			ErrorMessage = ex.Message;
+
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{UserControl} {EventHandler} had an error", nameof(BaseMethodsDeleteControl), nameof(DeleteButton_Click));
+				_logger.LogError(ex, "{UserControl} {EventHandler} called with {Sender} and {EventArgs} had an error.", nameof(BaseMethodsDeleteControl), nameof(DeleteButton_Click), sender, e);
 			}
-
-			ErrorMessage = ex.Message;
 		}
 		catch (AggregateException ae)
 		{
@@ -271,12 +340,13 @@ public partial class BaseMethodsDeleteControl : UserControl, INotifyPropertyChan
 			{
 				if (ex is HttpIOException)
 				{
+					ErrorMessage = ex.Message;
+
 					if (_logger.IsEnabled(LogLevel.Error))
 					{
-						_logger.LogError(ex, "{UserControl} {EventHandler} had an error", nameof(BaseMethodsDeleteControl), nameof(DeleteButton_Click));
+						_logger.LogError(ex, "{UserControl} {EventHandler} called with {Sender} and {EventArgs} had an error.", nameof(BaseMethodsDeleteControl), nameof(DeleteButton_Click), sender, e);
 					}
 
-					ErrorMessage = ex.Message;
 					return true;
 				}
 
@@ -288,11 +358,16 @@ public partial class BaseMethodsDeleteControl : UserControl, INotifyPropertyChan
 
 	private void BackToIndexButton_Click(object sender, RoutedEventArgs e)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}", nameof(BaseMethodsDeleteControl), nameof(BackToIndexButton_Click), sender, e);
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.", nameof(BaseMethodsDeleteControl), nameof(BackToIndexButton_Click), sender, e);
 		}
 
 		ChildControlEvent?.Invoke(this, new ChildControlEventArgs<BaseMethodsDeleteControl>("index", null));
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(BaseMethodsDeleteControl), nameof(BackToIndexButton_Click));
+		}
 	}
 }

@@ -5,30 +5,18 @@ using GaussianCommonLibrary.ErrorModels;
 using GaussianWPF.Controls.BaseMethods;
 using GaussianWPF.FactoryHelpers;
 
-using GaussianWPFLibrary.DataAccess;
 using GaussianWPFLibrary.EventModels;
-using GaussianWPFLibrary.Models;
 
 using Microsoft.Extensions.Logging;
 
 namespace GaussianWPF.Controls;
 
 /// <summary>
-/// Represents a container control that manages navigation and coordination between different 
-/// BaseMethod-related child controls (Index, Create, Edit, Details, Delete).
-/// This control handles event-driven navigation and maintains the lifecycle of child controls
-/// through dependency injection and abstract factory patterns.
+/// Interaction logic for BaseMethodsControl.xaml
 /// </summary>
-/// <remarks>
-/// This control acts as a coordinator/container for CRUD operations on BaseMethods.
-/// It responds to events from child controls to navigate between different views while
-/// maintaining clean separation of concerns.
-/// </remarks>
 public partial class BaseMethodsControl : UserControl
 {
 	private readonly ILogger<BaseMethodsControl> _logger;
-	private readonly ILoggedInUserModel _loggedInUser;
-	private readonly IApiHelper _apiHelper;
 	private readonly IAbstractFactory<BaseMethodsIndexControl> _baseMethodsIndexFactory;
 	private readonly IAbstractFactory<BaseMethodsDetailsControl> _baseMethodsDetailsFactory;
 	private readonly IAbstractFactory<BaseMethodsCreateControl> _baseMethodsCreateFactory;
@@ -36,25 +24,17 @@ public partial class BaseMethodsControl : UserControl
 	private readonly IAbstractFactory<BaseMethodsDeleteControl> _baseMethodsDeleteFactory;
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="BaseMethodsControl"/> class.
+	/// Initializes a new instance of the <see cref="BaseMethodsControl"/> class with dependency injection.
 	/// </summary>
-	/// <param name="logger">Logger instance for tracing control events.</param>
-	/// <param name="loggedInUser">Model representing the currently logged-in user.</param>
-	/// <param name="apiHelper">Helper for making API requests.</param>
-	/// <param name="baseMethodsIndexFactory">Factory for creating index controls.</param>
-	/// <param name="baseMethodsDetailsFactory">Factory for creating details controls.</param>
-	/// <param name="baseMethodsCreateFactory">Factory for creating create controls.</param>
-	/// <param name="baseMethodsEditFactory">Factory for creating edit controls.</param>
-	/// <param name="baseMethodsDeleteFactory">Factory for creating delete controls.</param>
-	/// <remarks>
-	/// This constructor initializes the control and immediately loads the Index view as the default view.
-	/// All dependencies are injected through the constructor to support testability and loose coupling.
-	/// </remarks>
-	public BaseMethodsControl(ILogger<BaseMethodsControl> logger, ILoggedInUserModel loggedInUser, IApiHelper apiHelper, IAbstractFactory<BaseMethodsIndexControl> baseMethodsIndexFactory, IAbstractFactory<BaseMethodsDetailsControl> baseMethodsDetailsFactory, IAbstractFactory<BaseMethodsCreateControl> baseMethodsCreateFactory, IAbstractFactory<BaseMethodsEditControl> baseMethodsEditFactory, IAbstractFactory<BaseMethodsDeleteControl> baseMethodsDeleteFactory)
+	/// <param name="logger">The logger instance for logging control operations.</param>
+	/// <param name="baseMethodsIndexFactory">The factory for creating base methods index controls.</param>
+	/// <param name="baseMethodsDetailsFactory">The factory for creating base methods details controls.</param>
+	/// <param name="baseMethodsCreateFactory">The factory for creating base methods create controls.</param>
+	/// <param name="baseMethodsEditFactory">The factory for creating base methods edit controls.</param>
+	/// <param name="baseMethodsDeleteFactory">The factory for creating base methods delete controls.</param>
+	public BaseMethodsControl(ILogger<BaseMethodsControl> logger, IAbstractFactory<BaseMethodsIndexControl> baseMethodsIndexFactory, IAbstractFactory<BaseMethodsDetailsControl> baseMethodsDetailsFactory, IAbstractFactory<BaseMethodsCreateControl> baseMethodsCreateFactory, IAbstractFactory<BaseMethodsEditControl> baseMethodsEditFactory, IAbstractFactory<BaseMethodsDeleteControl> baseMethodsDeleteFactory)
 	{
 		_logger = logger;
-		_loggedInUser = loggedInUser;
-		_apiHelper = apiHelper;
 		_baseMethodsIndexFactory = baseMethodsIndexFactory;
 		_baseMethodsDetailsFactory = baseMethodsDetailsFactory;
 		_baseMethodsCreateFactory = baseMethodsCreateFactory;
@@ -62,17 +42,35 @@ public partial class BaseMethodsControl : UserControl
 		_baseMethodsDeleteFactory = baseMethodsDeleteFactory;
 
 		InitializeComponent();
+	}
 
+	/// <inheritdoc/>
+	/// <summary>
+	/// Raises the OnInitialized event and displays the base methods index control as the initial content.
+	/// </summary>
+	protected override void OnInitialized(EventArgs e)
+	{
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} with {EventArgs}.", nameof(BaseMethodsControl), nameof(OnInitialized), e);
+		}
+
+		base.OnInitialized(e);
 		BaseMethodsIndexControl indexControl = _baseMethodsIndexFactory.Create();
 		indexControl.ChildControlEvent += BaseMethods_Index_ChildControlEvent;
 		BaseMethodsContent.Content = indexControl;
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(BaseMethodsControl), nameof(OnInitialized));
+		}
 	}
 
 	private void BaseMethods_Index_ChildControlEvent(object? sender, ChildControlEventArgs<BaseMethodsIndexControl> e)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}", nameof(BaseMethodsControl), nameof(BaseMethods_Index_ChildControlEvent), sender, e);
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.", nameof(BaseMethodsControl), nameof(BaseMethods_Index_ChildControlEvent), sender, e);
 		}
 
 		switch (e.Action)
@@ -103,53 +101,18 @@ public partial class BaseMethodsControl : UserControl
 			default:
 				break;
 		}
-	}
 
-	private void BaseMethods_Create_ChildControlEvent(object? sender, ChildControlEventArgs<BaseMethodsCreateControl> e)
-	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}", nameof(BaseMethodsControl), nameof(BaseMethods_Create_ChildControlEvent), sender, e);
-		}
-
-		switch (e.Action)
-		{
-			case "create":
-			case "index":
-				BaseMethodsIndexControl indexControl = _baseMethodsIndexFactory.Create();
-				indexControl.ChildControlEvent += BaseMethods_Index_ChildControlEvent;
-				BaseMethodsContent.Content = indexControl;
-				break;
-			default:
-				break;
-		}
-	}
-
-	private void BaseMethods_Edit_ChildControlEvent(object? sender, ChildControlEventArgs<BaseMethodsEditControl> e)
-	{
-		if (_logger.IsEnabled(LogLevel.Trace))
-		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}", nameof(BaseMethodsControl), nameof(BaseMethods_Edit_ChildControlEvent), sender, e);
-		}
-
-		switch (e.Action)
-		{
-			case "save":
-			case "index":
-				BaseMethodsIndexControl indexControl = _baseMethodsIndexFactory.Create();
-				indexControl.ChildControlEvent += BaseMethods_Index_ChildControlEvent;
-				BaseMethodsContent.Content = indexControl;
-				break;
-			default:
-				break;
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(BaseMethodsControl), nameof(BaseMethods_Index_ChildControlEvent));
 		}
 	}
 
 	private void BaseMethods_Details_ChildControlEvent(object? sender, ChildControlEventArgs<BaseMethodsDetailsControl> e)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}", nameof(BaseMethodsControl), nameof(BaseMethods_Details_ChildControlEvent), sender, e);
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.", nameof(BaseMethodsControl), nameof(BaseMethods_Details_ChildControlEvent), sender, e);
 		}
 
 		switch (e.Action)
@@ -168,12 +131,77 @@ public partial class BaseMethodsControl : UserControl
 			default:
 				break;
 		}
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(BaseMethodsControl), nameof(BaseMethods_Details_ChildControlEvent));
+		}
+	}
+
+	private void BaseMethods_Create_ChildControlEvent(object? sender, ChildControlEventArgs<BaseMethodsCreateControl> e)
+	{
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.", nameof(BaseMethodsControl), nameof(BaseMethods_Create_ChildControlEvent), sender, e);
+		}
+
+		switch (e.Action)
+		{
+			case "create":
+				BaseMethodsDetailsControl detailsControl = _baseMethodsDetailsFactory.Create();
+				detailsControl.BaseMethodId = e.ItemId ?? throw new NullParameterException(nameof(e.ItemId), $"The {nameof(e.ItemId)} cannot be null.");
+				detailsControl.ChildControlEvent += BaseMethods_Details_ChildControlEvent;
+				BaseMethodsContent.Content = detailsControl;
+				break;
+			case "index":
+				BaseMethodsIndexControl indexControl = _baseMethodsIndexFactory.Create();
+				indexControl.ChildControlEvent += BaseMethods_Index_ChildControlEvent;
+				BaseMethodsContent.Content = indexControl;
+				break;
+			default:
+				break;
+		}
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(BaseMethodsControl), nameof(BaseMethods_Create_ChildControlEvent));
+		}
+	}
+
+	private void BaseMethods_Edit_ChildControlEvent(object? sender, ChildControlEventArgs<BaseMethodsEditControl> e)
+	{
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.", nameof(BaseMethodsControl), nameof(BaseMethods_Edit_ChildControlEvent), sender, e);
+		}
+
+		switch (e.Action)
+		{
+			case "save":
+				BaseMethodsDetailsControl detailsControl = _baseMethodsDetailsFactory.Create();
+				detailsControl.BaseMethodId = e.ItemId ?? throw new NullParameterException(nameof(e.ItemId), $"The {nameof(e.ItemId)} cannot be null.");
+				detailsControl.ChildControlEvent += BaseMethods_Details_ChildControlEvent;
+				BaseMethodsContent.Content = detailsControl;
+				break;
+			case "index":
+				BaseMethodsIndexControl indexControl = _baseMethodsIndexFactory.Create();
+				indexControl.ChildControlEvent += BaseMethods_Index_ChildControlEvent;
+				BaseMethodsContent.Content = indexControl;
+				break;
+			default:
+				break;
+		}
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(BaseMethodsControl), nameof(BaseMethods_Edit_ChildControlEvent));
+		}
 	}
 	private void BaseMethods_Delete_ChildControlEvent(object? sender, ChildControlEventArgs<BaseMethodsDeleteControl> e)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}", nameof(BaseMethodsControl), nameof(BaseMethods_Delete_ChildControlEvent), sender, e);
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.", nameof(BaseMethodsControl), nameof(BaseMethods_Delete_ChildControlEvent), sender, e);
 		}
 
 		switch (e.Action)
@@ -186,6 +214,11 @@ public partial class BaseMethodsControl : UserControl
 				break;
 			default:
 				break;
+		}
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(BaseMethodsControl), nameof(BaseMethods_Delete_ChildControlEvent));
 		}
 	}
 }

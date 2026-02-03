@@ -6,7 +6,7 @@ namespace GaussianWPF.Models;
 
 /// <summary>
 /// View model representing a Calculation Type for the Gaussian WPF application.
-/// Provides data transfer and validation between the view layer and the business logic.
+/// Provides data binding and validation for calculation type operations in the desktop client.
 /// </summary>
 public class CalculationTypeViewModel
 {
@@ -25,11 +25,7 @@ public class CalculationTypeViewModel
 	/// <exception cref="ArgumentNullException">Thrown when <paramref name="model"/> is null.</exception>
 	public CalculationTypeViewModel(CalculationTypeFullModel model)
 	{
-		if (model is null)
-		{
-			throw new ArgumentNullException(nameof(model), $"The parameter {nameof(model)} cannot be null.");
-		}
-
+		ArgumentNullException.ThrowIfNull(model, nameof(model));
 		Id = model.Id;
 		Name = model.Name;
 		Keyword = model.Keyword;
@@ -44,14 +40,13 @@ public class CalculationTypeViewModel
 	/// Gets or sets the unique identifier for the Calculation Type.
 	/// </summary>
 	[Display(Name = "Id")]
+	[Key]
 	public int Id { get; set; }
 
 	/// <summary>
 	/// Gets or sets the name of the Calculation Type.
 	/// </summary>
-	/// <remarks>
-	/// This field is required and has a maximum length of 200 characters.
-	/// </remarks>
+	[DataType(DataType.Text)]
 	[Display(Name = "Name")]
 	[Required]
 	[MaxLength(200)]
@@ -60,60 +55,44 @@ public class CalculationTypeViewModel
 	/// <summary>
 	/// Gets or sets the keyword identifier for the Calculation Type.
 	/// </summary>
-	/// <remarks>
-	/// This field is required and has a maximum length of 20 characters.
-	/// Used as a short identifier or code for the Calculation Type.
-	/// </remarks>
+	[DataType(DataType.Text)]
 	[Display(Name = "Keyword")]
-	[Required]
 	[MaxLength(30)]
+	[Required]
 	public string Keyword { get; set; } = string.Empty;
 
 	/// <summary>
-	/// Gets or sets the description in Rich Text Format (RTF).
+	/// Gets or sets the description in RTF format.
 	/// </summary>
-	/// <remarks>
-	/// This field is optional and can contain formatted text description.
-	/// </remarks>
-	[Display(Name = "Description (RTF)")]
+	[DataType(DataType.MultilineText)]
+	[Display(Name = "Description")]
 	public string? DescriptionRtf { get; set; }
 
 	/// <summary>
-	/// Gets or sets the plain text description of the Calculation Type.
+	/// Gets or sets the description in plain text format.
 	/// </summary>
-	/// <remarks>
-	/// This field is optional and has a maximum length of 2000 characters.
-	/// </remarks>
-	[Display(Name = "Description (Text)")]
+	[DataType(DataType.MultilineText)]
+	[Display(Name = "Description")]
 	[MaxLength(2000)]
 	public string? DescriptionText { get; set; }
 
 	/// <summary>
 	/// Gets or sets the date and time when the Calculation Type was created.
 	/// </summary>
-	/// <remarks>
-	/// Defaults to the current date and time when a new instance is created.
-	/// </remarks>
+	[DataType(DataType.DateTime)]
 	[Display(Name = "Created Date")]
 	public DateTime CreatedDate { get; set; } = DateTime.Now;
 
 	/// <summary>
 	/// Gets or sets the date and time when the Calculation Type was last updated.
 	/// </summary>
-	/// <remarks>
-	/// Defaults to the current date and time when a new instance is created.
-	/// Should be updated whenever the Calculation Type is modified.
-	/// </remarks>
+	[DataType(DataType.DateTime)]
 	[Display(Name = "Last Updated Date")]
 	public DateTime LastUpdatedDate { get; set; } = DateTime.Now;
 
 	/// <summary>
 	/// Gets or sets a value indicating whether the Calculation Type is archived.
 	/// </summary>
-	/// <remarks>
-	/// Defaults to <c>false</c>. When set to <c>true</c>, the Calculation Type
-	/// is considered archived and may be hidden from active lists.
-	/// </remarks>
 	[Display(Name = "Archived")]
 	public bool Archived { get; set; }
 
@@ -139,10 +118,7 @@ public class CalculationTypeViewModel
 	/// <summary>
 	/// Returns a string representation of the Calculation Type.
 	/// </summary>
-	/// <returns>
-	/// A string in the format "Name (Name)", combining the Calculation Type's name
-	/// and keyword identifier. Returns null if both <see cref="Name"/> and <see cref="Keyword"/> are null.
-	/// </returns>
+	/// <returns>A string in the format "Name (Keyword)".</returns>
 	public override string? ToString()
 	{
 		return $"{Name} ({Keyword})";

@@ -6,8 +6,8 @@ using GaussianCommonLibrary.Models;
 namespace GaussianWPF.Models;
 
 /// <summary>
-/// Represents a view model for base method data used in Razor Pages views.
-/// Provides data binding and validation for base method creation, editing, and display operations.
+/// View model representing a base method for the Gaussian WPF application.
+/// Provides data binding and validation for base method creation, editing, and display operations in the desktop client.
 /// </summary>
 public class BaseMethodViewModel
 {
@@ -22,23 +22,15 @@ public class BaseMethodViewModel
 	/// Initializes a new instance of the <see cref="BaseMethodViewModel"/> class from a full model.
 	/// </summary>
 	/// <param name="model">The base method full model containing the source data.</param>
-	/// <param name="methodFamilies">The list of available method families for the dropdown selection.</param>
-	/// <exception cref="ArgumentNullException">Thrown when <paramref name="model"/> is null or when <paramref name="methodFamilies"/> is null or empty.</exception>
+	/// <param name="methodFamilies">The list of available method families for dropdown selection.</param>
+	/// <exception cref="ArgumentNullException">Thrown when <paramref name="model"/> or <paramref name="methodFamilies"/> is null.</exception>
 	public BaseMethodViewModel(BaseMethodFullModel model, IList<MethodFamilyRecord> methodFamilies)
 	{
-		if (model is null)
-		{
-			throw new ArgumentNullException(nameof(model), $"The parameter {nameof(model)} cannot be null.");
-		}
-
-		if (methodFamilies is null || !methodFamilies.Any())
-		{
-			throw new ArgumentNullException(nameof(methodFamilies), $"The parameter {nameof(methodFamilies)} cannot be null or empty.");
-		}
-
+		ArgumentNullException.ThrowIfNull(model, nameof(model));
+		ArgumentNullException.ThrowIfNull(methodFamilies, nameof(methodFamilies));
 		Id = model.Id;
 		Keyword = model.Keyword;
-		MethodFamily = methodFamilies.Where(x => x.Id == model.MethodFamily.Id).FirstOrDefault();
+		MethodFamily = methodFamilies.First(x => x.Id == model.MethodFamily.Id);
 		DescriptionRtf = model.DescriptionRtf;
 		DescriptionText = model.DescriptionText;
 		CreatedDate = model.CreatedDate;
@@ -52,32 +44,18 @@ public class BaseMethodViewModel
 	}
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="BaseMethodViewModel"/> class from a simple model and method family record.
+	/// Initializes a new instance of the <see cref="BaseMethodViewModel"/> class from an intermediate model.
 	/// </summary>
-	/// <param name="model">The base method simple model containing the source data.</param>
-	/// <param name="methodFamily">The method family record associated with the base method.</param>
-	/// <param name="methodFamilies">The list of available method families for the dropdown selection.</param>
-	/// <exception cref="ArgumentNullException">Thrown when <paramref name="model"/>, <paramref name="methodFamily"/>, or <paramref name="methodFamilies"/> is null, or when <paramref name="methodFamilies"/> is empty.</exception>
-	public BaseMethodViewModel(BaseMethodSimpleModel model, MethodFamilyRecord methodFamily, IList<MethodFamilyRecord> methodFamilies)
+	/// <param name="model">The base method intermediate model containing the source data.</param>
+	/// <param name="methodFamilies">The list of available method families for dropdown selection.</param>
+	/// <exception cref="ArgumentNullException">Thrown when <paramref name="model"/> or <paramref name="methodFamilies"/> is null.</exception>
+	public BaseMethodViewModel(BaseMethodIntermediateModel model, IList<MethodFamilyRecord> methodFamilies)
 	{
-		if (model is null)
-		{
-			throw new ArgumentNullException(nameof(model), $"The parameter {nameof(model)} cannot be null.");
-		}
-
-		if (methodFamily is null)
-		{
-			throw new ArgumentNullException(nameof(methodFamily), $"The parameter {nameof(methodFamily)} cannot be null.");
-		}
-
-		if (methodFamilies is null || !methodFamilies.Any())
-		{
-			throw new ArgumentNullException(nameof(methodFamilies), $"The parameter {nameof(methodFamilies)} cannot be null or empty.");
-		}
-
+		ArgumentNullException.ThrowIfNull(model, nameof(model));
+		ArgumentNullException.ThrowIfNull(methodFamilies, nameof(methodFamilies));
 		Id = model.Id;
 		Keyword = model.Keyword;
-		MethodFamily = methodFamily;
+		MethodFamily = model.MethodFamily;
 		DescriptionRtf = model.DescriptionRtf;
 		DescriptionText = model.DescriptionText;
 		CreatedDate = model.CreatedDate;
@@ -91,32 +69,18 @@ public class BaseMethodViewModel
 	}
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="BaseMethodViewModel"/> class from a simple model and method family full model.
+	/// Initializes a new instance of the <see cref="BaseMethodViewModel"/> class from a simple model.
 	/// </summary>
 	/// <param name="model">The base method simple model containing the source data.</param>
-	/// <param name="methodFamily">The method family full model associated with the base method.</param>
-	/// <param name="methodFamilies">The list of available method families for the dropdown selection.</param>
-	/// <exception cref="ArgumentNullException">Thrown when <paramref name="model"/>, <paramref name="methodFamily"/>, or <paramref name="methodFamilies"/> is null, or when <paramref name="methodFamilies"/> is empty.</exception>
-	public BaseMethodViewModel(BaseMethodSimpleModel model, MethodFamilyFullModel methodFamily, IList<MethodFamilyRecord> methodFamilies)
+	/// <param name="methodFamilies">The list of available method families for dropdown selection.</param>
+	/// <exception cref="ArgumentNullException">Thrown when <paramref name="model"/> or <paramref name="methodFamilies"/> is null.</exception>
+	public BaseMethodViewModel(BaseMethodSimpleModel model, IList<MethodFamilyRecord> methodFamilies)
 	{
-		if (model is null)
-		{
-			throw new ArgumentNullException(nameof(model), $"The parameter {nameof(model)} cannot be null.");
-		}
-
-		if (methodFamily is null)
-		{
-			throw new ArgumentNullException(nameof(methodFamily), $"The parameter {nameof(methodFamily)} cannot be null.");
-		}
-
-		if (methodFamilies is null || !methodFamilies.Any())
-		{
-			throw new ArgumentNullException(nameof(methodFamilies), $"The parameter {nameof(methodFamilies)} cannot be null or empty.");
-		}
-
+		ArgumentNullException.ThrowIfNull(model, nameof(model));
+		ArgumentNullException.ThrowIfNull(methodFamilies, nameof(methodFamilies));
 		Id = model.Id;
 		Keyword = model.Keyword;
-		MethodFamily = methodFamilies.Where(x => x.Id == model.MethodFamilyId).FirstOrDefault();
+		MethodFamily = methodFamilies.First(x => x.Id == model.MethodFamilyId);
 		DescriptionRtf = model.DescriptionRtf;
 		DescriptionText = model.DescriptionText;
 		CreatedDate = model.CreatedDate;
@@ -132,14 +96,11 @@ public class BaseMethodViewModel
 	/// <summary>
 	/// Initializes a new instance of the <see cref="BaseMethodViewModel"/> class with method families for new record creation.
 	/// </summary>
-	/// <param name="methodFamilies">The list of available method families for the dropdown selection.</param>
+	/// <param name="methodFamilies">The list of available method families for dropdown selection.</param>
 	/// <exception cref="ArgumentNullException">Thrown when <paramref name="methodFamilies"/> is null.</exception>
 	public BaseMethodViewModel(IList<MethodFamilyRecord> methodFamilies)
 	{
-		if (methodFamilies is null)
-		{
-			throw new ArgumentNullException(nameof(methodFamilies), $"The parameter {nameof(methodFamilies)} cannot be null.");
-		}
+		ArgumentNullException.ThrowIfNull(methodFamilies, nameof(methodFamilies));
 
 		foreach (MethodFamilyRecord item in methodFamilies)
 		{
@@ -151,52 +112,59 @@ public class BaseMethodViewModel
 	/// Gets or sets the unique identifier for the base method.
 	/// </summary>
 	[Display(Name = "Id")]
+	[Key]
 	public int Id { get; set; }
 
 	/// <summary>
 	/// Gets or sets the keyword that identifies the base method.
-	/// Maximum length is 20 characters.
 	/// </summary>
+	[DataType(DataType.Text)]
 	[Display(Name = "Keyword")]
-	[Required]
 	[MaxLength(20)]
+	[Required]
 	public string Keyword { get; set; } = string.Empty;
 
 	/// <summary>
-	/// Gets or sets the method family identifier as a string representation.
+	/// Gets or sets the method family associated with this base method.
 	/// </summary>
 	[Display(Name = "Method Family")]
 	[Required]
 	public MethodFamilyRecord? MethodFamily { get; set; }
 
 	/// <summary>
-	/// Gets or sets the list of method families available for selection in the view.
+	/// Gets or sets the observable collection of method families available for selection in the UI.
 	/// </summary>
+	/// <remarks>
+	/// This collection supports data binding for ComboBox or similar controls in WPF.
+	/// </remarks>
 	public ObservableCollection<MethodFamilyRecord> MethodFamilyList { get; set; } = [];
 
 	/// <summary>
-	/// Gets or sets the description in Rich Text Format (RTF).
+	/// Gets or sets the description in RTF format.
 	/// </summary>
-	[Display(Name = "Description (RTF)")]
+	[DataType(DataType.MultilineText)]
+	[Display(Name = "Description")]
 	public string? DescriptionRtf { get; set; }
 
 	/// <summary>
 	/// Gets or sets the description in plain text format.
 	/// </summary>
-	[Display(Name = "Description (Text)")]
+	[DataType(DataType.MultilineText)]
+	[Display(Name = "Description")]
+	[MaxLength(2000)]
 	public string? DescriptionText { get; set; }
 
 	/// <summary>
 	/// Gets or sets the date and time when the base method was created.
-	/// Defaults to the current date and time.
 	/// </summary>
+	[DataType(DataType.DateTime)]
 	[Display(Name = "Created Date")]
 	public DateTime CreatedDate { get; set; } = DateTime.Now;
 
 	/// <summary>
 	/// Gets or sets the date and time when the base method was last updated.
-	/// Defaults to the current date and time.
 	/// </summary>
+	[DataType(DataType.DateTime)]
 	[Display(Name = "Last Updated Date")]
 	public DateTime LastUpdatedDate { get; set; } = DateTime.Now;
 
@@ -207,7 +175,7 @@ public class BaseMethodViewModel
 	public bool Archived { get; set; }
 
 	/// <summary>
-	/// Converts the view model to a <see cref="BaseMethodFullModel"/>.
+	/// Converts this view model to a <see cref="BaseMethodFullModel"/> instance.
 	/// </summary>
 	/// <param name="methodFamily">The method family full model to associate with the base method.</param>
 	/// <returns>A new instance of <see cref="BaseMethodFullModel"/> populated with the view model data.</returns>
@@ -227,7 +195,27 @@ public class BaseMethodViewModel
 	}
 
 	/// <summary>
-	/// Converts the view model to a <see cref="BaseMethodSimpleModel"/>.
+	/// Converts this view model to a <see cref="BaseMethodIntermediateModel"/> instance.
+	/// </summary>
+	/// <param name="methodFamily">The method family record to associate with the base method.</param>
+	/// <returns>A new instance of <see cref="BaseMethodIntermediateModel"/> populated with the view model data.</returns>
+	public BaseMethodIntermediateModel ToIntermediateModel(MethodFamilyRecord methodFamily)
+	{
+		return new BaseMethodIntermediateModel
+		{
+			Id = Id,
+			Keyword = Keyword,
+			MethodFamily = methodFamily,
+			DescriptionRtf = DescriptionRtf,
+			DescriptionText = DescriptionText,
+			CreatedDate = CreatedDate,
+			LastUpdatedDate = LastUpdatedDate,
+			Archived = Archived
+		};
+	}
+
+	/// <summary>
+	/// Converts this view model to a <see cref="BaseMethodSimpleModel"/> instance.
 	/// </summary>
 	/// <returns>A new instance of <see cref="BaseMethodSimpleModel"/> populated with the view model data.</returns>
 	public BaseMethodSimpleModel ToSimpleModel()
@@ -246,7 +234,7 @@ public class BaseMethodViewModel
 	}
 
 	/// <summary>
-	/// Returns a string representation of the base method view model.
+	/// Returns a string representation of the base method.
 	/// </summary>
 	/// <returns>The keyword of the base method.</returns>
 	public override string? ToString()

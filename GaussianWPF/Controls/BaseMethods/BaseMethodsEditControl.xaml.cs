@@ -12,43 +12,33 @@ using GaussianWPF.WPFHelpers;
 
 using GaussianWPFLibrary.DataAccess;
 using GaussianWPFLibrary.EventModels;
-using GaussianWPFLibrary.Models;
 
 using Microsoft.Extensions.Logging;
 
 namespace GaussianWPF.Controls.BaseMethods;
 
 /// <summary>
-/// A WPF UserControl that provides an interface for editing Base Method records.
-/// Implements INotifyPropertyChanged for data binding and includes comprehensive error handling and logging.
+/// Interaction logic for BaseMethodsEditControl.xaml
 /// </summary>
 public partial class BaseMethodsEditControl : UserControl, INotifyPropertyChanged
 {
 	private readonly ILogger<BaseMethodsEditControl> _logger;
-	private readonly ILoggedInUserModel _loggedInUser;
-	private readonly IApiHelper _apiHelper;
 	private readonly IBaseMethodsEndpoint _baseMethodsEndpoint;
 	private readonly IMethodFamiliesEndpoint _methodFamiliesEndpoint;
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="BaseMethodsEditControl"/> class.
+	/// Initializes a new instance of the <see cref="BaseMethodsEditControl"/> class with dependency injection.
 	/// </summary>
-	/// <param name="logger">Logger instance for diagnostic and trace information.</param>
-	/// <param name="loggedInUser">The currently logged-in user model.</param>
-	/// <param name="apiHelper">Helper for API operations.</param>
-	/// <param name="baseMethodsEndpoint">Endpoint for Base Method data access operations.</param>
-	/// <param name="methodFamiliesEndpoint">Endpoint for Method Family data access operations.</param>
-	public BaseMethodsEditControl(ILogger<BaseMethodsEditControl> logger, ILoggedInUserModel loggedInUser, IApiHelper apiHelper, IBaseMethodsEndpoint baseMethodsEndpoint, IMethodFamiliesEndpoint methodFamiliesEndpoint)
+	/// <param name="logger">The logger instance for logging control operations.</param>
+	/// <param name="baseMethodsEndpoint">The endpoint for base method API operations.</param>
+	/// <param name="methodFamiliesEndpoint">The endpoint for method family API operations.</param>
+	public BaseMethodsEditControl(ILogger<BaseMethodsEditControl> logger, IBaseMethodsEndpoint baseMethodsEndpoint, IMethodFamiliesEndpoint methodFamiliesEndpoint)
 	{
 		_logger = logger;
-		_loggedInUser = loggedInUser;
-		_apiHelper = apiHelper;
 		_baseMethodsEndpoint = baseMethodsEndpoint;
 		_methodFamiliesEndpoint = methodFamiliesEndpoint;
 
 		InitializeComponent();
-		DataContext = this;
-		PropertyChanged += BaseMethodsEditControl_PropertyChanged;
 	}
 
 	/// <summary>
@@ -57,28 +47,16 @@ public partial class BaseMethodsEditControl : UserControl, INotifyPropertyChange
 	public event PropertyChangedEventHandler? PropertyChanged;
 
 	/// <summary>
-	/// Occurs when a child control event needs to be communicated to the parent control.
+	/// Occurs when a child control event is raised to request navigation to another view.
 	/// </summary>
 	public event EventHandler<ChildControlEventArgs<BaseMethodsEditControl>>? ChildControlEvent;
 
 	/// <summary>
-	/// Gets or sets the ID of the Base Method being edited.
-	/// Setting this property triggers loading of the Base Method data.
+	/// Gets or sets the base method view model being edited.
 	/// </summary>
-	public int BaseMethodId
-	{
-		get;
-		set
-		{
-			field = value;
-			OnPropertyChanged(nameof(BaseMethodId));
-		}
-	}
-
-	/// <summary>
-	/// Gets or sets the Base Method view model being edited.
-	/// When set, updates all related properties for data binding.
-	/// </summary>
+	/// <remarks>
+	/// When this property is set, the control automatically populates the keyword, RTF content, and updates validation state.
+	/// </remarks>
 	public BaseMethodViewModel? BaseMethod
 	{
 		get;
@@ -90,8 +68,23 @@ public partial class BaseMethodsEditControl : UserControl, INotifyPropertyChange
 	}
 
 	/// <summary>
-	/// Gets or sets the keyword associated with the Base Method.
-	/// This property is bound to the UI and affects the <see cref="CanSave"/> state.
+	/// Gets or sets the identifier of the base method to edit.
+	/// </summary>
+	/// <remarks>
+	/// When this property is set, the control automatically loads the base method data from the API.
+	/// </remarks>
+	public int BaseMethodId
+	{
+		get;
+		set
+		{
+			field = value;
+			OnPropertyChanged(nameof(BaseMethodId));
+		}
+	}
+
+	/// <summary>
+	/// Gets or sets the keyword that identifies the base method.
 	/// </summary>
 	public string Keyword
 	{
@@ -104,8 +97,7 @@ public partial class BaseMethodsEditControl : UserControl, INotifyPropertyChange
 	} = string.Empty;
 
 	/// <summary>
-	/// Gets or sets the currently selected Method Family.
-	/// This property is bound to the UI and affects the <see cref="CanSave"/> state.
+	/// Gets or sets the selected method family for the base method.
 	/// </summary>
 	public MethodFamilyRecord? SelectedMethodFamily
 	{
@@ -118,9 +110,11 @@ public partial class BaseMethodsEditControl : UserControl, INotifyPropertyChange
 	}
 
 	/// <summary>
-	/// Gets or sets the collection of available Method Families for selection.
-	/// This collection is populated when a Base Method is loaded for editing.
+	/// Gets or sets the observable collection of method families available for selection.
 	/// </summary>
+	/// <remarks>
+	/// This collection supports data binding for ComboBox controls in WPF.
+	/// </remarks>
 	public ObservableCollection<MethodFamilyRecord> MethodFamilyList
 	{
 		get;
@@ -132,9 +126,11 @@ public partial class BaseMethodsEditControl : UserControl, INotifyPropertyChange
 	} = [];
 
 	/// <summary>
-	/// Gets or sets a value indicating whether the Base Method model is not null.
-	/// Used for conditional UI rendering.
+	/// Gets or sets a value indicating whether a valid base method model is loaded.
 	/// </summary>
+	/// <remarks>
+	/// Setting this property also updates the <see cref="ModelIsNull"/> property.
+	/// </remarks>
 	public bool ModelIsNotNull
 	{
 		get;
@@ -147,17 +143,18 @@ public partial class BaseMethodsEditControl : UserControl, INotifyPropertyChange
 	}
 
 	/// <summary>
-	/// Gets a value indicating whether the Base Method model is null.
-	/// Computed from <see cref="ModelIsNotNull"/>.
+	/// Gets a value indicating whether no base method model is loaded.
 	/// </summary>
+	/// <remarks>
+	/// This property returns the inverse of <see cref="ModelIsNotNull"/>.
+	/// </remarks>
 	public bool ModelIsNull
 	{
 		get { return !ModelIsNotNull; }
 	}
 
 	/// <summary>
-	/// Gets or sets the current error message to be displayed to the user.
-	/// Setting this property updates the <see cref="IsErrorVisible"/> state.
+	/// Gets or sets the error message to display when an operation fails.
 	/// </summary>
 	public string? ErrorMessage
 	{
@@ -173,8 +170,11 @@ public partial class BaseMethodsEditControl : UserControl, INotifyPropertyChange
 	}
 
 	/// <summary>
-	/// Gets or sets a value indicating whether an error message should be visible in the UI.
+	/// Gets or sets a value indicating whether the error message should be visible.
 	/// </summary>
+	/// <remarks>
+	/// This property is automatically set based on whether <see cref="ErrorMessage"/> has a value.
+	/// </remarks>
 	public bool IsErrorVisible
 	{
 		get;
@@ -189,9 +189,11 @@ public partial class BaseMethodsEditControl : UserControl, INotifyPropertyChange
 	}
 
 	/// <summary>
-	/// Gets or sets a value indicating whether the save operation can be performed.
-	/// This is true when both <see cref="SelectedMethodFamily"/> is not null and <see cref="Keyword"/> has a length greater than zero.
+	/// Gets or sets a value indicating whether the save button should be enabled.
 	/// </summary>
+	/// <remarks>
+	/// This property is automatically set to <see langword="true"/> when the keyword, selected method family, and description are valid.
+	/// </remarks>
 	public bool CanSave
 	{
 		get;
@@ -209,93 +211,48 @@ public partial class BaseMethodsEditControl : UserControl, INotifyPropertyChange
 	/// <summary>
 	/// Raises the <see cref="PropertyChanged"/> event for the specified property.
 	/// </summary>
-	/// <param name="propertyName">The name of the property that changed. This is automatically populated by the CallerMemberName attribute.</param>
+	/// <param name="propertyName">The name of the property that changed. This parameter is optional and can be automatically populated by the caller member name.</param>
 	protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
 	{
 		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogDebug("{UserControl} {Method} with {PropertyName}", nameof(BaseMethodsEditControl), nameof(OnPropertyChanged), propertyName);
+			_logger.LogDebug("{UserControl} {Method} called with CallerMemberName = {PropertyName}.", nameof(BaseMethodsEditControl), nameof(OnPropertyChanged), propertyName);
 		}
 
 		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {Method} returning.", nameof(BaseMethodsEditControl), nameof(OnPropertyChanged));
+		}
 	}
 
+	/// <inheritdoc/>
 	/// <summary>
-	/// Handles property changes for the control, managing dependent property updates and data loading.
-	/// Loads Base Method data when <see cref="BaseMethodId"/> changes, updates UI bindings when <see cref="BaseMethod"/> changes,
-	/// validates save conditions when <see cref="SelectedMethodFamily"/> or <see cref="Keyword"/> change,
-	/// and controls error visibility when <see cref="ErrorMessage"/> changes.
+	/// Raises the OnInitialized event and sets up data binding and property change notifications.
 	/// </summary>
-	/// <param name="sender">The source of the event.</param>
-	/// <param name="e">The <see cref="PropertyChangedEventArgs"/> containing the property name that changed.</param>
-	private void BaseMethodsEditControl_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+	protected override void OnInitialized(EventArgs e)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}", nameof(BaseMethodsEditControl), nameof(BaseMethodsEditControl_PropertyChanged), sender, e);
+			_logger.LogDebug("{UserControl} {EventHandler} called with {EventArgs}.", nameof(BaseMethodsEditControl), nameof(OnInitialized), e);
 		}
 
-		if (e.PropertyName is nameof(BaseMethodId))
+		base.OnInitialized(e);
+		DataContext = this;
+		PropertyChanged += BaseMethodsEditControl_PropertyChanged;
+
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			try
-			{
-				if (BaseMethodId != 0)
-				{
-					BaseMethodFullModel? results = _baseMethodsEndpoint.GetByIdAsync(BaseMethodId).Result;
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(BaseMethodsEditControl), nameof(OnInitialized));
+		}
+	}
 
-					if (_logger.IsEnabled(LogLevel.Trace))
-					{
-						_logger.LogTrace("{Method} returned {Results}", nameof(_baseMethodsEndpoint.GetByIdAsync), results);
-					}
-
-					List<MethodFamilyRecord>? methodFamilies = _methodFamiliesEndpoint.GetListAsync().Result;
-
-					if (results is not null && methodFamilies is not null && methodFamilies.Count > 0)
-					{
-						foreach (MethodFamilyRecord item in methodFamilies)
-						{
-							MethodFamilyList.Add(item);
-						}
-
-						SelectedMethodFamily = MethodFamilyList.FirstOrDefault(mf => mf.Id == results.MethodFamily.Id);
-						BaseMethod = new BaseMethodViewModel(results, methodFamilies);
-						ModelIsNotNull = true;
-					}
-				}
-				else
-				{
-					BaseMethod = null;
-					ModelIsNotNull = false;
-				}
-			}
-			catch (HttpIOException ex)
-			{
-				if (_logger.IsEnabled(LogLevel.Error))
-				{
-					_logger.LogError(ex, "{UserControl} {Method} had an error", nameof(BaseMethodsEditControl), nameof(OnInitialized));
-				}
-
-				ErrorMessage = ex.Message;
-			}
-			catch (AggregateException ae)
-			{
-				ae.Handle(ex =>
-				{
-					if (ex is HttpIOException)
-					{
-						if (_logger.IsEnabled(LogLevel.Error))
-						{
-							_logger.LogError(ex, "{UserControl} {Method} had an error", nameof(BaseMethodsEditControl), nameof(OnInitialized));
-						}
-
-						ErrorMessage = ex.Message;
-						return true;
-					}
-
-					// Return false for any other exception types to rethrow them in a new AggregateException
-					return false;
-				});
-			}
+	private void BaseMethodsEditControl_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+	{
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.", nameof(BaseMethodsEditControl), nameof(BaseMethodsEditControl_PropertyChanged), sender, e);
 		}
 
 		if (e.PropertyName is nameof(BaseMethod))
@@ -305,73 +262,180 @@ public partial class BaseMethodsEditControl : UserControl, INotifyPropertyChange
 				Keyword = BaseMethod.Keyword;
 				// Populate the RichTextBox with RTF
 				DescriptionRichTextBox.SetRtfText(BaseMethod.DescriptionRtf);
+				ModelIsNotNull = true;
+				CanSave = BaseMethod.MethodFamily is not null && BaseMethod.Keyword?.Length is > 0 and <= 20 && (BaseMethod.DescriptionText?.Length is <= 2000 || string.IsNullOrEmpty(BaseMethod.DescriptionText));
 			}
 			else
 			{
 				Keyword = string.Empty;
 				DescriptionRichTextBox.Document.Blocks.Clear();
+				ModelIsNotNull = false;
+				CanSave = false;
 			}
 		}
 
-		if (e.PropertyName is (nameof(SelectedMethodFamily)) or (nameof(Keyword)))
+		if (e.PropertyName is nameof(BaseMethodId))
 		{
-			CanSave = SelectedMethodFamily is not null && Keyword?.Length > 0;
+			try
+			{
+				if (BaseMethodId != 0 && (BaseMethod is null || BaseMethod.Id != BaseMethodId))
+				{
+					BaseMethodFullModel? results = _baseMethodsEndpoint.GetByIdAsync(BaseMethodId).Result;
+					List<MethodFamilyRecord>? methodFamilies = _methodFamiliesEndpoint.GetListAsync().Result;
+
+					if (results is not null && methodFamilies is not null && methodFamilies.Count > 0)
+					{
+						MethodFamilyList.Clear();
+
+						foreach (MethodFamilyRecord item in methodFamilies)
+						{
+							MethodFamilyList.Add(item);
+						}
+
+						SelectedMethodFamily = MethodFamilyList.FirstOrDefault(mf => mf.Id == results.MethodFamily.Id);
+						BaseMethod = new BaseMethodViewModel(results, methodFamilies);
+						Keyword = BaseMethod.Keyword;
+						// Populate the RichTextBox with RTF
+						DescriptionRichTextBox.SetRtfText(BaseMethod.DescriptionRtf);
+						ModelIsNotNull = true;
+						CanSave = BaseMethod.MethodFamily is not null && BaseMethod.Keyword?.Length is > 0 and <= 20 && (BaseMethod.DescriptionText?.Length is <= 2000 || string.IsNullOrEmpty(BaseMethod.DescriptionText));
+					}
+					else if (results is not null)
+					{
+						SelectedMethodFamily = MethodFamilyList.FirstOrDefault(mf => mf.Id == results.MethodFamily.Id);
+						List<MethodFamilyRecord> methodFamilyList = [.. MethodFamilyList];
+						BaseMethod = new BaseMethodViewModel(results, methodFamilyList);
+						Keyword = BaseMethod.Keyword ?? string.Empty;
+						// Populate the RichTextBox with RTF
+						DescriptionRichTextBox.SetRtfText(BaseMethod.DescriptionRtf);
+						ModelIsNotNull = true;
+						CanSave = BaseMethod.MethodFamily is not null && BaseMethod.Keyword?.Length is > 0 and <= 20 && (BaseMethod.DescriptionText?.Length is <= 2000 || string.IsNullOrEmpty(BaseMethod.DescriptionText));
+					}
+					else if (methodFamilies is not null && methodFamilies.Count > 0)
+					{
+						MethodFamilyList.Clear();
+
+						foreach (MethodFamilyRecord item in methodFamilies)
+						{
+							MethodFamilyList.Add(item);
+						}
+
+						BaseMethod = null;
+						Keyword = string.Empty;
+						DescriptionRichTextBox.Document.Blocks.Clear();
+						ModelIsNotNull = false;
+						CanSave = false;
+					}
+					else
+					{
+						MethodFamilyList.Clear();
+						BaseMethod = null;
+						Keyword = string.Empty;
+						DescriptionRichTextBox.Document.Blocks.Clear();
+						ModelIsNotNull = false;
+						CanSave = false;
+					}
+				}
+				else if (BaseMethodId == 0)
+				{
+					BaseMethod = null;
+					Keyword = string.Empty;
+					DescriptionRichTextBox.Document.Blocks.Clear();
+					ModelIsNotNull = false;
+					CanSave = false;
+				}
+			}
+			catch (HttpIOException ex)
+			{
+				ErrorMessage = ex.Message;
+
+				if (_logger.IsEnabled(LogLevel.Error))
+				{
+					_logger.LogError(ex, "{UserControl} {EventHandler} called with {Sender} and {EventArgs} had an error.", nameof(BaseMethodsEditControl), nameof(BaseMethodsEditControl_PropertyChanged), sender, e);
+				}
+			}
+			catch (AggregateException ae)
+			{
+				ae.Handle(ex =>
+				{
+					if (ex is HttpIOException)
+					{
+						ErrorMessage = ex.Message;
+
+						if (_logger.IsEnabled(LogLevel.Error))
+						{
+							_logger.LogError(ex, "{UserControl} {EventHandler} called with {Sender} and {EventArgs} had an error.", nameof(BaseMethodsEditControl), nameof(BaseMethodsEditControl_PropertyChanged), sender, e);
+						}
+
+						return true;
+					}
+
+					// Return false for any other exception types to rethrow them in a new AggregateException
+					return false;
+				});
+			}
+		}
+
+		if (e.PropertyName is (nameof(Keyword)) or (nameof(SelectedMethodFamily)))
+		{
+			CanSave = SelectedMethodFamily is not null && Keyword?.Length is > 0 and <= 20;
+		}
+
+		if (e.PropertyName is nameof(MethodFamilyList))
+		{
+			BaseMethod?.MethodFamily = null;
+			BaseMethod?.MethodFamilyList = MethodFamilyList;
+			SelectedMethodFamily = null;
 		}
 
 		if (e.PropertyName == nameof(ErrorMessage))
 		{
 			IsErrorVisible = ErrorMessage?.Length > 0;
 		}
+
+		// Nothing to do for change events of ModelIsNull, ModelIsNotNull, IsErrorVisible and CanSave.
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(BaseMethodsEditControl), nameof(BaseMethodsEditControl_PropertyChanged));
+		}
 	}
 
-	/// <summary>
-	/// Handles the Save button click event, persisting changes to the Base Method.
-	/// Retrieves RTF and plain text from the description editor, updates the view model,
-	/// converts to a simple model, and calls the update endpoint. On success, updates the
-	/// last modified timestamp and raises a "save" child control event.
-	/// </summary>
-	/// <param name="sender">The source of the event.</param>
-	/// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
 	private void SaveButton_Click(object sender, RoutedEventArgs e)
 	{
 		try
 		{
-			if (_logger.IsEnabled(LogLevel.Trace))
+			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}", nameof(BaseMethodsEditControl), nameof(SaveButton_Click), sender, e);
+				_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.", nameof(BaseMethodsEditControl), nameof(SaveButton_Click), sender, e);
 			}
 
 			ErrorMessage = string.Empty;
-
-			string descriptionRtf = DescriptionRichTextBox.GetRtfText();
-			string descriptionText = DescriptionRichTextBox.GetPlainText();
 			BaseMethod!.Keyword = Keyword;
-			BaseMethod.MethodFamily = SelectedMethodFamily;
-			BaseMethod!.DescriptionRtf = descriptionRtf;
-			BaseMethod!.DescriptionText = descriptionText;
-
-			BaseMethodSimpleModel model = BaseMethod.ToSimpleModel();
+			BaseMethod!.DescriptionRtf = DescriptionRichTextBox.GetRtfText();
+			BaseMethod!.DescriptionText = DescriptionRichTextBox.GetPlainText();
+			BaseMethodSimpleModel model = BaseMethod!.ToSimpleModel();
 			BaseMethodFullModel? result = _baseMethodsEndpoint.UpdateAsync(BaseMethodId, model).Result;
-
-			if (_logger.IsEnabled(LogLevel.Trace))
-			{
-				_logger.LogTrace("{Method} returned {Result}", nameof(_baseMethodsEndpoint.UpdateAsync), result);
-			}
 
 			if (result is not null)
 			{
 				BaseMethod.LastUpdatedDate = result.LastUpdatedDate;
 				ChildControlEvent?.Invoke(this, new ChildControlEventArgs<BaseMethodsEditControl>("save", null));
 			}
+
+			if (_logger.IsEnabled(LogLevel.Debug))
+			{
+				_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(BaseMethodsEditControl), nameof(SaveButton_Click));
+			}
 		}
 		catch (HttpIOException ex)
 		{
+			ErrorMessage = ex.Message;
+
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{UserControl} {EventHandler} had an error", nameof(BaseMethodsEditControl), nameof(SaveButton_Click));
+				_logger.LogError(ex, "{UserControl} {EventHandler} called with {Sender} and {EventArgs} had an error.", nameof(BaseMethodsEditControl), nameof(SaveButton_Click), sender, e);
 			}
-
-			ErrorMessage = ex.Message;
 		}
 		catch (AggregateException ae)
 		{
@@ -379,12 +443,13 @@ public partial class BaseMethodsEditControl : UserControl, INotifyPropertyChange
 			{
 				if (ex is HttpIOException)
 				{
+					ErrorMessage = ex.Message;
+
 					if (_logger.IsEnabled(LogLevel.Error))
 					{
-						_logger.LogError(ex, "{UserControl} {EventHandler} had an error", nameof(BaseMethodsEditControl), nameof(SaveButton_Click));
+						_logger.LogError(ex, "{UserControl} {EventHandler} called with {Sender} and {EventArgs} had an error.", nameof(BaseMethodsEditControl), nameof(SaveButton_Click), sender, e);
 					}
 
-					ErrorMessage = ex.Message;
 					return true;
 				}
 
@@ -394,131 +459,137 @@ public partial class BaseMethodsEditControl : UserControl, INotifyPropertyChange
 		}
 	}
 
-	/// <summary>
-	/// Handles the Back to Index button click event, navigating the user back to the index view.
-	/// Raises an "index" child control event to signal the parent to switch views.
-	/// </summary>
-	/// <param name="sender">The source of the event.</param>
-	/// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
 	private void BackToIndexButton_Click(object sender, RoutedEventArgs e)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}", nameof(BaseMethodsEditControl), nameof(BackToIndexButton_Click), sender, e);
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.", nameof(BaseMethodsEditControl), nameof(BackToIndexButton_Click), sender, e);
 		}
 
 		ChildControlEvent?.Invoke(this, new ChildControlEventArgs<BaseMethodsEditControl>("index", null));
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(BaseMethodsEditControl), nameof(BackToIndexButton_Click));
+		}
 	}
 
-	/// <summary>
-	/// Handles the Bold button click event, toggling bold formatting on the current selection in the description editor.
-	/// </summary>
-	/// <param name="sender">The source of the event.</param>
-	/// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
 	private void BoldButton_Click(object sender, RoutedEventArgs e)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}",
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.",
 				nameof(BaseMethodsEditControl), nameof(BoldButton_Click), sender, e);
 		}
 
 		DescriptionRichTextBox.ToggleFontWeight();
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.",
+				nameof(BaseMethodsEditControl), nameof(BoldButton_Click));
+		}
 	}
 
-	/// <summary>
-	/// Handles the Italic button click event, toggling italic formatting on the current selection in the description editor.
-	/// </summary>
-	/// <param name="sender">The source of the event.</param>
-	/// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
 	private void ItalicButton_Click(object sender, RoutedEventArgs e)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}",
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.",
 				nameof(BaseMethodsEditControl), nameof(ItalicButton_Click), sender, e);
 		}
 
 		DescriptionRichTextBox.ToggleFontStyle();
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.",
+				nameof(BaseMethodsEditControl), nameof(ItalicButton_Click));
+		}
 	}
 
-	/// <summary>
-	/// Handles the Underline button click event, toggling underline formatting on the current selection in the description editor.
-	/// </summary>
-	/// <param name="sender">The source of the event.</param>
-	/// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
 	private void UnderlineButton_Click(object sender, RoutedEventArgs e)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}",
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.",
 				nameof(BaseMethodsEditControl), nameof(UnderlineButton_Click), sender, e);
 		}
 
 		DescriptionRichTextBox.ToggleUnderline();
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.",
+				nameof(BaseMethodsEditControl), nameof(UnderlineButton_Click));
+		}
 	}
 
-	/// <summary>
-	/// Handles the Subscript button click event, toggling subscript formatting on the current selection in the description editor.
-	/// </summary>
-	/// <param name="sender">The source of the event.</param>
-	/// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
 	private void SubscriptButton_Click(object sender, RoutedEventArgs e)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}",
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.",
 				nameof(BaseMethodsEditControl), nameof(SubscriptButton_Click), sender, e);
 		}
 
 		DescriptionRichTextBox.ToggleBaselineAlignment(BaselineAlignment.Subscript);
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.",
+				nameof(BaseMethodsEditControl), nameof(SubscriptButton_Click));
+		}
 	}
 
-	/// <summary>
-	/// Handles the Superscript button click event, toggling superscript formatting on the current selection in the description editor.
-	/// </summary>
-	/// <param name="sender">The source of the event.</param>
-	/// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
 	private void SuperscriptButton_Click(object sender, RoutedEventArgs e)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}",
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.",
 				nameof(BaseMethodsEditControl), nameof(SuperscriptButton_Click), sender, e);
 		}
 
 		DescriptionRichTextBox.ToggleBaselineAlignment(BaselineAlignment.Superscript);
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.",
+				nameof(BaseMethodsEditControl), nameof(SuperscriptButton_Click));
+		}
 	}
 
-	/// <summary>
-	/// Handles the Bullets button click event, toggling bulleted list formatting on the current selection in the description editor.
-	/// </summary>
-	/// <param name="sender">The source of the event.</param>
-	/// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
 	private void BulletsButton_Click(object sender, RoutedEventArgs e)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}",
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.",
 				nameof(BaseMethodsEditControl), nameof(BulletsButton_Click), sender, e);
 		}
 
 		DescriptionRichTextBox.ToggleList(TextMarkerStyle.Disc);
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.",
+				nameof(BaseMethodsEditControl), nameof(BulletsButton_Click));
+		}
 	}
 
-	/// <summary>
-	/// Handles the Numbering button click event, toggling numbered list formatting on the current selection in the description editor.
-	/// </summary>
-	/// <param name="sender">The source of the event.</param>
-	/// <param name="e">The <see cref="RoutedEventArgs"/> instance containing the event data.</param>
 	private void NumberingButton_Click(object sender, RoutedEventArgs e)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}",
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.",
 				nameof(BaseMethodsEditControl), nameof(NumberingButton_Click), sender, e);
 		}
 
 		DescriptionRichTextBox.ToggleList(TextMarkerStyle.Decimal);
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.",
+				nameof(BaseMethodsEditControl), nameof(NumberingButton_Click));
+		}
 	}
 }

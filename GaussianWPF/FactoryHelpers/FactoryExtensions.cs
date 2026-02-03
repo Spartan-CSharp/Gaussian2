@@ -3,29 +3,25 @@
 namespace GaussianWPF.FactoryHelpers;
 
 /// <summary>
-/// Provides extension methods for configuring dependency injection services with factory patterns.
+/// Provides extension methods for registering abstract factories in the dependency injection container.
 /// </summary>
 public static class FactoryExtensions
 {
 	/// <summary>
-	/// Registers a form or window type with the dependency injection container along with factory services
-	/// to enable dynamic creation of instances.
+	/// Registers a transient form instance and a factory for creating instances of <typeparamref name="TForm"/>.
 	/// </summary>
-	/// <typeparam name="TForm">The type of form or window to register. Must be a class.</typeparam>
-	/// <param name="services">The <see cref="IServiceCollection"/> to add the services to.</param>
-	/// <returns>The <see cref="IServiceCollection"/> for method chaining.</returns>
+	/// <typeparam name="TForm">The type of form to register. Must be a class.</typeparam>
+	/// <param name="services">The service collection to register the factory with.</param>
+	/// <returns>The service collection for method chaining.</returns>
+	/// <exception cref="InvalidOperationException">Thrown when an instance of <typeparamref name="TForm"/> cannot be created from the service provider.</exception>
 	/// <remarks>
-	/// This method registers three services:
-	/// <list type="bullet">
-	/// <item><description>The form type itself as a transient service.</description></item>
-	/// <item><description>A <see cref="Func{TForm}"/> factory delegate as a singleton that creates new instances.</description></item>
-	/// <item><description>An <see cref="IAbstractFactory{TForm}"/> implementation as a singleton for abstracted instance creation.</description></item>
+	/// This method registers three components:
+	/// <list type="number">
+	/// <item>A transient registration for <typeparamref name="TForm"/></item>
+	/// <item>A singleton factory function for creating instances</item>
+	/// <item>A singleton <see cref="IAbstractFactory{T}"/> implementation</item>
 	/// </list>
-	/// The factory will throw an <see cref="InvalidOperationException"/> if the form cannot be instantiated.
 	/// </remarks>
-	/// <exception cref="InvalidOperationException">
-	/// Thrown when the factory is unable to create an instance of <typeparamref name="TForm"/>.
-	/// </exception>
 	public static IServiceCollection AddFormFactory<TForm>(this IServiceCollection services) where TForm : class
 	{
 		_ = services.AddTransient<TForm>();

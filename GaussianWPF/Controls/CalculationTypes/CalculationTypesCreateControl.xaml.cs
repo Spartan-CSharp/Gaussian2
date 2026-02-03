@@ -11,7 +11,6 @@ using GaussianWPF.WPFHelpers;
 
 using GaussianWPFLibrary.DataAccess;
 using GaussianWPFLibrary.EventModels;
-using GaussianWPFLibrary.Models;
 
 using Microsoft.Extensions.Logging;
 
@@ -19,33 +18,23 @@ namespace GaussianWPF.Controls.CalculationTypes;
 
 /// <summary>
 /// Interaction logic for CalculationTypesCreateControl.xaml
-/// A user control that provides functionality for creating new Calculation Types.
-/// Implements INotifyPropertyChanged to support data binding with the XAML view.
 /// </summary>
 public partial class CalculationTypesCreateControl : UserControl, INotifyPropertyChanged
 {
 	private readonly ILogger<CalculationTypesCreateControl> _logger;
-	private readonly ILoggedInUserModel _loggedInUser;
-	private readonly IApiHelper _apiHelper;
 	private readonly ICalculationTypesEndpoint _endpoint;
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="CalculationTypesCreateControl"/> class.
+	/// Initializes a new instance of the <see cref="CalculationTypesCreateControl"/> class with dependency injection.
 	/// </summary>
 	/// <param name="logger">The logger instance for logging control operations.</param>
-	/// <param name="loggedInUser">The currently logged-in user model.</param>
-	/// <param name="apiHelper">The API helper for making HTTP requests.</param>
-	/// <param name="endpoint">The endpoint for Calculation Types API operations.</param>
-	public CalculationTypesCreateControl(ILogger<CalculationTypesCreateControl> logger, ILoggedInUserModel loggedInUser, IApiHelper apiHelper, ICalculationTypesEndpoint endpoint)
+	/// <param name="endpoint">The endpoint for calculation type API operations.</param>
+	public CalculationTypesCreateControl(ILogger<CalculationTypesCreateControl> logger, ICalculationTypesEndpoint endpoint)
 	{
 		_logger = logger;
-		_loggedInUser = loggedInUser;
-		_apiHelper = apiHelper;
 		_endpoint = endpoint;
 
 		InitializeComponent();
-		DataContext = this;
-		PropertyChanged += CalculationTypesCreateControl_PropertyChanged;
 	}
 
 	/// <summary>
@@ -54,12 +43,12 @@ public partial class CalculationTypesCreateControl : UserControl, INotifyPropert
 	public event PropertyChangedEventHandler? PropertyChanged;
 
 	/// <summary>
-	/// Occurs when a child control event is raised, typically for navigation or state changes.
+	/// Occurs when a child control event is raised to request navigation to another view.
 	/// </summary>
 	public event EventHandler<ChildControlEventArgs<CalculationTypesCreateControl>>? ChildControlEvent;
 
 	/// <summary>
-	/// Gets or sets the Calculation Type view model being created.
+	/// Gets or sets the calculation type view model being created.
 	/// </summary>
 	public CalculationTypeViewModel CalculationType
 	{
@@ -72,8 +61,7 @@ public partial class CalculationTypesCreateControl : UserControl, INotifyPropert
 	} = new();
 
 	/// <summary>
-	/// Gets or sets the name of the Calculation Type.
-	/// This property is bound to the UI and triggers validation when changed.
+	/// Gets or sets the name of the calculation type.
 	/// </summary>
 	public string CalculationTypeName
 	{
@@ -86,8 +74,7 @@ public partial class CalculationTypesCreateControl : UserControl, INotifyPropert
 	} = string.Empty;
 
 	/// <summary>
-	/// Gets or sets the keyword associated with the Calculation Type.
-	/// This property is bound to the UI and triggers validation when changed.
+	/// Gets or sets the keyword that identifies the calculation type.
 	/// </summary>
 	public string Keyword
 	{
@@ -100,8 +87,7 @@ public partial class CalculationTypesCreateControl : UserControl, INotifyPropert
 	} = string.Empty;
 
 	/// <summary>
-	/// Gets or sets the error message to display to the user.
-	/// Setting this property will automatically update the <see cref="IsErrorVisible"/> property.
+	/// Gets or sets the error message to display when an operation fails.
 	/// </summary>
 	public string? ErrorMessage
 	{
@@ -117,9 +103,11 @@ public partial class CalculationTypesCreateControl : UserControl, INotifyPropert
 	}
 
 	/// <summary>
-	/// Gets or sets a value indicating whether error messages should be visible in the UI.
-	/// This property is automatically updated when <see cref="ErrorMessage"/> changes.
+	/// Gets or sets a value indicating whether the error message should be visible.
 	/// </summary>
+	/// <remarks>
+	/// This property is automatically set based on whether <see cref="ErrorMessage"/> has a value.
+	/// </remarks>
 	public bool IsErrorVisible
 	{
 		get;
@@ -134,9 +122,11 @@ public partial class CalculationTypesCreateControl : UserControl, INotifyPropert
 	}
 
 	/// <summary>
-	/// Gets or sets a value indicating whether the save operation can be performed.
-	/// This property is automatically updated based on validation of required fields.
+	/// Gets or sets a value indicating whether the create button should be enabled.
 	/// </summary>
+	/// <remarks>
+	/// This property is automatically set to <see langword="true"/> when the name and keyword are valid.
+	/// </remarks>
 	public bool CanSave
 	{
 		get;
@@ -154,32 +144,84 @@ public partial class CalculationTypesCreateControl : UserControl, INotifyPropert
 	/// <summary>
 	/// Raises the <see cref="PropertyChanged"/> event for the specified property.
 	/// </summary>
-	/// <param name="propertyName">The name of the property that changed. This is automatically provided by the compiler.</param>
+	/// <param name="propertyName">The name of the property that changed. This parameter is optional and can be automatically populated by the caller member name.</param>
 	protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
 	{
 		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogDebug("{UserControl} {Method} with {PropertyName}", nameof(CalculationTypesCreateControl), nameof(OnPropertyChanged), propertyName);
+			_logger.LogDebug("{UserControl} {Method} called with CallerMemberName = {PropertyName}.", nameof(CalculationTypesCreateControl), nameof(OnPropertyChanged), propertyName);
 		}
 
 		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {Method} returning.", nameof(CalculationTypesCreateControl), nameof(OnPropertyChanged));
+		}
+	}
+
+	/// <inheritdoc/>
+	/// <summary>
+	/// Raises the OnInitialized event and sets up data binding and property change notifications.
+	/// </summary>
+	protected override void OnInitialized(EventArgs e)
+	{
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} called with {EventArgs}.", nameof(CalculationTypesCreateControl), nameof(OnInitialized), e);
+		}
+
+		base.OnInitialized(e);
+		DataContext = this;
+		PropertyChanged += CalculationTypesCreateControl_PropertyChanged;
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(CalculationTypesCreateControl), nameof(OnInitialized));
+		}
 	}
 
 	private void CalculationTypesCreateControl_PropertyChanged(object? sender, PropertyChangedEventArgs e)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}", nameof(CalculationTypesCreateControl), nameof(CalculationTypesCreateControl_PropertyChanged), sender, e);
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.", nameof(CalculationTypesCreateControl), nameof(CalculationTypesCreateControl_PropertyChanged), sender, e);
+		}
+
+		if (e.PropertyName is nameof(CalculationType))
+		{
+			if (CalculationType is not null)
+			{
+				CalculationTypeName = CalculationType.Name;
+				Keyword = CalculationType.Keyword;
+				// Populate the RichTextBox with RTF
+				DescriptionRichTextBox.SetRtfText(CalculationType.DescriptionRtf);
+				CanSave = CalculationType.Name?.Length is > 0 and <= 200 && CalculationType.Keyword?.Length is > 0 and <= 30 && (CalculationType.DescriptionText?.Length is <= 2000 || string.IsNullOrEmpty(CalculationType.DescriptionText));
+			}
+			else
+			{
+				CalculationTypeName = string.Empty;
+				Keyword = string.Empty;
+				DescriptionRichTextBox.Document.Blocks.Clear();
+				CanSave = false;
+			}
 		}
 
 		if (e.PropertyName is (nameof(CalculationTypeName)) or (nameof(Keyword)))
 		{
-			CanSave = CalculationTypeName?.Length > 0 && Keyword?.Length > 0;
+			CanSave = CalculationTypeName?.Length is > 0 and <= 200 && Keyword?.Length is > 0 and <= 30;
 		}
 
 		if (e.PropertyName == nameof(ErrorMessage))
 		{
 			IsErrorVisible = ErrorMessage?.Length > 0;
+		}
+
+		// Nothing to do for change events of IsErrorVisible and CanSave.
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(CalculationTypesCreateControl), nameof(CalculationTypesCreateControl_PropertyChanged));
 		}
 	}
 
@@ -187,25 +229,18 @@ public partial class CalculationTypesCreateControl : UserControl, INotifyPropert
 	{
 		try
 		{
-			if (_logger.IsEnabled(LogLevel.Trace))
+			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}", nameof(CalculationTypesCreateControl), nameof(CreateButton_Click), sender, e);
+				_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.", nameof(CalculationTypesCreateControl), nameof(CreateButton_Click), sender, e);
 			}
 
 			ErrorMessage = string.Empty;
-			string descriptionRtf = DescriptionRichTextBox.GetRtfText();
-			string descriptionText = DescriptionRichTextBox.GetPlainText();
 			CalculationType.Name = CalculationTypeName;
 			CalculationType.Keyword = Keyword;
-			CalculationType.DescriptionRtf = descriptionRtf;
-			CalculationType.DescriptionText = descriptionText;
+			CalculationType.DescriptionRtf = DescriptionRichTextBox.GetRtfText();
+			CalculationType.DescriptionText = DescriptionRichTextBox.GetPlainText();
 			CalculationTypeFullModel model = CalculationType.ToFullModel();
 			CalculationTypeFullModel? result = _endpoint.CreateAsync(model).Result;
-
-			if (_logger.IsEnabled(LogLevel.Trace))
-			{
-				_logger.LogTrace("{Method} returned {Result}", nameof(_endpoint.CreateAsync), result);
-			}
 
 			if (result is not null)
 			{
@@ -213,17 +248,22 @@ public partial class CalculationTypesCreateControl : UserControl, INotifyPropert
 				CalculationType.CreatedDate = result.CreatedDate;
 				CalculationType.LastUpdatedDate = result.LastUpdatedDate;
 				CalculationType.Archived = result.Archived;
-				ChildControlEvent?.Invoke(this, new ChildControlEventArgs<CalculationTypesCreateControl>("create", null));
+				ChildControlEvent?.Invoke(this, new ChildControlEventArgs<CalculationTypesCreateControl>("create", CalculationType.Id));
+			}
+
+			if (_logger.IsEnabled(LogLevel.Debug))
+			{
+				_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(CalculationTypesCreateControl), nameof(CreateButton_Click));
 			}
 		}
 		catch (HttpIOException ex)
 		{
+			ErrorMessage = ex.Message;
+
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{UserControl} {EventHandler} had an error", nameof(CalculationTypesCreateControl), nameof(CreateButton_Click));
+				_logger.LogError(ex, "{UserControl} {EventHandler} called with {Sender} and {EventArgs} had an error.", nameof(CalculationTypesCreateControl), nameof(CreateButton_Click), sender, e);
 			}
-
-			ErrorMessage = ex.Message;
 		}
 		catch (AggregateException ae)
 		{
@@ -231,12 +271,13 @@ public partial class CalculationTypesCreateControl : UserControl, INotifyPropert
 			{
 				if (ex is HttpIOException)
 				{
+					ErrorMessage = ex.Message;
+
 					if (_logger.IsEnabled(LogLevel.Error))
 					{
-						_logger.LogError(ex, "{UserControl} {EventHandler} had an error", nameof(CalculationTypesCreateControl), nameof(CreateButton_Click));
+						_logger.LogError(ex, "{UserControl} {EventHandler} called with {Sender} and {EventArgs} had an error.", nameof(CalculationTypesCreateControl), nameof(CreateButton_Click), sender, e);
 					}
 
-					ErrorMessage = ex.Message;
 					return true;
 				}
 
@@ -248,88 +289,135 @@ public partial class CalculationTypesCreateControl : UserControl, INotifyPropert
 
 	private void BackToIndexButton_Click(object sender, RoutedEventArgs e)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}", nameof(CalculationTypesCreateControl), nameof(BackToIndexButton_Click), sender, e);
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.", nameof(CalculationTypesCreateControl), nameof(BackToIndexButton_Click), sender, e);
 		}
 
 		ChildControlEvent?.Invoke(this, new ChildControlEventArgs<CalculationTypesCreateControl>("index", null));
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(CalculationTypesCreateControl), nameof(BackToIndexButton_Click));
+		}
 	}
 
 	private void BoldButton_Click(object sender, RoutedEventArgs e)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}",
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.",
 				nameof(CalculationTypesCreateControl), nameof(BoldButton_Click), sender, e);
 		}
 
 		DescriptionRichTextBox.ToggleFontWeight();
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.",
+				nameof(CalculationTypesCreateControl), nameof(BoldButton_Click));
+		}
 	}
 
 	private void ItalicButton_Click(object sender, RoutedEventArgs e)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}",
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.",
 				nameof(CalculationTypesCreateControl), nameof(ItalicButton_Click), sender, e);
 		}
 
 		DescriptionRichTextBox.ToggleFontStyle();
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.",
+				nameof(CalculationTypesCreateControl), nameof(ItalicButton_Click));
+		}
 	}
 
 	private void UnderlineButton_Click(object sender, RoutedEventArgs e)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}",
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.",
 				nameof(CalculationTypesCreateControl), nameof(UnderlineButton_Click), sender, e);
 		}
 
 		DescriptionRichTextBox.ToggleUnderline();
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.",
+				nameof(CalculationTypesCreateControl), nameof(UnderlineButton_Click));
+		}
 	}
 
 	private void SubscriptButton_Click(object sender, RoutedEventArgs e)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}",
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.",
 				nameof(CalculationTypesCreateControl), nameof(SubscriptButton_Click), sender, e);
 		}
 
 		DescriptionRichTextBox.ToggleBaselineAlignment(BaselineAlignment.Subscript);
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.",
+				nameof(CalculationTypesCreateControl), nameof(SubscriptButton_Click));
+		}
 	}
 
 	private void SuperscriptButton_Click(object sender, RoutedEventArgs e)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}",
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.",
 				nameof(CalculationTypesCreateControl), nameof(SuperscriptButton_Click), sender, e);
 		}
 
 		DescriptionRichTextBox.ToggleBaselineAlignment(BaselineAlignment.Superscript);
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.",
+				nameof(CalculationTypesCreateControl), nameof(SuperscriptButton_Click));
+		}
 	}
 
 	private void BulletsButton_Click(object sender, RoutedEventArgs e)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}",
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.",
 				nameof(CalculationTypesCreateControl), nameof(BulletsButton_Click), sender, e);
 		}
 
 		DescriptionRichTextBox.ToggleList(TextMarkerStyle.Disc);
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.",
+				nameof(CalculationTypesCreateControl), nameof(BulletsButton_Click));
+		}
 	}
 
 	private void NumberingButton_Click(object sender, RoutedEventArgs e)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}",
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.",
 				nameof(CalculationTypesCreateControl), nameof(NumberingButton_Click), sender, e);
 		}
 
 		DescriptionRichTextBox.ToggleList(TextMarkerStyle.Decimal);
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.",
+				nameof(CalculationTypesCreateControl), nameof(NumberingButton_Click));
+		}
 	}
 }

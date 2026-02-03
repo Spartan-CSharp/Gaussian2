@@ -11,7 +11,6 @@ using GaussianWPF.Models;
 
 using GaussianWPFLibrary.DataAccess;
 using GaussianWPFLibrary.EventModels;
-using GaussianWPFLibrary.Models;
 
 using Microsoft.Extensions.Logging;
 
@@ -19,47 +18,24 @@ namespace GaussianWPF.Controls.CalculationTypes;
 
 /// <summary>
 /// Interaction logic for CalculationTypesIndexControl.xaml
-/// A WPF UserControl that displays a list of Calculation Types and provides CRUD operations.
 /// </summary>
-/// <remarks>
-/// This control implements the INotifyPropertyChanged interface to support data binding
-/// and raises events to notify parent controls of user actions.
-/// </remarks>
 public partial class CalculationTypesIndexControl : UserControl, INotifyPropertyChanged
 {
 	private readonly ILogger<CalculationTypesIndexControl> _logger;
-	private readonly ILoggedInUserModel _loggedInUser;
-	private readonly IApiHelper _apiHelper;
 	private readonly ICalculationTypesEndpoint _endpoint;
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="CalculationTypesIndexControl"/> class.
+	/// Initializes a new instance of the <see cref="CalculationTypesIndexControl"/> class with dependency injection.
 	/// </summary>
-	/// <param name="logger">Logger instance for diagnostic logging.</param>
-	/// <param name="loggedInUser">Model representing the currently logged-in user.</param>
-	/// <param name="apiHelper">Helper for API communication.</param>
-	/// <param name="endpoint">Endpoint for accessing Calculation Types data.</param>
-	public CalculationTypesIndexControl(ILogger<CalculationTypesIndexControl> logger, ILoggedInUserModel loggedInUser, IApiHelper apiHelper, ICalculationTypesEndpoint endpoint)
+	/// <param name="logger">The logger instance for logging control operations.</param>
+	/// <param name="endpoint">The endpoint for calculation type API operations.</param>
+	public CalculationTypesIndexControl(ILogger<CalculationTypesIndexControl> logger, ICalculationTypesEndpoint endpoint)
 	{
 		_logger = logger;
-		_loggedInUser = loggedInUser;
-		_apiHelper = apiHelper;
 		_endpoint = endpoint;
-		CalculationTypesList = [];
 
 		InitializeComponent();
-		DataContext = this;
-		PropertyChanged += CalculationTypesIndexControl_PropertyChanged;
 	}
-
-	/// <summary>
-	/// Event raised when a child control action is triggered.
-	/// </summary>
-	/// <remarks>
-	/// This event notifies parent controls when the user initiates create, edit, details, or delete actions.
-	/// The event data includes the action type and the ID of the affected item (if applicable).
-	/// </remarks>
-	public event EventHandler<ChildControlEventArgs<CalculationTypesIndexControl>>? ChildControlEvent;
 
 	/// <summary>
 	/// Occurs when a property value changes.
@@ -67,11 +43,13 @@ public partial class CalculationTypesIndexControl : UserControl, INotifyProperty
 	public event PropertyChangedEventHandler? PropertyChanged;
 
 	/// <summary>
-	/// Gets or sets the collection of Calculation Types to display.
+	/// Occurs when a child control event is raised to request navigation to another view.
 	/// </summary>
-	/// <value>
-	/// An observable collection of <see cref="CalculationTypeViewModel"/> instances.
-	/// </value>
+	public event EventHandler<ChildControlEventArgs<CalculationTypesIndexControl>>? ChildControlEvent;
+
+	/// <summary>
+	/// Gets or sets the collection of calculation types to display in the list.
+	/// </summary>
 	public Collection<CalculationTypeViewModel> CalculationTypesList
 	{
 		get;
@@ -83,14 +61,11 @@ public partial class CalculationTypesIndexControl : UserControl, INotifyProperty
 				OnPropertyChanged(nameof(CalculationTypesList));
 			}
 		}
-	}
+	} = [];
 
 	/// <summary>
-	/// Gets or sets the error message to display to the user.
+	/// Gets or sets the error message to display when an operation fails.
 	/// </summary>
-	/// <value>
-	/// A string containing the error message, or <c>null</c> if there is no error.
-	/// </value>
 	public string? ErrorMessage
 	{
 		get;
@@ -107,9 +82,9 @@ public partial class CalculationTypesIndexControl : UserControl, INotifyProperty
 	/// <summary>
 	/// Gets or sets a value indicating whether the error message should be visible.
 	/// </summary>
-	/// <value>
-	/// <c>true</c> if the error message should be visible; otherwise, <c>false</c>.
-	/// </value>
+	/// <remarks>
+	/// This property is automatically set based on whether <see cref="ErrorMessage"/> has a value.
+	/// </remarks>
 	public bool IsErrorVisible
 	{
 		get;
@@ -124,31 +99,42 @@ public partial class CalculationTypesIndexControl : UserControl, INotifyProperty
 	}
 
 	/// <summary>
-	/// Raises the <see cref="OnInitialized"/> event and loads Calculation Types from the API.
+	/// Raises the <see cref="PropertyChanged"/> event for the specified property.
 	/// </summary>
-	/// <param name="e">The event data.</param>
-	/// <remarks>
-	/// This method fetches all Calculation Types from the endpoint and populates the <see cref="CalculationTypesList"/>.
-	/// If an error occurs during data retrieval, it sets the <see cref="ErrorMessage"/> property.
-	/// </remarks>
-	/// <exception cref="HttpIOException">Thrown when an HTTP communication error occurs.</exception>
+	/// <param name="propertyName">The name of the property that changed. This parameter is optional and can be automatically populated by the caller member name.</param>
+	protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+	{
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {Method} called with CallerMemberName = {PropertyName}.", nameof(CalculationTypesIndexControl), nameof(OnPropertyChanged), propertyName);
+		}
+
+		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {Method} returning.", nameof(CalculationTypesIndexControl), nameof(OnPropertyChanged));
+		}
+	}
+
+	/// <inheritdoc/>
+	/// <summary>
+	/// Raises the OnInitialized event, sets up data binding, and loads the list of calculation types from the API.
+	/// </summary>
 	protected override void OnInitialized(EventArgs e)
 	{
 		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogDebug("{UserControl} {Method} with {EventArgs}", nameof(CalculationTypesIndexControl), nameof(OnInitialized), e);
+			_logger.LogDebug("{UserControl} {EventHandler} called with {EventArgs}.", nameof(CalculationTypesIndexControl), nameof(OnInitialized), e);
 		}
 
 		base.OnInitialized(e);
+		DataContext = this;
+		PropertyChanged += CalculationTypesIndexControl_PropertyChanged;
 
 		try
 		{
 			List<CalculationTypeFullModel>? results = _endpoint.GetAllAsync().Result;
-
-			if (_logger.IsEnabled(LogLevel.Trace))
-			{
-				_logger.LogTrace("{Method} returned {ResultsCount}", nameof(_endpoint.GetAllAsync), results?.Count);
-			}
 
 			if (results is not null)
 			{
@@ -161,12 +147,12 @@ public partial class CalculationTypesIndexControl : UserControl, INotifyProperty
 		}
 		catch (HttpIOException ex)
 		{
+			ErrorMessage = ex.Message;
+
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{UserControl} {Method} had an error", nameof(CalculationTypesIndexControl), nameof(OnInitialized));
+				_logger.LogError(ex, "{UserControl} {EventHandler} called with {EventArgs} had an error.", nameof(CalculationTypesIndexControl), nameof(OnInitialized), e);
 			}
-
-			ErrorMessage = ex.Message;
 		}
 		catch (AggregateException ae)
 		{
@@ -174,12 +160,13 @@ public partial class CalculationTypesIndexControl : UserControl, INotifyProperty
 			{
 				if (ex is HttpIOException)
 				{
+					ErrorMessage = ex.Message;
+
 					if (_logger.IsEnabled(LogLevel.Error))
 					{
-						_logger.LogError(ex, "{UserControl} {Method} had an error", nameof(CalculationTypesIndexControl), nameof(OnInitialized));
+						_logger.LogError(ex, "{UserControl} {EventHandler} called with {EventArgs} had an error.", nameof(CalculationTypesIndexControl), nameof(OnInitialized), e);
 					}
 
-					ErrorMessage = ex.Message;
 					return true;
 				}
 
@@ -187,96 +174,120 @@ public partial class CalculationTypesIndexControl : UserControl, INotifyProperty
 				return false;
 			});
 		}
-	}
 
-	/// <summary>
-	/// Raises the <see cref="PropertyChanged"/> event.
-	/// </summary>
-	/// <param name="propertyName">The name of the property that changed. This parameter is automatically populated by the compiler.</param>
-	protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-	{
 		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogDebug("{UserControl} {Method} with {PropertyName}", nameof(CalculationTypesIndexControl), nameof(OnPropertyChanged), propertyName);
-		}
-
-		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-	}
-
-	private void CreateNewButton_Click(object sender, RoutedEventArgs e)
-	{
-		if (_logger.IsEnabled(LogLevel.Trace))
-		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}", nameof(CalculationTypesIndexControl), nameof(CreateNewButton_Click), sender, e);
-		}
-
-		ChildControlEvent?.Invoke(this, new ChildControlEventArgs<CalculationTypesIndexControl>("create", null));
-	}
-
-	private void EditButton_Click(object sender, RoutedEventArgs e)
-	{
-		if (_logger.IsEnabled(LogLevel.Trace))
-		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}", nameof(CalculationTypesIndexControl), nameof(EditButton_Click), sender, e);
-		}
-
-		Button? button = sender as Button;
-		if (button is not null)
-		{
-			CalculationTypeViewModel? itemToEdit = button.DataContext as CalculationTypeViewModel;
-			if (itemToEdit is not null)
-			{
-				ChildControlEvent?.Invoke(this, new ChildControlEventArgs<CalculationTypesIndexControl>("edit", itemToEdit.Id));
-			}
-		}
-	}
-
-	private void DetailsButton_Click(object sender, RoutedEventArgs e)
-	{
-		if (_logger.IsEnabled(LogLevel.Trace))
-		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}", nameof(CalculationTypesIndexControl), nameof(DetailsButton_Click), sender, e);
-		}
-
-		Button? button = sender as Button;
-		if (button is not null)
-		{
-			CalculationTypeViewModel? itemToView = button.DataContext as CalculationTypeViewModel;
-			if (itemToView is not null)
-			{
-				ChildControlEvent?.Invoke(this, new ChildControlEventArgs<CalculationTypesIndexControl>("details", itemToView.Id));
-			}
-		}
-	}
-
-	private void DeleteButton_Click(object sender, RoutedEventArgs e)
-	{
-		if (_logger.IsEnabled(LogLevel.Trace))
-		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}", nameof(CalculationTypesIndexControl), nameof(DeleteButton_Click), sender, e);
-		}
-
-		Button? button = sender as Button;
-		if (button is not null)
-		{
-			CalculationTypeViewModel? itemToDelete = button.DataContext as CalculationTypeViewModel;
-			if (itemToDelete is not null)
-			{
-				ChildControlEvent?.Invoke(this, new ChildControlEventArgs<CalculationTypesIndexControl>("delete", itemToDelete.Id));
-			}
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(CalculationTypesIndexControl), nameof(OnInitialized));
 		}
 	}
 
 	private void CalculationTypesIndexControl_PropertyChanged(object? sender, PropertyChangedEventArgs e)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}", nameof(CalculationTypesIndexControl), nameof(CalculationTypesIndexControl_PropertyChanged), sender, e);
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.", nameof(CalculationTypesIndexControl), nameof(CalculationTypesIndexControl_PropertyChanged), sender, e);
 		}
 
 		if (e.PropertyName == nameof(ErrorMessage))
 		{
 			IsErrorVisible = ErrorMessage?.Length > 0;
+		}
+
+		// Nothing to do for change events of CalculationTypeList and IsErrorVisible.
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(CalculationTypesIndexControl), nameof(CalculationTypesIndexControl_PropertyChanged));
+		}
+	}
+
+	private void CreateNewButton_Click(object sender, RoutedEventArgs e)
+	{
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.", nameof(CalculationTypesIndexControl), nameof(CreateNewButton_Click), sender, e);
+		}
+
+		ChildControlEvent?.Invoke(this, new ChildControlEventArgs<CalculationTypesIndexControl>("create", null));
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(CalculationTypesIndexControl), nameof(CreateNewButton_Click));
+		}
+	}
+
+	private void EditButton_Click(object sender, RoutedEventArgs e)
+	{
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.", nameof(CalculationTypesIndexControl), nameof(EditButton_Click), sender, e);
+		}
+
+		Button? button = sender as Button;
+
+		if (button is not null)
+		{
+			CalculationTypeViewModel? itemToEdit = button.DataContext as CalculationTypeViewModel;
+
+			if (itemToEdit is not null)
+			{
+				ChildControlEvent?.Invoke(this, new ChildControlEventArgs<CalculationTypesIndexControl>("edit", itemToEdit.Id));
+			}
+		}
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(CalculationTypesIndexControl), nameof(EditButton_Click));
+		}
+	}
+
+	private void DetailsButton_Click(object sender, RoutedEventArgs e)
+	{
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.", nameof(CalculationTypesIndexControl), nameof(DetailsButton_Click), sender, e);
+		}
+
+		Button? button = sender as Button;
+
+		if (button is not null)
+		{
+			CalculationTypeViewModel? itemToView = button.DataContext as CalculationTypeViewModel;
+
+			if (itemToView is not null)
+			{
+				ChildControlEvent?.Invoke(this, new ChildControlEventArgs<CalculationTypesIndexControl>("details", itemToView.Id));
+			}
+		}
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(CalculationTypesIndexControl), nameof(DetailsButton_Click));
+		}
+	}
+
+	private void DeleteButton_Click(object sender, RoutedEventArgs e)
+	{
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.", nameof(CalculationTypesIndexControl), nameof(DeleteButton_Click), sender, e);
+		}
+
+		Button? button = sender as Button;
+
+		if (button is not null)
+		{
+			CalculationTypeViewModel? itemToDelete = button.DataContext as CalculationTypeViewModel;
+
+			if (itemToDelete is not null)
+			{
+				ChildControlEvent?.Invoke(this, new ChildControlEventArgs<CalculationTypesIndexControl>("delete", itemToDelete.Id));
+			}
+		}
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(CalculationTypesIndexControl), nameof(DeleteButton_Click));
 		}
 	}
 }

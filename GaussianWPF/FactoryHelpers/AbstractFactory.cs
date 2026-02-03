@@ -3,39 +3,27 @@
 namespace GaussianWPF.FactoryHelpers;
 
 /// <summary>
-/// Provides a generic implementation of the Abstract Factory pattern with logging support.
-/// This class wraps a factory function to create instances of type <typeparamref name="T"/>.
+/// Provides a factory implementation for creating instances of type <typeparamref name="T"/> using dependency injection.
 /// </summary>
-/// <typeparam name="T">The type of object to be created by the factory.</typeparam>
-/// <remarks>
-/// Initializes a new instance of the <see cref="AbstractFactory{T}"/> class.
-/// </remarks>
-/// <param name="factory">The factory function that creates instances of type <typeparamref name="T"/>.</param>
+/// <typeparam name="T">The type of object to create.</typeparam>
+/// <param name="factory">The factory function used to create instances.</param>
 /// <param name="logger">The logger instance for logging factory operations.</param>
 public class AbstractFactory<T>(Func<T> factory, ILogger<AbstractFactory<T>> logger) : IAbstractFactory<T>
 {
-	/// <summary>
-	/// The factory function used to create instances of type <typeparamref name="T"/>.
-	/// </summary>
 	private readonly Func<T> _factory = factory;
-	
-	/// <summary>
-	/// The logger instance used to log factory creation operations.
-	/// </summary>
 	private readonly ILogger<AbstractFactory<T>> _logger = logger;
 
-	/// <summary>
-	/// Creates a new instance of type <typeparamref name="T"/> using the configured factory function.
-	/// </summary>
-	/// <returns>A new instance of type <typeparamref name="T"/>.</returns>
-	/// <remarks>
-	/// This method logs a trace-level message when called, if trace logging is enabled.
-	/// </remarks>
+	/// <inheritdoc/>
 	public T Create()
 	{
 		if (_logger.IsEnabled(LogLevel.Trace))
 		{
-			_logger.LogTrace("{Method} of {Factory}<{Type}> Called", nameof(Create), nameof(AbstractFactory<>), typeof(T).Name);
+			_logger.LogTrace("{Class}<{Type}> {Method} called.", nameof(AbstractFactory<>), typeof(T).Name, nameof(Create));
+		}
+
+		if (_logger.IsEnabled(LogLevel.Trace))
+		{
+			_logger.LogTrace("{Class}<{Type}> {Method} returning {FactoryType}<{Type}> {Factory}", nameof(AbstractFactory<>), typeof(T).Name, nameof(Create), nameof(Func<>), typeof(T).Name, _factory);
 		}
 
 		return _factory();

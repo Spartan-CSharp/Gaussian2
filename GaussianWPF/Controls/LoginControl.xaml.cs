@@ -5,7 +5,6 @@ using System.Windows;
 using System.Windows.Controls;
 
 using GaussianWPFLibrary.DataAccess;
-using GaussianWPFLibrary.Models;
 
 using Microsoft.Extensions.Logging;
 
@@ -14,31 +13,22 @@ namespace GaussianWPF.Controls;
 /// <summary>
 /// Interaction logic for LoginControl.xaml
 /// </summary>
-/// <remarks>
-/// A WPF UserControl that provides user authentication functionality through username and password input.
-/// Implements INotifyPropertyChanged to support data binding and includes error handling with visual feedback.
-/// </remarks>
 public partial class LoginControl : UserControl, INotifyPropertyChanged
 {
 	private readonly ILogger<LoginControl> _logger;
 	private readonly IApiHelper _apiHelper;
-	private readonly ILoggedInUserModel _loggedInUser;
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="LoginControl"/> class.
+	/// Initializes a new instance of the <see cref="LoginControl"/> class with dependency injection.
 	/// </summary>
-	/// <param name="logger">The logger instance for diagnostic logging.</param>
+	/// <param name="logger">The logger instance for logging control operations.</param>
 	/// <param name="apiHelper">The API helper for authentication operations.</param>
-	/// <param name="loggedInUser">The model to store the logged-in user information.</param>
-	public LoginControl(ILogger<LoginControl> logger, IApiHelper apiHelper, ILoggedInUserModel loggedInUser)
+	public LoginControl(ILogger<LoginControl> logger, IApiHelper apiHelper)
 	{
 		_logger = logger;
 		_apiHelper = apiHelper;
-		_loggedInUser = loggedInUser;
 
 		InitializeComponent();
-		DataContext = this;
-		PropertyChanged += LoginControl_PropertyChanged;
 	}
 
 	/// <summary>
@@ -47,9 +37,8 @@ public partial class LoginControl : UserControl, INotifyPropertyChanged
 	public event PropertyChangedEventHandler? PropertyChanged;
 
 	/// <summary>
-	/// Gets or sets the username entered by the user.
+	/// Gets or sets the user name (email) for login.
 	/// </summary>
-	/// <value>The username string. Triggers property change notification when modified.</value>
 	public string? UserName
 	{
 		get;
@@ -64,9 +53,8 @@ public partial class LoginControl : UserControl, INotifyPropertyChanged
 	}
 
 	/// <summary>
-	/// Gets or sets the password entered by the user.
+	/// Gets or sets the password for login.
 	/// </summary>
-	/// <value>The password string. Triggers property change notification when modified.</value>
 	public string? Password
 	{
 		get;
@@ -83,7 +71,9 @@ public partial class LoginControl : UserControl, INotifyPropertyChanged
 	/// <summary>
 	/// Gets or sets a value indicating whether the login button should be enabled.
 	/// </summary>
-	/// <value><c>true</c> if both username and password have been entered; otherwise, <c>false</c>.</value>
+	/// <remarks>
+	/// This property is automatically set to <see langword="true"/> when both <see cref="UserName"/> and <see cref="Password"/> have values.
+	/// </remarks>
 	public bool CanLogIn
 	{
 		get;
@@ -101,7 +91,6 @@ public partial class LoginControl : UserControl, INotifyPropertyChanged
 	/// <summary>
 	/// Gets or sets the error message to display when login fails.
 	/// </summary>
-	/// <value>The error message string, or empty string if no error occurred.</value>
 	public string? ErrorMessage
 	{
 		get;
@@ -118,7 +107,9 @@ public partial class LoginControl : UserControl, INotifyPropertyChanged
 	/// <summary>
 	/// Gets or sets a value indicating whether the error message should be visible.
 	/// </summary>
-	/// <value><c>true</c> if an error message exists and should be displayed; otherwise, <c>false</c>.</value>
+	/// <remarks>
+	/// This property is automatically set based on whether <see cref="ErrorMessage"/> has a value.
+	/// </remarks>
 	public bool IsErrorVisible
 	{
 		get;
@@ -135,85 +126,48 @@ public partial class LoginControl : UserControl, INotifyPropertyChanged
 	/// <summary>
 	/// Raises the <see cref="PropertyChanged"/> event for the specified property.
 	/// </summary>
-	/// <param name="propertyName">The name of the property that changed. Auto-populated by compiler when called from a property setter.</param>
+	/// <param name="propertyName">The name of the property that changed. This parameter is optional and can be automatically populated by the caller member name.</param>
 	protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
 	{
 		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogDebug("{UserControl} {Method} with {PropertyName}", nameof(LoginControl), nameof(OnPropertyChanged), propertyName);
+			_logger.LogDebug("{UserControl} {Method} called with CallerMemberName = {PropertyName}.", nameof(LoginControl), nameof(OnPropertyChanged), propertyName);
 		}
 
 		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {Method} returning.", nameof(LoginControl), nameof(OnPropertyChanged));
+		}
 	}
 
-	private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+	/// <inheritdoc/>
+	/// <summary>
+	/// Raises the OnInitialized event and sets up data binding and property change notifications.
+	/// </summary>
+	protected override void OnInitialized(EventArgs e)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{UserControl} {Method} with {Sender} and {EventArgs}", nameof(LoginControl), nameof(PasswordBox_PasswordChanged), sender, e);
+			_logger.LogDebug("{UserControl} {EventHandler} with {EventArgs}.", nameof(LoginControl), nameof(OnInitialized), e);
 		}
 
-		// PasswordBox.Password cannot be bound directly for security reasons
-		Password = PasswordBox.Password;
-	}
+		base.OnInitialized(e);
+		DataContext = this;
+		PropertyChanged += LoginControl_PropertyChanged;
 
-	private void LoginButton_Click(object sender, RoutedEventArgs e)
-	{
-		// Your login logic
-		try
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			if (_logger.IsEnabled(LogLevel.Trace))
-			{
-				_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}", nameof(LoginControl), nameof(LoginButton_Click), sender, e);
-			}
-
-			ErrorMessage = string.Empty;
-
-			ILoggedInUserModel result = _apiHelper.LoginAsync(UserName!, Password!).Result;
-
-			if (_logger.IsEnabled(LogLevel.Trace))
-			{
-				_logger.LogTrace("{Method} returned {Result}", nameof(_apiHelper.LoginAsync), result);
-			}
-
-			_loggedInUser.UserName = result.UserName;
-			_loggedInUser.AccessToken = result.AccessToken;
-		}
-		catch (HttpIOException ex)
-		{
-			if (_logger.IsEnabled(LogLevel.Error))
-			{
-				_logger.LogError(ex, "{UserControl} {EventHandler} had an error", nameof(LoginControl), nameof(LoginButton_Click));
-			}
-
-			ErrorMessage = ex.Message;
-		}
-		catch (AggregateException ae)
-		{
-			ae.Handle(ex =>
-			{
-				if (ex is HttpIOException)
-				{
-					if (_logger.IsEnabled(LogLevel.Error))
-					{
-						_logger.LogError(ex, "{UserControl} {EventHandler} had an error", nameof(LoginControl), nameof(LoginButton_Click));
-					}
-
-					ErrorMessage = ex.Message;
-					return true;
-				}
-
-				// Return false for any other exception types to rethrow them in a new AggregateException
-				return false;
-			});
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(LoginControl), nameof(OnInitialized));
 		}
 	}
 
 	private void LoginControl_PropertyChanged(object? sender, PropertyChangedEventArgs e)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}", nameof(LoginControl), nameof(LoginControl_PropertyChanged), sender, e);
+			_logger.LogDebug("{UserControl} {EventHandler} with {Sender} and {EventArgs}.", nameof(LoginControl), nameof(LoginControl_PropertyChanged), sender, e);
 		}
 
 		if (e.PropertyName is (nameof(UserName)) or (nameof(Password)))
@@ -224,6 +178,78 @@ public partial class LoginControl : UserControl, INotifyPropertyChanged
 		if (e.PropertyName == nameof(ErrorMessage))
 		{
 			IsErrorVisible = ErrorMessage?.Length > 0;
+		}
+
+		// Nothing to do for change events of IsErrorVisible and CanLogIn.
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(LoginControl), nameof(LoginControl_PropertyChanged));
+		}
+	}
+
+	private void PasswordBox_PasswordChanged(object sender, RoutedEventArgs e)
+	{
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.", nameof(LoginControl), nameof(PasswordBox_PasswordChanged), sender, e);
+		}
+
+		// PasswordBox.Password cannot be bound directly for security reasons
+		Password = PasswordBox.Password;
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(LoginControl), nameof(PasswordBox_PasswordChanged));
+		}
+	}
+
+	private void LoginButton_Click(object sender, RoutedEventArgs e)
+	{
+		// Your login logic
+		try
+		{
+			if (_logger.IsEnabled(LogLevel.Debug))
+			{
+				_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.", nameof(LoginControl), nameof(LoginButton_Click), sender, e);
+			}
+
+			ErrorMessage = string.Empty;
+			_ = _apiHelper.LoginAsync(UserName!, Password!).Result;
+
+			if (_logger.IsEnabled(LogLevel.Debug))
+			{
+				_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(LoginControl), nameof(LoginButton_Click));
+			}
+		}
+		catch (HttpIOException ex)
+		{
+			ErrorMessage = ex.Message;
+
+			if (_logger.IsEnabled(LogLevel.Error))
+			{
+				_logger.LogError(ex, "{UserControl} {EventHandler} called with {Sender} and {EventArgs} had an error.", nameof(LoginControl), nameof(LoginButton_Click), sender, e);
+			}
+		}
+		catch (AggregateException ae)
+		{
+			ae.Handle(ex =>
+			{
+				if (ex is HttpIOException)
+				{
+					ErrorMessage = ex.Message;
+
+					if (_logger.IsEnabled(LogLevel.Error))
+					{
+						_logger.LogError(ex, "{UserControl} {EventHandler} called with {Sender} and {EventArgs} had an error.", nameof(LoginControl), nameof(LoginButton_Click), sender, e);
+					}
+
+					return true;
+				}
+
+				// Return false for any other exception types to rethrow them in a new AggregateException
+				return false;
+			});
 		}
 	}
 }

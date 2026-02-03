@@ -11,48 +11,31 @@ using GaussianWPF.WPFHelpers;
 
 using GaussianWPFLibrary.DataAccess;
 using GaussianWPFLibrary.EventModels;
-using GaussianWPFLibrary.Models;
 
 using Microsoft.Extensions.Logging;
 
 namespace GaussianWPF.Controls.MethodFamilies;
 
 /// <summary>
-/// User control for displaying detailed information about a specific Method Family.
-/// Implements INotifyPropertyChanged to support WPF data binding and provides functionality
-/// for viewing Method Family details, including RTF-formatted descriptions.
+/// Interaction logic for MethodFamiliesDetailsControl.xaml
 /// </summary>
 public partial class MethodFamiliesDetailsControl : UserControl, INotifyPropertyChanged
 {
-	private readonly ILogger<MethodFamiliesIndexControl> _logger;
-	private readonly ILoggedInUserModel _loggedInUser;
-	private readonly IApiHelper _apiHelper;
+	private readonly ILogger<MethodFamiliesDetailsControl> _logger;
 	private readonly IMethodFamiliesEndpoint _endpoint;
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="MethodFamiliesDetailsControl"/> class.
+	/// Initializes a new instance of the <see cref="MethodFamiliesDetailsControl"/> class with dependency injection.
 	/// </summary>
-	/// <param name="logger">The logger instance for logging control events and errors.</param>
-	/// <param name="loggedInUser">The model representing the currently logged-in user.</param>
-	/// <param name="apiHelper">The API helper for making HTTP requests.</param>
-	/// <param name="endpoint">The endpoint for accessing Method Families data.</param>
-	public MethodFamiliesDetailsControl(ILogger<MethodFamiliesIndexControl> logger, ILoggedInUserModel loggedInUser, IApiHelper apiHelper, IMethodFamiliesEndpoint endpoint)
+	/// <param name="logger">The logger instance for logging control operations.</param>
+	/// <param name="endpoint">The endpoint for method family API operations.</param>
+	public MethodFamiliesDetailsControl(ILogger<MethodFamiliesDetailsControl> logger, IMethodFamiliesEndpoint endpoint)
 	{
 		_logger = logger;
-		_loggedInUser = loggedInUser;
-		_apiHelper = apiHelper;
 		_endpoint = endpoint;
 
 		InitializeComponent();
-		DataContext = this;
-		PropertyChanged += MethodFamiliesDetailsControl_PropertyChanged;
 	}
-
-	/// <summary>
-	/// Event raised when the control needs to communicate with its parent or container.
-	/// Used for navigation and control interaction events.
-	/// </summary>
-	public event EventHandler<ChildControlEventArgs<MethodFamiliesDetailsControl>>? ChildControlEvent;
 
 	/// <summary>
 	/// Occurs when a property value changes.
@@ -60,23 +43,16 @@ public partial class MethodFamiliesDetailsControl : UserControl, INotifyProperty
 	public event PropertyChangedEventHandler? PropertyChanged;
 
 	/// <summary>
-	/// Gets or sets the ID of the Method Family to display.
-	/// When set, triggers retrieval of the Method Family details from the endpoint.
+	/// Occurs when a child control event is raised to request navigation to another view.
 	/// </summary>
-	public int MethodFamilyId
-	{
-		get;
-		set
-		{
-			field = value;
-			OnPropertyChanged(nameof(MethodFamilyId));
-		}
-	}
+	public event EventHandler<ChildControlEventArgs<MethodFamiliesDetailsControl>>? ChildControlEvent;
 
 	/// <summary>
-	/// Gets or sets the view model for the Method Family being displayed.
-	/// When set, triggers updates to the UI, including the RTF description.
+	/// Gets or sets the method family view model being displayed.
 	/// </summary>
+	/// <remarks>
+	/// When this property is set, the control automatically populates the RTF content and updates the <see cref="ModelIsNotNull"/> property.
+	/// </remarks>
 	public MethodFamilyViewModel? MethodFamily
 	{
 		get;
@@ -88,9 +64,27 @@ public partial class MethodFamiliesDetailsControl : UserControl, INotifyProperty
 	}
 
 	/// <summary>
-	/// Gets or sets a value indicating whether the Method Family model is not null.
-	/// Used for controlling the visibility of UI elements based on whether data is loaded.
+	/// Gets or sets the identifier of the method family to display.
 	/// </summary>
+	/// <remarks>
+	/// When this property is set, the control automatically loads the method family data from the API.
+	/// </remarks>
+	public int MethodFamilyId
+	{
+		get;
+		set
+		{
+			field = value;
+			OnPropertyChanged(nameof(MethodFamilyId));
+		}
+	}
+
+	/// <summary>
+	/// Gets or sets a value indicating whether a valid method family model is loaded.
+	/// </summary>
+	/// <remarks>
+	/// Setting this property also updates the <see cref="ModelIsNull"/> property.
+	/// </remarks>
 	public bool ModelIsNotNull
 	{
 		get;
@@ -103,17 +97,18 @@ public partial class MethodFamiliesDetailsControl : UserControl, INotifyProperty
 	}
 
 	/// <summary>
-	/// Gets a value indicating whether the Method Family model is null.
-	/// This is the inverse of <see cref="ModelIsNotNull"/>.
+	/// Gets a value indicating whether no method family model is loaded.
 	/// </summary>
+	/// <remarks>
+	/// This property returns the inverse of <see cref="ModelIsNotNull"/>.
+	/// </remarks>
 	public bool ModelIsNull
 	{
 		get { return !ModelIsNotNull; }
 	}
 
 	/// <summary>
-	/// Gets or sets the error message to display when an error occurs.
-	/// Typically populated when data retrieval fails.
+	/// Gets or sets the error message to display when an operation fails.
 	/// </summary>
 	public string? ErrorMessage
 	{
@@ -130,8 +125,10 @@ public partial class MethodFamiliesDetailsControl : UserControl, INotifyProperty
 
 	/// <summary>
 	/// Gets or sets a value indicating whether the error message should be visible.
-	/// Used to control the visibility of error UI elements.
 	/// </summary>
+	/// <remarks>
+	/// This property is automatically set based on whether <see cref="ErrorMessage"/> has a value.
+	/// </remarks>
 	public bool IsErrorVisible
 	{
 		get;
@@ -147,59 +144,103 @@ public partial class MethodFamiliesDetailsControl : UserControl, INotifyProperty
 
 	/// <summary>
 	/// Raises the <see cref="PropertyChanged"/> event for the specified property.
-	/// Logs debug information when enabled.
 	/// </summary>
-	/// <param name="propertyName">The name of the property that changed. This parameter is optional and can be automatically populated by the compiler.</param>
+	/// <param name="propertyName">The name of the property that changed. This parameter is optional and can be automatically populated by the caller member name.</param>
 	protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
 	{
 		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogDebug("{UserControl} {Method} with {PropertyName}", nameof(MethodFamiliesDetailsControl), nameof(OnPropertyChanged), propertyName);
+			_logger.LogDebug("{UserControl} {Method} called with CallerMemberName = {PropertyName}.", nameof(MethodFamiliesDetailsControl), nameof(OnPropertyChanged), propertyName);
 		}
 
 		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {Method} returning.", nameof(MethodFamiliesDetailsControl), nameof(OnPropertyChanged));
+		}
+	}
+
+	/// <inheritdoc/>
+	/// <summary>
+	/// Raises the OnInitialzied event and sets up data binding and property change notifications.
+	/// </summary>
+	protected override void OnInitialized(EventArgs e)
+	{
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} called with {EventArgs}.", nameof(MethodFamiliesDetailsControl), nameof(OnInitialized), e);
+		}
+
+		base.OnInitialized(e);
+		DataContext = this;
+		PropertyChanged += MethodFamiliesDetailsControl_PropertyChanged;
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(MethodFamiliesDetailsControl), nameof(OnInitialized));
+		}
 	}
 
 	private void MethodFamiliesDetailsControl_PropertyChanged(object? sender, PropertyChangedEventArgs e)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}", nameof(MethodFamiliesDetailsControl), nameof(MethodFamiliesDetailsControl_PropertyChanged), sender, e);
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.", nameof(MethodFamiliesDetailsControl), nameof(MethodFamiliesDetailsControl_PropertyChanged), sender, e);
+		}
+
+		if (e.PropertyName is nameof(MethodFamily))
+		{
+			if (MethodFamily is not null)
+			{
+				// Populate the RichTextBox with RTF
+				DescriptionRichTextBox.SetRtfText(MethodFamily.DescriptionRtf);
+				ModelIsNotNull = true;
+			}
+			else
+			{
+				DescriptionRichTextBox.Document.Blocks.Clear();
+				ModelIsNotNull = false;
+			}
 		}
 
 		if (e.PropertyName is nameof(MethodFamilyId))
 		{
 			try
 			{
-				if (MethodFamilyId != 0)
+				if (MethodFamilyId != 0 && (MethodFamily is null || MethodFamily.Id != MethodFamilyId))
 				{
 					MethodFamilyFullModel? results = _endpoint.GetByIdAsync(MethodFamilyId).Result;
-
-					if (_logger.IsEnabled(LogLevel.Trace))
-					{
-						_logger.LogTrace("{Method} returned {Results}", nameof(_endpoint.GetByIdAsync), results);
-					}
 
 					if (results is not null)
 					{
 						MethodFamily = new MethodFamilyViewModel(results);
+						// Populate the RichTextBox with RTF
+						DescriptionRichTextBox.SetRtfText(MethodFamily.DescriptionRtf);
 						ModelIsNotNull = true;
 					}
+					else
+					{
+						MethodFamily = null;
+						DescriptionRichTextBox.Document.Blocks.Clear();
+						ModelIsNotNull = false;
+					}
 				}
-				else
+				else if (MethodFamilyId == 0)
 				{
 					MethodFamily = null;
+					DescriptionRichTextBox.Document.Blocks.Clear();
 					ModelIsNotNull = false;
 				}
 			}
 			catch (HttpIOException ex)
 			{
+				ErrorMessage = ex.Message;
+
 				if (_logger.IsEnabled(LogLevel.Error))
 				{
-					_logger.LogError(ex, "{UserControl} {Method} had an error", nameof(MethodFamiliesDetailsControl), nameof(OnInitialized));
+					_logger.LogError(ex, "{UserControl} {EventHandler} called with {Sender} and {EventArgs} had an error.", nameof(MethodFamiliesDetailsControl), nameof(MethodFamiliesDetailsControl_PropertyChanged), sender, e);
 				}
-
-				ErrorMessage = ex.Message;
 			}
 			catch (AggregateException ae)
 			{
@@ -207,12 +248,13 @@ public partial class MethodFamiliesDetailsControl : UserControl, INotifyProperty
 				{
 					if (ex is HttpIOException)
 					{
+						ErrorMessage = ex.Message;
+
 						if (_logger.IsEnabled(LogLevel.Error))
 						{
-							_logger.LogError(ex, "{UserControl} {Method} had an error", nameof(MethodFamiliesDetailsControl), nameof(OnInitialized));
+							_logger.LogError(ex, "{UserControl} {EventHandler} called with {Sender} and {EventArgs} had an error.", nameof(MethodFamiliesDetailsControl), nameof(MethodFamiliesDetailsControl_PropertyChanged), sender, e);
 						}
 
-						ErrorMessage = ex.Message;
 						return true;
 					}
 
@@ -222,40 +264,49 @@ public partial class MethodFamiliesDetailsControl : UserControl, INotifyProperty
 			}
 		}
 
-		if (e.PropertyName is nameof(MethodFamily))
+		if (e.PropertyName == nameof(ErrorMessage))
 		{
-			if (MethodFamily is not null)
-			{
-				// Populate the RichTextBox with RTF
-				DescriptionRichTextBox.SetRtfText(MethodFamily.DescriptionRtf);
-			}
-			else
-			{
-				DescriptionRichTextBox.Document.Blocks.Clear();
-			}
+			IsErrorVisible = ErrorMessage?.Length > 0;
+		}
+
+		// Nothing to do for change events of ModelIsNull, ModelIsNotNull, IsErrorVisible and CanSave.
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(MethodFamiliesDetailsControl), nameof(MethodFamiliesDetailsControl_PropertyChanged));
 		}
 	}
 
 	private void EditButton_Click(object sender, RoutedEventArgs e)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}", nameof(MethodFamiliesDetailsControl), nameof(EditButton_Click), sender, e);
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.", nameof(MethodFamiliesDetailsControl), nameof(EditButton_Click), sender, e);
 		}
 
 		if (ModelIsNotNull)
 		{
 			ChildControlEvent?.Invoke(this, new ChildControlEventArgs<MethodFamiliesDetailsControl>("edit", MethodFamily!.Id));
 		}
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(MethodFamiliesDetailsControl), nameof(EditButton_Click));
+		}
 	}
 
 	private void BackToIndexButton_Click(object sender, RoutedEventArgs e)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}", nameof(MethodFamiliesDetailsControl), nameof(BackToIndexButton_Click), sender, e);
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.", nameof(MethodFamiliesDetailsControl), nameof(BackToIndexButton_Click), sender, e);
 		}
 
 		ChildControlEvent?.Invoke(this, new ChildControlEventArgs<MethodFamiliesDetailsControl>("index", null));
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(MethodFamiliesDetailsControl), nameof(BackToIndexButton_Click));
+		}
 	}
 }

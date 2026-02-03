@@ -1,19 +1,14 @@
 ﻿namespace GaussianWPF.FactoryHelpers;
 
 /// <summary>
-/// Defines a contract for an abstract factory that creates instances of type <typeparamref name="T"/>.
+/// Defines the contract for a factory that creates instances of type <typeparamref name="T"/>.
 /// </summary>
-/// <typeparam name="T">The type of object that this factory creates.</typeparam>
-/// <remarks>
-/// This interface implements the Abstract Factory design pattern, providing a way to encapsulate
-/// the creation of objects without specifying their concrete types. It is particularly useful
-/// when working with dependency injection containers to resolve factory dependencies.
-/// </remarks>
+/// <typeparam name="T">The type of object to create.</typeparam>
 public interface IAbstractFactory<T>
 {
 	/// <summary>
-	/// Creates a new instance of type <typeparamref name="T"/> using the configured factory function.
+	/// Creates a new instance of type <typeparamref name="T"/>.
 	/// </summary>
-	/// <returns>A new instance of type <typeparamref name="T"/>.</returns>
+	/// <returns>A new instance of <typeparamref name="T"/>.</returns>
 	T Create();
 }

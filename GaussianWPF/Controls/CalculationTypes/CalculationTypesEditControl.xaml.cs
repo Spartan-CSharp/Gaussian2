@@ -11,40 +11,30 @@ using GaussianWPF.WPFHelpers;
 
 using GaussianWPFLibrary.DataAccess;
 using GaussianWPFLibrary.EventModels;
-using GaussianWPFLibrary.Models;
 
 using Microsoft.Extensions.Logging;
 
 namespace GaussianWPF.Controls.CalculationTypes;
 
 /// <summary>
-/// A WPF UserControl that provides an interface for editing Calculation Type records.
-/// Implements INotifyPropertyChanged for data binding and includes comprehensive error handling and logging.
+/// Interaction logic for CalculationTypesEditControl.xaml
 /// </summary>
 public partial class CalculationTypesEditControl : UserControl, INotifyPropertyChanged
 {
 	private readonly ILogger<CalculationTypesEditControl> _logger;
-	private readonly ILoggedInUserModel _loggedInUser;
-	private readonly IApiHelper _apiHelper;
 	private readonly ICalculationTypesEndpoint _endpoint;
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="CalculationTypesEditControl"/> class.
+	/// Initializes a new instance of the <see cref="CalculationTypesEditControl"/> class with dependency injection.
 	/// </summary>
-	/// <param name="logger">Logger instance for diagnostic and trace information.</param>
-	/// <param name="loggedInUser">The currently logged-in user model.</param>
-	/// <param name="apiHelper">Helper for API operations.</param>
-	/// <param name="endpoint">Endpoint for Calculation Type data access operations.</param>
-	public CalculationTypesEditControl(ILogger<CalculationTypesEditControl> logger, ILoggedInUserModel loggedInUser, IApiHelper apiHelper, ICalculationTypesEndpoint endpoint)
+	/// <param name="logger">The logger instance for logging control operations.</param>
+	/// <param name="endpoint">The endpoint for calculation type API operations.</param>
+	public CalculationTypesEditControl(ILogger<CalculationTypesEditControl> logger, ICalculationTypesEndpoint endpoint)
 	{
 		_logger = logger;
-		_loggedInUser = loggedInUser;
-		_apiHelper = apiHelper;
 		_endpoint = endpoint;
 
 		InitializeComponent();
-		DataContext = this;
-		PropertyChanged += CalculationTypesEditControl_PropertyChanged;
 	}
 
 	/// <summary>
@@ -53,28 +43,16 @@ public partial class CalculationTypesEditControl : UserControl, INotifyPropertyC
 	public event PropertyChangedEventHandler? PropertyChanged;
 
 	/// <summary>
-	/// Occurs when a child control event needs to be communicated to the parent control.
+	/// Occurs when a child control event is raised to request navigation to another view.
 	/// </summary>
 	public event EventHandler<ChildControlEventArgs<CalculationTypesEditControl>>? ChildControlEvent;
 
 	/// <summary>
-	/// Gets or sets the ID of the Calculation Type being edited.
-	/// Setting this property triggers loading of the Calculation Type data.
+	/// Gets or sets the calculation type view model being edited.
 	/// </summary>
-	public int CalculationTypeId
-	{
-		get;
-		set
-		{
-			field = value;
-			OnPropertyChanged(nameof(CalculationTypeId));
-		}
-	}
-
-	/// <summary>
-	/// Gets or sets the Calculation Type view model being edited.
-	/// When set, updates all related properties for data binding.
-	/// </summary>
+	/// <remarks>
+	/// When this property is set, the control automatically populates the name, keyword, RTF content, and updates validation state.
+	/// </remarks>
 	public CalculationTypeViewModel? CalculationType
 	{
 		get;
@@ -86,8 +64,23 @@ public partial class CalculationTypesEditControl : UserControl, INotifyPropertyC
 	}
 
 	/// <summary>
-	/// Gets or sets the name of the Calculation Type.
-	/// This property is bound to the UI and affects the <see cref="CanSave"/> state.
+	/// Gets or sets the identifier of the calculation type to edit.
+	/// </summary>
+	/// <remarks>
+	/// When this property is set, the control automatically loads the calculation type data from the API.
+	/// </remarks>
+	public int CalculationTypeId
+	{
+		get;
+		set
+		{
+			field = value;
+			OnPropertyChanged(nameof(CalculationTypeId));
+		}
+	}
+
+	/// <summary>
+	/// Gets or sets the name of the calculation type.
 	/// </summary>
 	public string CalculationTypeName
 	{
@@ -100,8 +93,7 @@ public partial class CalculationTypesEditControl : UserControl, INotifyPropertyC
 	} = string.Empty;
 
 	/// <summary>
-	/// Gets or sets the keyword associated with the Calculation Type.
-	/// This property is bound to the UI and affects the <see cref="CanSave"/> state.
+	/// Gets or sets the keyword that identifies the calculation type.
 	/// </summary>
 	public string Keyword
 	{
@@ -114,9 +106,11 @@ public partial class CalculationTypesEditControl : UserControl, INotifyPropertyC
 	} = string.Empty;
 
 	/// <summary>
-	/// Gets or sets a value indicating whether the Calculation Type model is not null.
-	/// Used for conditional UI rendering.
+	/// Gets or sets a value indicating whether a valid calculation type model is loaded.
 	/// </summary>
+	/// <remarks>
+	/// Setting this property also updates the <see cref="ModelIsNull"/> property.
+	/// </remarks>
 	public bool ModelIsNotNull
 	{
 		get;
@@ -129,17 +123,18 @@ public partial class CalculationTypesEditControl : UserControl, INotifyPropertyC
 	}
 
 	/// <summary>
-	/// Gets a value indicating whether the Calculation Type model is null.
-	/// Computed from <see cref="ModelIsNotNull"/>.
+	/// Gets a value indicating whether no calculation type model is loaded.
 	/// </summary>
+	/// <remarks>
+	/// This property returns the inverse of <see cref="ModelIsNotNull"/>.
+	/// </remarks>
 	public bool ModelIsNull
 	{
 		get { return !ModelIsNotNull; }
 	}
 
 	/// <summary>
-	/// Gets or sets the current error message to be displayed to the user.
-	/// Setting this property updates the <see cref="IsErrorVisible"/> state.
+	/// Gets or sets the error message to display when an operation fails.
 	/// </summary>
 	public string? ErrorMessage
 	{
@@ -155,8 +150,11 @@ public partial class CalculationTypesEditControl : UserControl, INotifyPropertyC
 	}
 
 	/// <summary>
-	/// Gets or sets a value indicating whether an error message should be visible in the UI.
+	/// Gets or sets a value indicating whether the error message should be visible.
 	/// </summary>
+	/// <remarks>
+	/// This property is automatically set based on whether <see cref="ErrorMessage"/> has a value.
+	/// </remarks>
 	public bool IsErrorVisible
 	{
 		get;
@@ -171,9 +169,11 @@ public partial class CalculationTypesEditControl : UserControl, INotifyPropertyC
 	}
 
 	/// <summary>
-	/// Gets or sets a value indicating whether the save operation can be performed.
-	/// Determined by the validity of <see cref="CalculationTypeName"/> and <see cref="Keyword"/>.
+	/// Gets or sets a value indicating whether the save button should be enabled.
 	/// </summary>
+	/// <remarks>
+	/// This property is automatically set to <see langword="true"/> when the name, keyword, and description are valid.
+	/// </remarks>
 	public bool CanSave
 	{
 		get;
@@ -191,77 +191,48 @@ public partial class CalculationTypesEditControl : UserControl, INotifyPropertyC
 	/// <summary>
 	/// Raises the <see cref="PropertyChanged"/> event for the specified property.
 	/// </summary>
-	/// <param name="propertyName">The name of the property that changed. This is automatically populated by the CallerMemberName attribute.</param>
+	/// <param name="propertyName">The name of the property that changed. This parameter is optional and can be automatically populated by the caller member name.</param>
 	protected void OnPropertyChanged([CallerMemberName] string? propertyName = null)
 	{
 		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogDebug("{UserControl} {Method} with {PropertyName}", nameof(CalculationTypesEditControl), nameof(OnPropertyChanged), propertyName);
+			_logger.LogDebug("{UserControl} {Method} called with CallerMemberName = {PropertyName}.", nameof(CalculationTypesEditControl), nameof(OnPropertyChanged), propertyName);
 		}
 
 		PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {Method} returning.", nameof(CalculationTypesEditControl), nameof(OnPropertyChanged));
+		}
+	}
+
+	/// <inheritdoc/>
+	/// <summary>
+	/// Raises the OnInitialized event and sets up data binding and property change notifications.
+	/// </summary>
+	protected override void OnInitialized(EventArgs e)
+	{
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} called with {EventArgs}.", nameof(CalculationTypesEditControl), nameof(OnInitialized), e);
+		}
+
+		base.OnInitialized(e);
+		DataContext = this;
+		PropertyChanged += CalculationTypesEditControl_PropertyChanged;
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(CalculationTypesEditControl), nameof(OnInitialized));
+		}
 	}
 
 	private void CalculationTypesEditControl_PropertyChanged(object? sender, PropertyChangedEventArgs e)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}", nameof(CalculationTypesEditControl), nameof(CalculationTypesEditControl_PropertyChanged), sender, e);
-		}
-
-		if (e.PropertyName is nameof(CalculationTypeId))
-		{
-			try
-			{
-				if (CalculationTypeId != 0)
-				{
-					CalculationTypeFullModel? results = _endpoint.GetByIdAsync(CalculationTypeId).Result;
-
-					if (_logger.IsEnabled(LogLevel.Trace))
-					{
-						_logger.LogTrace("{Method} returned {Results}", nameof(_endpoint.GetByIdAsync), results);
-					}
-
-					if (results is not null)
-					{
-						CalculationType = new CalculationTypeViewModel(results);
-						ModelIsNotNull = true;
-					}
-				}
-				else
-				{
-					CalculationType = null;
-					ModelIsNotNull = false;
-				}
-			}
-			catch (HttpIOException ex)
-			{
-				if (_logger.IsEnabled(LogLevel.Error))
-				{
-					_logger.LogError(ex, "{UserControl} {Method} had an error", nameof(CalculationTypesEditControl), nameof(OnInitialized));
-				}
-
-				ErrorMessage = ex.Message;
-			}
-			catch (AggregateException ae)
-			{
-				ae.Handle(ex =>
-				{
-					if (ex is HttpIOException)
-					{
-						if (_logger.IsEnabled(LogLevel.Error))
-						{
-							_logger.LogError(ex, "{UserControl} {Method} had an error", nameof(CalculationTypesEditControl), nameof(OnInitialized));
-						}
-
-						ErrorMessage = ex.Message;
-						return true;
-					}
-
-					// Return false for any other exception types to rethrow them in a new AggregateException
-					return false;
-				});
-			}
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.", nameof(CalculationTypesEditControl), nameof(CalculationTypesEditControl_PropertyChanged), sender, e);
 		}
 
 		if (e.PropertyName is nameof(CalculationType))
@@ -272,23 +243,103 @@ public partial class CalculationTypesEditControl : UserControl, INotifyPropertyC
 				Keyword = CalculationType.Keyword;
 				// Populate the RichTextBox with RTF
 				DescriptionRichTextBox.SetRtfText(CalculationType.DescriptionRtf);
+				ModelIsNotNull = true;
+				CanSave = CalculationType.Name?.Length is > 0 and <= 200 && CalculationType.Keyword?.Length is > 0 and <= 30 && (CalculationType.DescriptionText?.Length is <= 2000 || string.IsNullOrEmpty(CalculationType.DescriptionText));
 			}
 			else
 			{
 				CalculationTypeName = string.Empty;
 				Keyword = string.Empty;
 				DescriptionRichTextBox.Document.Blocks.Clear();
+				ModelIsNotNull = false;
+				CanSave = false;
+			}
+		}
+
+		if (e.PropertyName is nameof(CalculationTypeId))
+		{
+			try
+			{
+				if (CalculationTypeId != 0 && (CalculationType is null || CalculationType.Id != CalculationTypeId))
+				{
+					CalculationTypeFullModel? results = _endpoint.GetByIdAsync(CalculationTypeId).Result;
+
+					if (results is not null)
+					{
+						CalculationType = new CalculationTypeViewModel(results);
+						CalculationTypeName = CalculationType.Name;
+						Keyword = CalculationType.Keyword;
+						// Populate the RichTextBox with RTF
+						DescriptionRichTextBox.SetRtfText(CalculationType.DescriptionRtf);
+						ModelIsNotNull = true;
+						CanSave = CalculationType.Name?.Length is > 0 and <= 200 && CalculationType.Keyword?.Length is > 0 and <= 30 && (CalculationType.DescriptionText?.Length is <= 2000 || string.IsNullOrEmpty(CalculationType.DescriptionText));
+					}
+					else
+					{
+						CalculationType = null;
+						CalculationTypeName = string.Empty;
+						Keyword = string.Empty;
+						DescriptionRichTextBox.Document.Blocks.Clear();
+						ModelIsNotNull = false;
+						CanSave = false;
+					}
+				}
+				else if (CalculationTypeId == 0)
+				{
+					CalculationType = null;
+					CalculationTypeName = string.Empty;
+					Keyword = string.Empty;
+					DescriptionRichTextBox.Document.Blocks.Clear();
+					ModelIsNotNull = false;
+					CanSave = false;
+				}
+			}
+			catch (HttpIOException ex)
+			{
+				ErrorMessage = ex.Message;
+
+				if (_logger.IsEnabled(LogLevel.Error))
+				{
+					_logger.LogError(ex, "{UserControl} {EventHandler} called with {Sender} and {EventArgs} had an error.", nameof(CalculationTypesEditControl), nameof(CalculationTypesEditControl_PropertyChanged), sender, e);
+				}
+			}
+			catch (AggregateException ae)
+			{
+				ae.Handle(ex =>
+				{
+					if (ex is HttpIOException)
+					{
+						ErrorMessage = ex.Message;
+
+						if (_logger.IsEnabled(LogLevel.Error))
+						{
+							_logger.LogError(ex, "{UserControl} {EventHandler} called with {Sender} and {EventArgs} had an error.", nameof(CalculationTypesEditControl), nameof(CalculationTypesEditControl_PropertyChanged), sender, e);
+						}
+
+						return true;
+					}
+
+					// Return false for any other exception types to rethrow them in a new AggregateException
+					return false;
+				});
 			}
 		}
 
 		if (e.PropertyName is (nameof(CalculationTypeName)) or (nameof(Keyword)))
 		{
-			CanSave = CalculationTypeName?.Length > 0 && Keyword?.Length > 0;
+			CanSave = CalculationTypeName?.Length is > 0 and <= 200 && Keyword?.Length is > 0 and <= 30;
 		}
 
 		if (e.PropertyName == nameof(ErrorMessage))
 		{
 			IsErrorVisible = ErrorMessage?.Length > 0;
+		}
+
+		// Nothing to do for change events of ModelIsNull, ModelIsNotNull, IsErrorVisible and CanSave.
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(CalculationTypesEditControl), nameof(CalculationTypesEditControl_PropertyChanged));
 		}
 	}
 
@@ -296,42 +347,38 @@ public partial class CalculationTypesEditControl : UserControl, INotifyPropertyC
 	{
 		try
 		{
-			if (_logger.IsEnabled(LogLevel.Trace))
+			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}", nameof(CalculationTypesEditControl), nameof(SaveButton_Click), sender, e);
+				_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.", nameof(CalculationTypesEditControl), nameof(SaveButton_Click), sender, e);
 			}
 
 			ErrorMessage = string.Empty;
-
-			string descriptionRtf = DescriptionRichTextBox.GetRtfText();
-			string descriptionText = DescriptionRichTextBox.GetPlainText();
 			CalculationType!.Name = CalculationTypeName;
 			CalculationType!.Keyword = Keyword;
-			CalculationType!.DescriptionRtf = descriptionRtf;
-			CalculationType!.DescriptionText = descriptionText;
-
+			CalculationType!.DescriptionRtf = DescriptionRichTextBox.GetRtfText();
+			CalculationType!.DescriptionText = DescriptionRichTextBox.GetPlainText();
 			CalculationTypeFullModel model = CalculationType!.ToFullModel();
 			CalculationTypeFullModel? result = _endpoint.UpdateAsync(CalculationTypeId, model).Result;
-
-			if (_logger.IsEnabled(LogLevel.Trace))
-			{
-				_logger.LogTrace("{Method} returned {Result}", nameof(_endpoint.UpdateAsync), result);
-			}
 
 			if (result is not null)
 			{
 				CalculationType.LastUpdatedDate = result.LastUpdatedDate;
 				ChildControlEvent?.Invoke(this, new ChildControlEventArgs<CalculationTypesEditControl>("save", null));
 			}
+
+			if (_logger.IsEnabled(LogLevel.Debug))
+			{
+				_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(CalculationTypesEditControl), nameof(SaveButton_Click));
+			}
 		}
 		catch (HttpIOException ex)
 		{
+			ErrorMessage = ex.Message;
+
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{UserControl} {EventHandler} had an error", nameof(CalculationTypesEditControl), nameof(SaveButton_Click));
+				_logger.LogError(ex, "{UserControl} {EventHandler} called with {Sender} and {EventArgs} had an error.", nameof(CalculationTypesEditControl), nameof(SaveButton_Click), sender, e);
 			}
-
-			ErrorMessage = ex.Message;
 		}
 		catch (AggregateException ae)
 		{
@@ -339,12 +386,13 @@ public partial class CalculationTypesEditControl : UserControl, INotifyPropertyC
 			{
 				if (ex is HttpIOException)
 				{
+					ErrorMessage = ex.Message;
+
 					if (_logger.IsEnabled(LogLevel.Error))
 					{
-						_logger.LogError(ex, "{UserControl} {EventHandler} had an error", nameof(CalculationTypesEditControl), nameof(SaveButton_Click));
+						_logger.LogError(ex, "{UserControl} {EventHandler} called with {Sender} and {EventArgs} had an error.", nameof(CalculationTypesEditControl), nameof(SaveButton_Click), sender, e);
 					}
 
-					ErrorMessage = ex.Message;
 					return true;
 				}
 
@@ -356,88 +404,135 @@ public partial class CalculationTypesEditControl : UserControl, INotifyPropertyC
 
 	private void BackToIndexButton_Click(object sender, RoutedEventArgs e)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}", nameof(CalculationTypesEditControl), nameof(BackToIndexButton_Click), sender, e);
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.", nameof(CalculationTypesEditControl), nameof(BackToIndexButton_Click), sender, e);
 		}
 
 		ChildControlEvent?.Invoke(this, new ChildControlEventArgs<CalculationTypesEditControl>("index", null));
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(CalculationTypesEditControl), nameof(BackToIndexButton_Click));
+		}
 	}
 
 	private void BoldButton_Click(object sender, RoutedEventArgs e)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}",
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.",
 				nameof(CalculationTypesEditControl), nameof(BoldButton_Click), sender, e);
 		}
 
 		DescriptionRichTextBox.ToggleFontWeight();
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.",
+				nameof(CalculationTypesEditControl), nameof(BoldButton_Click));
+		}
 	}
 
 	private void ItalicButton_Click(object sender, RoutedEventArgs e)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}",
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.",
 				nameof(CalculationTypesEditControl), nameof(ItalicButton_Click), sender, e);
 		}
 
 		DescriptionRichTextBox.ToggleFontStyle();
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.",
+				nameof(CalculationTypesEditControl), nameof(ItalicButton_Click));
+		}
 	}
 
 	private void UnderlineButton_Click(object sender, RoutedEventArgs e)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}",
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.",
 				nameof(CalculationTypesEditControl), nameof(UnderlineButton_Click), sender, e);
 		}
 
 		DescriptionRichTextBox.ToggleUnderline();
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.",
+				nameof(CalculationTypesEditControl), nameof(UnderlineButton_Click));
+		}
 	}
 
 	private void SubscriptButton_Click(object sender, RoutedEventArgs e)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}",
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.",
 				nameof(CalculationTypesEditControl), nameof(SubscriptButton_Click), sender, e);
 		}
 
 		DescriptionRichTextBox.ToggleBaselineAlignment(BaselineAlignment.Subscript);
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.",
+				nameof(CalculationTypesEditControl), nameof(SubscriptButton_Click));
+		}
 	}
 
 	private void SuperscriptButton_Click(object sender, RoutedEventArgs e)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}",
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.",
 				nameof(CalculationTypesEditControl), nameof(SuperscriptButton_Click), sender, e);
 		}
 
 		DescriptionRichTextBox.ToggleBaselineAlignment(BaselineAlignment.Superscript);
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.",
+				nameof(CalculationTypesEditControl), nameof(SuperscriptButton_Click));
+		}
 	}
 
 	private void BulletsButton_Click(object sender, RoutedEventArgs e)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}",
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.",
 				nameof(CalculationTypesEditControl), nameof(BulletsButton_Click), sender, e);
 		}
 
 		DescriptionRichTextBox.ToggleList(TextMarkerStyle.Disc);
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.",
+				nameof(CalculationTypesEditControl), nameof(BulletsButton_Click));
+		}
 	}
 
 	private void NumberingButton_Click(object sender, RoutedEventArgs e)
 	{
-		if (_logger.IsEnabled(LogLevel.Trace))
+		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogTrace("{UserControl} {EventHandler} with {Sender} and {EventArgs}",
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.",
 				nameof(CalculationTypesEditControl), nameof(NumberingButton_Click), sender, e);
 		}
 
 		DescriptionRichTextBox.ToggleList(TextMarkerStyle.Decimal);
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.",
+				nameof(CalculationTypesEditControl), nameof(NumberingButton_Click));
+		}
 	}
 }
