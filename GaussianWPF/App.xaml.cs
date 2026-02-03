@@ -3,6 +3,7 @@
 using GaussianWPF.Controls;
 using GaussianWPF.Controls.BaseMethods;
 using GaussianWPF.Controls.CalculationTypes;
+using GaussianWPF.Controls.ElectronicStates;
 using GaussianWPF.Controls.MethodFamilies;
 using GaussianWPF.FactoryHelpers;
 
@@ -11,50 +12,88 @@ using GaussianWPFLibrary.Models;
 
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 
 namespace GaussianWPF;
 
 /// <summary>
 /// Interaction logic for App.xaml
-/// Represents the main application class that configures dependency injection and manages the application lifecycle.
 /// </summary>
 public partial class App : Application
 {
-	/// <summary>
-	/// Gets the application's dependency injection host that manages service lifetimes and resolution.
-	/// This property provides access to the configured services throughout the application.
-	/// </summary>
-	public static IHost? AppHost { get; private set; }
+	private readonly ILogger<App> _logger;
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="App"/> class.
-	/// Creates and configures the dependency injection host with all required services.
+	/// Initializes a new instance of the <see cref="App"/> class and configures the application host with dependency injection.
 	/// </summary>
 	public App()
 	{
 		AppHost = Host.CreateDefaultBuilder()
 			.ConfigureServices(ConfigureServices)
 			.Build();
+		_logger = AppHost.Services.GetRequiredService<ILogger<App>>();
 	}
 
 	/// <summary>
-	/// Configures the dependency injection container with application services, views, and controls.
+	/// Gets the application's host instance used for dependency injection and service management.
 	/// </summary>
-	/// <param name="context">The host builder context containing configuration and environment information.</param>
-	/// <param name="services">The service collection to register dependencies into.</param>
-	/// <remarks>
-	/// Registers the following services:
-	/// - Singleton instances of ILoggedInUserModel and IApiHelper for data access
-	/// - Singleton instances of MainWindow and HomeControl
-	/// - Form factories for LoginControl, AboutControl, and PrivacyControl to enable dynamic creation
-	/// </remarks>
+	public static IHost? AppHost { get; private set; }
+
+	/// <inheritdoc/>
+	/// <summary>
+	/// Raises the <see cref="Application.Startup"/> event and initializes the application host and main window.
+	/// </summary>
+	protected override void OnStartup(StartupEventArgs e)
+	{
+		if (_logger.IsEnabled(LogLevel.Information))
+		{
+			_logger.LogInformation("{Class} {EventHandler} with {EventArgs} called.", nameof(App), nameof(OnStartup), e);
+		}
+
+		AppHost!.StartAsync().Wait();
+		base.OnStartup(e);
+		MainWindow? mainWindow = AppHost.Services.GetService<MainWindow>();
+		mainWindow?.Show();
+
+		if (_logger.IsEnabled(LogLevel.Information))
+		{
+			_logger.LogInformation("{Class} {EventHandler} with {EventArgs} returning.", nameof(App), nameof(OnStartup), e);
+		}
+	}
+
+	/// <inheritdoc/>
+	/// <summary>
+	/// Raises the <see cref="Application.Exit"/> event and performs application cleanup, including stopping the host.
+	/// </summary>
+	protected override void OnExit(ExitEventArgs e)
+	{
+		if (_logger.IsEnabled(LogLevel.Information))
+		{
+			_logger.LogInformation("{Class} {EventHandler} with {EventArgs} called.", nameof(App), nameof(OnExit), e);
+		}
+
+		using (AppHost)
+		{
+			AppHost!.StopAsync().Wait();
+		}
+
+		base.OnExit(e);
+
+		if (_logger.IsEnabled(LogLevel.Information))
+		{
+			_logger.LogInformation("{Class} {EventHandler} with {EventArgs} returning.", nameof(App), nameof(OnExit), e);
+		}
+	}
+
 	private static void ConfigureServices(HostBuilderContext context, IServiceCollection services)
 	{
 		// Register your services
 		_ = services.AddSingleton<IApiHelper, ApiHelper>();
+		_ = services.AddSingleton<IHomeEndpoint, HomeEndpoint>();
 		_ = services.AddSingleton<ICalculationTypesEndpoint, CalculationTypesEndpoint>();
 		_ = services.AddSingleton<IMethodFamiliesEndpoint, MethodFamiliesEndpoint>();
 		_ = services.AddSingleton<IBaseMethodsEndpoint, BaseMethodsEndpoint>();
+		_ = services.AddSingleton<IElectronicStatesEndpoint, ElectronicStatesEndpoint>();
 		_ = services.AddSingleton<ILoggedInUserModel, LoggedInUserModel>();
 
 		// Register your Views and ViewModels
@@ -64,6 +103,7 @@ public partial class App : Application
 		_ = services.AddFormFactory<CalculationTypesControl>();
 		_ = services.AddFormFactory<MethodFamiliesControl>();
 		_ = services.AddFormFactory<BaseMethodsControl>();
+		_ = services.AddFormFactory<ElectronicStatesControl>();
 		_ = services.AddFormFactory<AboutControl>();
 		_ = services.AddFormFactory<PrivacyControl>();
 		_ = services.AddFormFactory<ContactControl>();
@@ -85,35 +125,10 @@ public partial class App : Application
 		_ = services.AddFormFactory<BaseMethodsCreateControl>();
 		_ = services.AddFormFactory<BaseMethodsEditControl>();
 		_ = services.AddFormFactory<BaseMethodsDeleteControl>();
-	}
-
-	/// <summary>
-	/// Called when the application is shutting down.
-	/// Ensures proper cleanup by stopping and disposing of the dependency injection host.
-	/// </summary>
-	/// <param name="e">The event arguments containing information about the application exit.</param>
-	protected override void OnExit(ExitEventArgs e)
-	{
-		using (AppHost)
-		{
-			AppHost!.StopAsync().Wait();
-		}
-
-		base.OnExit(e);
-	}
-
-	/// <summary>
-	/// Called when the application starts.
-	/// Initializes the dependency injection host and displays the main window.
-	/// </summary>
-	/// <param name="e">The event arguments containing startup information and command-line arguments.</param>
-	protected override void OnStartup(StartupEventArgs e)
-	{
-		AppHost!.StartAsync().Wait();
-
-		MainWindow? mainWindow = AppHost.Services.GetService<MainWindow>();
-		mainWindow?.Show();
-
-		base.OnStartup(e);
+		_ = services.AddFormFactory<ElectronicStatesIndexControl>();
+		_ = services.AddFormFactory<ElectronicStatesDetailsControl>();
+		_ = services.AddFormFactory<ElectronicStatesCreateControl>();
+		_ = services.AddFormFactory<ElectronicStatesEditControl>();
+		_ = services.AddFormFactory<ElectronicStatesDeleteControl>();
 	}
 }

@@ -1,0 +1,44 @@
+﻿<UserControl x:Class="GaussianWPF.Controls.ElectronicStates.ElectronicStatesIndexControl" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:GaussianWPF.Controls.ElectronicStates" mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=local:ElectronicStatesIndexControl}" d:DesignWidth="1240" d:DesignHeight="648" Name="ElectronicStatesIndexUserControl" FontSize="18">
+	<Grid Name="IndexGrid">
+		<Grid.RowDefinitions>
+			<RowDefinition Name="Row0" Height="Auto" />
+			<RowDefinition Name="Row1" Height="Auto" />
+			<RowDefinition Name="Row2" Height="Auto" />
+			<RowDefinition Name="Row3" Height="*" />
+		</Grid.RowDefinitions>
+		<Grid.ColumnDefinitions>
+			<ColumnDefinition Name="Column0" Width="Auto" />
+			<ColumnDefinition Name="Column1" Width="*" />
+		</Grid.ColumnDefinitions>
+
+		<!-- Row 0 -->
+		<TextBlock Name="IndexHeaderTextBlock" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="0 0 0 10" FontSize="24" FontWeight="Bold" Text="Electronic States" />
+
+		<!-- Row 1 -->
+		<TextBlock Name="ErrorMessageTextBlock" Foreground="Red" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="0 0 0 20" MaxWidth="800" FontWeight="SemiBold" TextWrapping="Wrap" Visibility="{Binding IsErrorVisible, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" Text="{Binding ErrorMessage, UpdateSourceTrigger=PropertyChanged}" />
+
+		<!-- Row 2 -->
+		<Button Name="CreateNewButton" Grid.Row="2" Grid.Column="0" HorizontalAlignment="Center" Margin="5" Padding="10 5" Content="Create New" Click="CreateNewButton_Click" />
+
+		<!-- Row 3 -->
+		<ListView Name="ElectronicStatesListView" Grid.Row="3" Grid.Column="0" Grid.RowSpan="2" Grid.ColumnSpan="2" Margin="0 0 0 20" ItemsSource="{Binding ElectronicStatesList}">
+			<ListView.View>
+				<GridView x:Name="ElectronicStatesGridView" AllowsColumnReorder="false">
+					<GridViewColumn x:Name="NameColumn" DisplayMemberBinding="{Binding Path=Name}" Header="Name" />
+					<GridViewColumn x:Name="KeywordColumn" DisplayMemberBinding="{Binding Path=Keyword}" Header="Keyword" />
+					<GridViewColumn x:Name="ActionsColumn">
+						<GridViewColumn.CellTemplate>
+							<DataTemplate x:Name="ActionsDataTemplate">
+								<StackPanel Name="ActionsStackPanel" Orientation="Horizontal">
+									<Button Name="EditButton" Margin="5" Padding="10 5" Content="Edit" Tag="{Binding Id}" Click="EditButton_Click" />
+									<Button Name="DetailsButton" Margin="5" Padding="10 5" Content="Details" Tag="{Binding Id}" Click="DetailsButton_Click" />
+									<Button Name="DeleteButton" Margin="5" Padding="10 5" Content="Delete" Tag="{Binding Id}" Click="DeleteButton_Click" />
+								</StackPanel>
+							</DataTemplate>
+						</GridViewColumn.CellTemplate>
+					</GridViewColumn>
+				</GridView>
+			</ListView.View>
+		</ListView>
+	</Grid>
+</UserControl>

@@ -192,7 +192,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 - [ ] Continue the above pattern for the other tables.
 	- [x] Method Families
 	- [x] Base Methods
-	- [ ] Electronic States
+	- [x] Electronic States
 	- [ ] Spin States
 	- [ ] Electronic State/Method Families
 	- [ ] Spin State/Electronic State/Method Families
@@ -211,13 +211,17 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 	- [ ] Calculation Files
 	- [ ] Experiment Files
 - [ ] Add JWT decoding and get the logged in user properties in the WPF app
+- [ ] Add Post-Deployment Script to the SQL Database Project to populate initial default values
 - [ ] Add Unit Tests
 - [ ] Add Health Checks to the API
 - [ ] Add logging to the Entity Framework-scaffolded Identity pages in the MVC App
 - [ ] Add Role-based permissions on controllers and pages in the MVC app and in the controls/menu in the WPF app
 - [ ] Refactor and optimize the code
 - [ ] Remove the warning disables in .globalconfig and address each warning
+- [ ] Review and standardize the logging statements
+- [ ] Implement a structured logger
 - [ ] Beef up API with additional response codes and document them
+- [ ] Tweak both UIs
 
 See the [open issues](https://github.com/Spartan-CSharp/Gaussian2/issues) for a full list of proposed features (and known issues).
 
