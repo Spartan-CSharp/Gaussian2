@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="GaussianWPF.Controls.ErrorControl" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:GaussianWPF.Controls" mc:Ignorable="d" d:DesignWidth="1240" d:DesignHeight="648" Name="ErrorUserControl" FontSize="18">
+﻿<UserControl x:Class="GaussianWPF.Controls.ErrorControl" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:GaussianWPF.Controls" mc:Ignorable="d" d:DesignWidth="1240" d:DesignHeight="648" Name="ErrorUserControl" FontSize="16">
 	<Grid Name="ErrorGrid">
 		<Grid.RowDefinitions>
 			<RowDefinition Name="Row0" Height="Auto" />
@@ -13,19 +13,19 @@
 		</Grid.ColumnDefinitions>
 
 		<!-- Row 0 -->
-		<TextBlock Foreground="Red" Name="ErrorHeaderTextBlock" Grid.Row="0" Grid.Column="0" Margin="0 0 0 10" FontSize="24" FontWeight="Bold" Text="Error" />
+		<TextBlock Name="ErrorHeaderTextBlock" Foreground="Red" Grid.Row="0" Grid.Column="0" Margin="0 0 0 10" FontSize="40" FontWeight="SemiBold" Text="Error" />
 
 		<!-- Row 1 -->
-		<TextBlock Foreground="Red" Name="ErrorInfoTextBlock" Grid.Row="1" Grid.Column="0" Margin="0 0 0 20" FontSize="20" FontWeight="SemiBold" Text="An error occurred while processing your request." />
+		<TextBlock Name="ErrorInfoTextBlock" Foreground="Red" Grid.Row="1" Grid.Column="0" Margin="0 0 0 20" FontSize="32" FontWeight="SemiBold" Text="An error occurred while processing your request." />
 
 		<!-- Row 2 -->
 		<StackPanel Name="ErrorStackPanel" Grid.Row="2" Grid.Column="0" Orientation="Horizontal" Visibility="{Binding IsErrorVisible, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}">
-			<TextBlock Name="ErrorTypeTextBlock" Grid.Row="2" Grid.Column="0" Margin="0 0 0 20" FontWeight="Bold" TextWrapping="Wrap" Text="{Binding ErrorType, UpdateSourceTrigger=PropertyChanged}" />
-			<TextBlock Name="ErrorMessageTextBlock" Grid.Row="2" Grid.Column="0" Margin="0 0 0 20" TextWrapping="Wrap" Text="{Binding ErrorMessage, UpdateSourceTrigger=PropertyChanged}" />
+			<TextBlock Name="ErrorTypeTextBlock" Foreground="Red" Grid.Row="2" Grid.Column="0" Margin="0 0 0 20" FontSize="28" FontWeight="SemiBold" TextWrapping="Wrap" Text="{Binding ErrorType, UpdateSourceTrigger=PropertyChanged}" />
+			<TextBlock Name="ErrorMessageTextBlock" Foreground="Red" Grid.Row="2" Grid.Column="0" Margin="0 0 0 20" FontSize="28" FontWeight="SemiBold" TextWrapping="Wrap" Text="{Binding ErrorMessage, UpdateSourceTrigger=PropertyChanged}" />
 		</StackPanel>
 
 		<!-- Row 3 -->
-		<TextBlock Name="DevelopmentModeTextBlock" Grid.Row="3" Grid.Column="0" Margin="0 0 0 10" FontWeight="SemiBold" Text="Development Mode" />
+		<TextBlock Name="DevelopmentModeTextBlock" Grid.Row="3" Grid.Column="0" Margin="0 0 0 10" FontSize="28" FontWeight="SemiBold" Text="Development Mode" />
 
 		<!-- Row 4 -->
 		<RichTextBox Name="DevelopmentModeRichTextBox" Background="{x:Null}" BorderBrush="{x:Null}" Grid.Row="4" Grid.Column="0" HorizontalAlignment="Left" Margin="0 0 0 10" MaxWidth="800" IsReadOnly="True" BorderThickness="0">

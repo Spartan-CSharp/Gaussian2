@@ -130,7 +130,7 @@
     <comment>The API Endpoint for Calculation Types</comment>
   </data>
   <data name="ElectronicStatesEndpoint" xml:space="preserve">
-    <value>api/vi/ElectronicStates</value>
+    <value>api/v1/ElectronicStates</value>
     <comment>The API Endpoint for Electronic States</comment>
   </data>
   <data name="HomeEndpoint" xml:space="preserve">

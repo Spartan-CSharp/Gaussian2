@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="GaussianWPF.Controls.HomeControl" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:GaussianWPF.Controls" mc:Ignorable="d" d:DesignWidth="1240" d:DesignHeight="648" Name="HomeUserControl" FontSize="18">
+﻿<UserControl x:Class="GaussianWPF.Controls.HomeControl" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:GaussianWPF.Controls" mc:Ignorable="d" d:DesignWidth="1240" d:DesignHeight="648" Name="HomeUserControl" FontSize="16">
 	<Grid Name="HomeGrid">
 		<Grid.RowDefinitions>
 			<RowDefinition Name="Row0" Height="*" />
@@ -11,7 +11,7 @@
 			<ColumnDefinition Name="Column2" Width="*" />
 		</Grid.ColumnDefinitions>
 		<StackPanel Name="HomeStackPanel" Grid.Row="1" Grid.Column="1" Orientation="Vertical" HorizontalAlignment="Center" VerticalAlignment="Center">
-			<TextBlock Name="HomeHeaderTextBlock" HorizontalAlignment="Center" Margin="0 0 0 10" FontSize="24" FontWeight="Bold" Text="Welcome" />
+			<TextBlock Name="HomeHeaderTextBlock" HorizontalAlignment="Center" Margin="0 0 0 10" FontSize="40" FontWeight="SemiBold" Text="Welcome" />
 			<TextBlock Name="LearnAboutTextBlock" HorizontalAlignment="Center" Margin="0 0 0 20" TextWrapping="Wrap">
 				Learn about <Hyperlink Name="WPFLearnHyperlink" NavigateUri="https://learn.microsoft.com/en-us/dotnet/desktop/wpf/">building Desktop apps with WPF in .NET</Hyperlink>.
 			</TextBlock>

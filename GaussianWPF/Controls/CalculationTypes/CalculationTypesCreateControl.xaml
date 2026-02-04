@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="GaussianWPF.Controls.CalculationTypes.CalculationTypesCreateControl" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:GaussianWPF.Controls.CalculationTypes" mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=local:CalculationTypesCreateControl}" d:DesignWidth="1240" d:DesignHeight="648" Name="CalculationTypesCreateUserControl" FontSize="18">
+﻿<UserControl x:Class="GaussianWPF.Controls.CalculationTypes.CalculationTypesCreateControl" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:GaussianWPF.Controls.CalculationTypes" mc:Ignorable="d" d:DataContext="{d:DesignInstance Type=local:CalculationTypesCreateControl}" d:DesignWidth="1240" d:DesignHeight="648" Name="CalculationTypesCreateUserControl" FontSize="16">
 	<ScrollViewer Name="CreateScrollViewer" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto" CanContentScroll="True">
 		<Grid Name="CreateGrid">
 			<Grid.RowDefinitions>
@@ -19,7 +19,7 @@
 			</Grid.ColumnDefinitions>
 
 			<!-- Row 0 -->
-			<TextBlock Name="CreateHeaderTextBlock" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="0 0 0 10" FontSize="24" FontWeight="Bold" Text="Create" />
+			<TextBlock Name="CreateHeaderTextBlock" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="0 0 0 10" FontSize="40" FontWeight="SemiBold" Text="Create" />
 
 			<!-- Row 1 -->
 			<TextBlock Name="ErrorMessageTextBlock" Foreground="Red" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="0 0 0 20" MaxWidth="800" FontWeight="SemiBold" TextWrapping="Wrap" Visibility="{Binding IsErrorVisible, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" Text="{Binding ErrorMessage, UpdateSourceTrigger=PropertyChanged}" />
@@ -41,51 +41,120 @@
 			<!-- Row 6 -->
 			<TextBlock Name="DescriptionTextBlock" Grid.Row="6" Grid.Column="0" Margin="0 0 5 10" Text="Description:" />
 			<DockPanel Name="DescriptionDockPanel" Grid.Row="6" Grid.Column="1" HorizontalAlignment="Left" Margin="0 0 0 10">
-				<ToolBar Name="DescriptionToolBar" Background="#FFDDDDDD" Margin="0 0 0 5" FontSize="12px" DockPanel.Dock="Top">
-					<Button Name="BoldButton" Width="30" Height="30" FontWeight="Bold" Content="B" ToolTip="Bold (Ctrl+B)" Click="BoldButton_Click" />
-					<Button Name="ItalicButton" Width="30" Height="30" FontStyle="Italic" Content="I" ToolTip="Italic (Ctrl+I)" Click="ItalicButton_Click" />
-					<Button Name="UnderlineButton" Width="30" Height="30" Content="U" ToolTip="Underline (Ctrl+U)" Click="UnderlineButton_Click" />
-					<Button Name="SubscriptButton" Width="30" Height="30" ToolTip="Subscript" Click="SubscriptButton_Click">
-						<TextBlock Name="SubscriptTextBlock">x<Run Name="SubscriptRun" FontSize="7.68px" BaselineAlignment="Subscript" Text="2" /></TextBlock>
+				<ToolBar Name="DescriptionToolBar" Background="#FFDDDDDD" Margin="0 0 0 5" FontFamily="Palatino Linotype" FontSize="14" DockPanel.Dock="Top">
+					<ToggleButton Name="BoldToggleButton" Width="30" Height="30" Command="EditingCommands.ToggleBold" ToolTip="Bold (Ctrl+B)" CommandTarget="{Binding ElementName=DescriptionRichTextBox}">
+						<Image Name="BoldIcon" Source="/Resources/Bold.png" />
+					</ToggleButton>
+					<ToggleButton Name="ItalicToggleButton" Width="30" Height="30" Command="EditingCommands.ToggleItalic" ToolTip="Italic (Ctrl+I)" CommandTarget="{Binding ElementName=DescriptionRichTextBox}">
+						<Image Name="ItalicIcon" Source="/Resources/Italic.png" />
+					</ToggleButton>
+					<ToggleButton Name="UnderlineToggleButton" Width="30" Height="30" Command="EditingCommands.ToggleUnderline" ToolTip="Underline (Ctrl+U)" CommandTarget="{Binding ElementName=DescriptionRichTextBox}">
+						<Image Name="UnderlineIcon" Source="/Resources/Underline.png" />
+					</ToggleButton>
+					<Separator Name="ToolbarSeparator1" />
+					<ToggleButton Name="SuperscriptToggleButton" Width="30" Height="30" ToolTip="Superscript" Click="SuperscriptToggleButton_Click">
+						<Image Name="SuperscriptIcon" Source="/Resources/Superscript.png" />
+					</ToggleButton>
+					<ToggleButton Name="SubscriptToggleButton" Width="30" Height="30" ToolTip="Subscript" Click="SubscriptToggleButton_Click">
+						<Image Name="SubscriptIcon" Source="/Resources/Subscript.png" />
+					</ToggleButton>
+					<Separator Name="ToolbarSeparator2" />
+					<ComboBox Name="FontFamilyComboBox" MaxDropDownHeight="355" MinWidth="105" SelectionChanged="FontFamilyComboBox_SelectionChanged" />
+					<ComboBox Name="FontSizeComboBox" MaxDropDownHeight="355" MinWidth="45" SelectionChanged="FontSizeComboBox_SelectionChanged" />
+					<Button Name="FontColorButton" Width="30" Height="30" ToolTip="Font Color" Click="FontColorButton_Click">
+						<Border Name="FontColorBorder" BorderBrush="Black" Width="20" Height="20" BorderThickness="1">
+							<Rectangle Name="FontColorRectangle" Fill="Black" />
+						</Border>
 					</Button>
-					<Button Name="SuperscriptButton" Width="30" Height="30" ToolTip="Superscript" Click="SuperscriptButton_Click">
-						<TextBlock Name="SuperscriptTextBlock">x<Run Name="SuperscriptRun" FontSize="7.68px" BaselineAlignment="Superscript" Text="2" /></TextBlock>
+					<Button Name="FontColorPickerButton" Width="15" Height="30" ToolTip="Choose Font Color" Click="FontColorPickerButton_Click">
+						<Path Name="FontColorPickerPath" Fill="Black" Data="M 0 0 L 4 4 L 8 0 Z" />
 					</Button>
-					<Separator Name="ToolbarSeparator" />
-					<Button Name="BulletsButton" Width="30" Height="30" FontSize="6px" ToolTip="Bullets" Click="BulletsButton_Click">
-						<StackPanel Name="BulletsOuterStackPanel" Orientation="Vertical" VerticalAlignment="Center">
-							<StackPanel Name="Bullets1StackPanel" Orientation="Horizontal">
-								<TextBlock FontWeight="Bold" Text="• " />
-								<TextBlock Text="─" VerticalAlignment="Center" />
+					<Popup Name="FontColorPopup" Placement="Bottom" StaysOpen="False" PlacementTarget="{Binding ElementName=FontColorPickerButton}">
+						<Border Name="FontColorPopupBorder" Background="White" BorderBrush="Black" Padding="5" BorderThickness="1">
+							<StackPanel Name="FontColorPopupStackPanel">
+								<UniformGrid Name="FontColorGrid" Rows="6" Columns="10" />
+								<Separator Name="FontColorPopupSeparator" Margin="0 5" />
+								<UniformGrid Name="FontColorRecentGrid" Rows="1" Columns="10" />
 							</StackPanel>
-							<StackPanel Name="Bullets2StackPanel" Orientation="Horizontal">
-								<TextBlock FontWeight="Bold" Text="• " />
-								<TextBlock Text="─" VerticalAlignment="Center" />
-							</StackPanel>
-							<StackPanel Name="Bullets3StackPanel" Orientation="Horizontal">
-								<TextBlock FontWeight="Bold" Text="• " />
-								<TextBlock Text="─" VerticalAlignment="Center" />
-							</StackPanel>
-						</StackPanel>
+						</Border>
+					</Popup>
+					<Button Name="BackgroundColorButton" Width="30" Height="30" ToolTip="Background Color" Click="BackgroundColorButton_Click">
+						<Border Name="BackgroundColorBorder" BorderBrush="Black" Width="20" Height="20" BorderThickness="1">
+							<Rectangle Name="BackgroundColorRectangle" Fill="Yellow" />
+						</Border>
 					</Button>
-					<Button Name="NumberingButton" Width="30" Height="30" FontSize="6px" ToolTip="Numbering" Click="NumberingButton_Click">
-						<StackPanel Name="NumberingOuterStackPanel" Orientation="Vertical" VerticalAlignment="Center">
-							<StackPanel Name="Number1StackPanel" Orientation="Horizontal">
-								<TextBlock Text="1. " />
-								<TextBlock Text="─" VerticalAlignment="Center" />
+					<Button Name="BackgroundColorPickerButton" Width="15" Height="30" ToolTip="Choose Background Color" Click="BackgroundColorPickerButton_Click">
+						<Path Name="BackgroundColorPickerPath" Fill="Black" Data="M 0 0 L 4 4 L 8 0 Z" />
+					</Button>
+					<Popup Name="BackgroundColorPopup" Placement="Bottom" StaysOpen="False" PlacementTarget="{Binding ElementName=BackgroundColorPickerButton}">
+						<Border Name="BackgroundColorPopupBorder" Background="White" BorderBrush="Black" Padding="5" BorderThickness="1">
+							<StackPanel Name="BackgroundColorPopupStackPanel">
+								<UniformGrid Name="BackgroundColorGrid" Rows="6" Columns="10" />
+								<Separator Name="BackgroundColorPopupSeparator" Margin="0 5" />
+								<UniformGrid Name="BackgroundColorRecentGrid" Rows="1" Columns="10" />
 							</StackPanel>
-							<StackPanel Name="Number2StackPanel" Orientation="Horizontal">
-								<TextBlock Text="2. " />
-								<TextBlock Text="─" VerticalAlignment="Center" />
-							</StackPanel>
-							<StackPanel Name="Number3StackPanel" Orientation="Horizontal">
-								<TextBlock Text="3. " />
-								<TextBlock Text="─" VerticalAlignment="Center" />
-							</StackPanel>
-						</StackPanel>
+						</Border>
+					</Popup>
+					<Separator Name="ToolbarSeparator3" />
+					<Button Name="NumberingButton" Width="30" Height="30" Command="EditingCommands.ToggleNumbering" ToolTip="Numbering" CommandTarget="{Binding ElementName=DescriptionRichTextBox}">
+						<Image Name="NumberingIcon" Source="/Resources/Numbers.png" />
+					</Button>
+					<Button Name="BulletsButton" Width="30" Height="30" Command="EditingCommands.ToggleBullets" ToolTip="Bullets" CommandTarget="{Binding ElementName=DescriptionRichTextBox}">
+						<Image Name="BulletsIcon" Source="/Resources/Bullets.png" />
+					</Button>
+					<Button Name="IndentButton" Width="30" Height="30" Command="EditingCommands.IncreaseIndentation" ToolTip="Increase Indent" CommandTarget="{Binding ElementName=DescriptionRichTextBox}">
+						<Image Name="IndentIcon" Source="/Resources/IncreaseIndent.png" />
+					</Button>
+					<Button Name="OutdentButton" Width="30" Height="30" Command="EditingCommands.DecreaseIndentation" ToolTip="Decrease Indent" CommandTarget="{Binding ElementName=DescriptionRichTextBox}">
+						<Image Name="OutdentIcon" Source="/Resources/DecreaseIndent.png" />
+					</Button>
+					<Separator Name="ToolbarSeparator4" />
+					<Button Name="UndoButton" Width="30" Height="30" Command="ApplicationCommands.Undo" ToolTip="Undo (Ctrl+Z)" CommandTarget="{Binding ElementName=DescriptionRichTextBox}">
+						<Button.Style>
+							<Style x:Name="UndoButtonStyle" TargetType="Button">
+								<Style.Triggers>
+									<Trigger x:Name="CanUndoTrigger" Property="IsEnabled" Value="True">
+										<Setter x:Name="CanUndoSetter" Property="Content">
+											<Setter.Value>
+												<Image Name="UndoIcon" Source="/Resources/Undo.png" />
+											</Setter.Value>
+										</Setter>
+									</Trigger>
+									<Trigger x:Name="CantUndoTrigger" Property="IsEnabled" Value="False">
+										<Setter x:Name="CantUndoSetter" Property="Content">
+											<Setter.Value>
+												<Image Name="CantUndoIcon" Source="/Resources/CantUndo.png" />
+											</Setter.Value>
+										</Setter>
+									</Trigger>
+								</Style.Triggers>
+							</Style>
+						</Button.Style>
+					</Button>
+					<Button Name="RedoButton" Width="30" Height="30" Command="ApplicationCommands.Redo" ToolTip="Redo (Ctrl+Y)" CommandTarget="{Binding ElementName=DescriptionRichTextBox}">
+						<Button.Style>
+							<Style x:Name="RedoButtonStyle" TargetType="Button">
+								<Style.Triggers>
+									<Trigger x:Name="CanRedoTrigger" Property="IsEnabled" Value="True">
+										<Setter x:Name="CanRedoSetter" Property="Content">
+											<Setter.Value>
+												<Image Name="RedoIcon" Source="/Resources/Redo.png" />
+											</Setter.Value>
+										</Setter>
+									</Trigger>
+									<Trigger x:Name="CantRedoTrigger" Property="IsEnabled" Value="False">
+										<Setter x:Name="CantRedoSetter" Property="Content">
+											<Setter.Value>
+												<Image Name="CantRedoIcon" Source="/Resources/CantRedo.png" />
+											</Setter.Value>
+										</Setter>
+									</Trigger>
+								</Style.Triggers>
+							</Style>
+						</Button.Style>
 					</Button>
 				</ToolBar>
-				<RichTextBox Name="DescriptionRichTextBox" MinWidth="300" MaxWidth="800" MaxHeight="377" AcceptsTab="True">
+				<RichTextBox Name="DescriptionRichTextBox" MinWidth="300" MaxWidth="800" MaxHeight="377" AcceptsTab="True" SelectionChanged="DescriptionRichTextBox_SelectionChanged">
 					<FlowDocument Name="DescriptionFlowDocument"></FlowDocument>
 				</RichTextBox>
 			</DockPanel>

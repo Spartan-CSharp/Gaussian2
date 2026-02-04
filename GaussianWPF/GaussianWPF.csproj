@@ -35,9 +35,26 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+		<None Remove="Resources\BackgroundColor.png" />
+		<None Remove="Resources\Blockquote.png" />
+		<None Remove="Resources\Bold.png" />
+		<None Remove="Resources\Bullets.png" />
+		<None Remove="Resources\CantRedo.png" />
+		<None Remove="Resources\CantUndo.png" />
+		<None Remove="Resources\DecreaseIndent.png" />
+		<None Remove="Resources\FontColor.png" />
 		<None Remove="Resources\gaussian_logo.png" />
+		<None Remove="Resources\IncreaseIndent.png" />
+		<None Remove="Resources\InsertCode.png" />
+		<None Remove="Resources\Italic.png" />
+		<None Remove="Resources\Numbers.png" />
 		<None Remove="Resources\pjlplourde_logo.png" />
+		<None Remove="Resources\Redo.png" />
 		<None Remove="Resources\spartan_csharp_logo.png" />
+		<None Remove="Resources\Subscript.png" />
+		<None Remove="Resources\Superscript.png" />
+		<None Remove="Resources\Underline.png" />
+		<None Remove="Resources\Undo.png" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -61,6 +78,57 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 			<Pack>True</Pack>
 			<PackagePath>\</PackagePath>
+		</Resource>
+		<Resource Include="Resources\BackgroundColor.png">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Resource>
+		<Resource Include="Resources\Blockquote.png">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Resource>
+		<Resource Include="Resources\Bold.png">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Resource>
+		<Resource Include="Resources\Bullets.png">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Resource>
+		<Resource Include="Resources\CantRedo.png">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Resource>
+		<Resource Include="Resources\CantUndo.png">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Resource>
+		<Resource Include="Resources\DecreaseIndent.png">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Resource>
+		<Resource Include="Resources\FontColor.png">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Resource>
+		<Resource Include="Resources\IncreaseIndent.png">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Resource>
+		<Resource Include="Resources\InsertCode.png">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Resource>
+		<Resource Include="Resources\Italic.png">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Resource>
+		<Resource Include="Resources\Numbers.png">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Resource>
+		<Resource Include="Resources\Redo.png">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Resource>
+		<Resource Include="Resources\Subscript.png">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Resource>
+		<Resource Include="Resources\Superscript.png">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Resource>
+		<Resource Include="Resources\Underline.png">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Resource>
+		<Resource Include="Resources\Undo.png">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</Resource>
 		<None Include="..\images\spartan.png">
 			<Pack>True</Pack>

@@ -82,7 +82,10 @@ public static class RtfConverter
 		{
 			string text = htmlText;
 
-			// STEP 1: Extract font settings from outer div if present
+			// STEP 1: Decode HTML entities FIRST (before extracting fonts/colors)
+			text = DecodeHtmlEntities(text);
+
+			// STEP 2: Extract font settings from outer div if present
 			string defaultFontFamily = "Segoe UI";
 			int defaultFontSize = 12; // Default 12pt
 
@@ -95,7 +98,7 @@ public static class RtfConverter
 				Match fontFamilyMatch = Regex.Match(style, @"font-family:\s*([^;]+)", RegexOptions.IgnoreCase);
 				if (fontFamilyMatch.Success)
 				{
-					defaultFontFamily = fontFamilyMatch.Groups[1].Value.Trim();
+					defaultFontFamily = fontFamilyMatch.Groups[1].Value.Trim().Trim('\'', '"');
 				}
 
 				// Extract font-size
@@ -106,7 +109,7 @@ public static class RtfConverter
 				}
 			}
 
-			// STEP 2: Build font table by finding all unique fonts
+			// STEP 3: Build font table by finding all unique fonts
 			List<string> fonts = [defaultFontFamily];
 			MatchCollection fontMatches = Regex.Matches(text, @"font-family:\s*([^;""']+)", RegexOptions.IgnoreCase);
 			foreach (Match match in fontMatches)
@@ -123,7 +126,7 @@ public static class RtfConverter
 				fonts.Add("Courier New");
 			}
 
-			// STEP 3: Build color table by finding all unique colors
+			// STEP 4: Build color table by finding all unique colors
 			List<(int R, int G, int B)> colors = [(0, 0, 0)]; // Default black
 
 			// Find RGB colors
@@ -153,7 +156,7 @@ public static class RtfConverter
 				}
 			}
 
-			// STEP 4: Build RTF header
+			// STEP 5: Build RTF header
 			StringBuilder rtf = new();
 			int defaultFontSizeHalfPoints = defaultFontSize * 2;
 
@@ -191,45 +194,7 @@ public static class RtfConverter
 			_ = rtf.Append(@"{\*\generator RtfConverter;}");
 			_ = rtf.Append(CultureInfo.InvariantCulture, $@"\viewkind4\uc1\pard\sa200\sl276\slmult1\f0\fs{defaultFontSizeHalfPoints} ");
 
-			// STEP 5: Decode HTML entities FIRST (before escaping RTF characters)
-			text = text.Replace("&nbsp;", " ", StringComparison.InvariantCultureIgnoreCase);
-			text = text.Replace("&#160;", " ", StringComparison.InvariantCultureIgnoreCase);
-			text = text.Replace("&lt;", "<", StringComparison.InvariantCultureIgnoreCase);
-			text = text.Replace("&#60;", "<", StringComparison.InvariantCultureIgnoreCase);
-			text = text.Replace("&gt;", ">", StringComparison.InvariantCultureIgnoreCase);
-			text = text.Replace("&#62;", ">", StringComparison.InvariantCultureIgnoreCase);
-			text = text.Replace("&amp;", "&", StringComparison.InvariantCultureIgnoreCase);
-			text = text.Replace("&#38;", "&", StringComparison.InvariantCultureIgnoreCase);
-			text = text.Replace("&quot;", "\"", StringComparison.InvariantCultureIgnoreCase);
-			text = text.Replace("&#160;", "\"", StringComparison.InvariantCultureIgnoreCase);
-			text = text.Replace("&apos;", "'", StringComparison.InvariantCultureIgnoreCase);
-			text = text.Replace("&#39;", "'", StringComparison.InvariantCultureIgnoreCase);
-			text = text.Replace("&cent;", "¢", StringComparison.InvariantCultureIgnoreCase);
-			text = text.Replace("&#162;", "¢", StringComparison.InvariantCultureIgnoreCase);
-			text = text.Replace("&pound;", "£", StringComparison.InvariantCultureIgnoreCase);
-			text = text.Replace("&#163;", "£", StringComparison.InvariantCultureIgnoreCase);
-			text = text.Replace("&yen;", "¥", StringComparison.InvariantCultureIgnoreCase);
-			text = text.Replace("&#165;", "¥", StringComparison.InvariantCultureIgnoreCase);
-			text = text.Replace("&euro;", "€", StringComparison.InvariantCultureIgnoreCase);
-			text = text.Replace("&#8364;", "€", StringComparison.InvariantCultureIgnoreCase);
-			text = text.Replace("&copy;", "©", StringComparison.InvariantCultureIgnoreCase);
-			text = text.Replace("&#169;", "©", StringComparison.InvariantCultureIgnoreCase);
-			text = text.Replace("&reg;", "®", StringComparison.InvariantCultureIgnoreCase);
-			text = text.Replace("&#174;", "®", StringComparison.InvariantCultureIgnoreCase);
-			text = text.Replace("&trade;", "™", StringComparison.InvariantCultureIgnoreCase);
-			text = text.Replace("&#8482;", "™", StringComparison.InvariantCultureIgnoreCase);
-			text = text.Replace("&macr;", "¯", StringComparison.InvariantCultureIgnoreCase);
-			text = text.Replace("&#0175;", "¯", StringComparison.InvariantCultureIgnoreCase);
-			text = text.Replace("&mdash;", "—", StringComparison.InvariantCultureIgnoreCase);
-			text = text.Replace("&#0151;", "—", StringComparison.InvariantCultureIgnoreCase);
-			text = text.Replace("&ndash;", "–", StringComparison.InvariantCultureIgnoreCase);
-			text = text.Replace("&#0150;", "–", StringComparison.InvariantCultureIgnoreCase);
-			text = text.Replace("&micro;", "µ", StringComparison.InvariantCultureIgnoreCase);
-			text = text.Replace("&#0181;", "µ", StringComparison.InvariantCultureIgnoreCase);
-			text = text.Replace("&times;", "×", StringComparison.InvariantCultureIgnoreCase);
-			text = text.Replace("&#0215;", "×", StringComparison.InvariantCultureIgnoreCase);
-
-			// STEP 6: Escape RTF special characters SECOND (before converting tags)
+			// STEP 6: Escape RTF special characters (after entities are already decoded)
 			text = text.Replace(@"\", @"\\", StringComparison.InvariantCultureIgnoreCase);
 			text = text.Replace("{", @"\{", StringComparison.InvariantCultureIgnoreCase);
 			text = text.Replace("}", @"\}", StringComparison.InvariantCultureIgnoreCase);
@@ -241,7 +206,7 @@ public static class RtfConverter
 			{
 				string content = m.Groups[1].Value;
 				int courierIndex = fonts.FindIndex(f => f.Equals("Courier New", StringComparison.OrdinalIgnoreCase));
-				return $@"{{\pard\f{courierIndex}\fs{defaultFontSizeHalfPoints} {content}\par\f0}}";
+				return $@"{{\pard\li0\fi0\f{courierIndex}\fs{defaultFontSizeHalfPoints} {content}\par}}\pard ";
 			}, RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
 			// Handle inline code
@@ -252,8 +217,12 @@ public static class RtfConverter
 				return $@"{{\f{courierIndex} {content}}}";
 			}, RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
-			// Handle blockquote
-			text = Regex.Replace(text, @"<blockquote[^>]*>(.*?)</blockquote>", @"\li720\ri720 $1\li0\ri0", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+			// Handle blockquote - with proper paragraph wrapping
+			text = Regex.Replace(text, @"<blockquote[^>]*>(.*?)</blockquote>", m =>
+			{
+				string content = m.Groups[1].Value;
+				return $@"{{\pard\li720\ri720 {content}\par}}\pard ";
+			}, RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
 			// Handle spans with multiple styles (font-family, color, background-color, font-size)
 			text = Regex.Replace(text, @"<span[^>]*style=[""']([^""']*)[""'][^>]*>(.*?)</span>", m =>
@@ -269,7 +238,7 @@ public static class RtfConverter
 				if (fontMatch.Success)
 				{
 					string fontName = fontMatch.Groups[1].Value.Trim().Trim('\'', '"');
-					int fontIndex = fonts.FindIndex(f => f.Equals(fontName, StringComparison.OrdinalIgnoreCase));
+					int fontIndex = fonts.FindIndex(f => string.Equals(f, fontName, StringComparison.OrdinalIgnoreCase));
 					if (fontIndex >= 0)
 					{
 						_ = spanRtf.Append(CultureInfo.InvariantCulture, $@"\f{fontIndex} ");
@@ -342,15 +311,6 @@ public static class RtfConverter
 					_ = spanRtf.Append(@"\ul ");
 				}
 
-				// Indentation (margin-left or padding-left)
-				Match indentMatch = Regex.Match(style, @"(?:margin-left|padding-left):\s*(\d+)px", RegexOptions.IgnoreCase);
-				if (indentMatch.Success)
-				{
-					int pixels = int.Parse(indentMatch.Groups[1].Value, CultureInfo.InvariantCulture);
-					int twips = pixels * 15; // Approximate conversion
-					_ = spanRtf.Append(CultureInfo.InvariantCulture, $@"\li{twips} ");
-				}
-
 				_ = spanRtf.Append(content);
 				_ = spanRtf.Append('}');
 
@@ -374,26 +334,26 @@ public static class RtfConverter
 			// Handle underline (plain u tag)
 			text = Regex.Replace(text, @"<u>(.*?)</u>", @"{\ul $1}", RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
-			// Handle ordered (numbered) lists
-			int listCounter = 1;
+			// Handle ordered (numbered) lists - WARNING: This doesn't handle nesting properly
 			text = Regex.Replace(text, @"<ol[^>]*>(.*?)</ol>", m =>
 			{
 				string items = m.Groups[1].Value;
-				listCounter = 1;
+				int listCounter = 1;
 				StringBuilder listRtf = new();
 
 				MatchCollection matches = Regex.Matches(items, @"<li[^>]*>(.*?)</li>", RegexOptions.IgnoreCase | RegexOptions.Singleline);
 				foreach (Match match in matches)
 				{
 					string content = match.Groups[1].Value;
-					_ = listRtf.Append(CultureInfo.InvariantCulture, $@"{{\pntext {listCounter}.\tab}}{{\*\pn\pnlvl1\pndec\pnstart1\pnindent720\pnhang{{\pntxta .}}}}\ls2\li720\fi-360\jclisttab\tx720 {content}\par ");
+					_ = listRtf.Append(CultureInfo.InvariantCulture, $@"{{\pntext {listCounter}.\tab}}{{\*\pn\pnlvl1\pndec\pnstart1\pnindent720\pnhang{{\pntxta .}}}}\fi-360\li720\jclisttab\tx720 {content}\par ");
 					listCounter++;
 				}
 
+				_ = listRtf.Append(@"\pard ");
 				return listRtf.ToString();
 			}, RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
-			// Handle unordered (bulleted) lists
+			// Handle unordered (bulleted) lists - WARNING: This doesn't handle nesting properly
 			text = Regex.Replace(text, @"<ul[^>]*>(.*?)</ul>", m =>
 			{
 				string items = m.Groups[1].Value;
@@ -403,14 +363,41 @@ public static class RtfConverter
 				foreach (Match match in matches)
 				{
 					string content = match.Groups[1].Value;
-					_ = listRtf.Append(CultureInfo.InvariantCulture, $@"{{\pntext \'b7\tab}}{{\*\pn\pnlvlblt\pnstart1{{\pntxtb \'b7}}}}\ls1\li720\fi-360\jclisttab\tx720 {content}\par ");
+					_ = listRtf.Append(CultureInfo.InvariantCulture, $@"{{\pntext \'b7\tab}}{{\*\pn\pnlvlblt\pnstart1{{\pntxtb \'b7}}}}\fi-360\li720\jclisttab\tx720 {content}\par ");
 				}
 
+				_ = listRtf.Append(@"\pard ");
 				return listRtf.ToString();
 			}, RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
-			// Handle paragraphs
+			// Handle paragraphs with indentation
+			text = Regex.Replace(text, @"<p[^>]*style=[""']([^""']*)[""'][^>]*>(.*?)</p>", m =>
+			{
+				string style = m.Groups[1].Value;
+				string content = m.Groups[2].Value;
+				StringBuilder paraRtf = new();
+
+				_ = paraRtf.Append(@"\pard ");
+
+				// Extract margin-left or padding-left for indentation
+				Match indentMatch = Regex.Match(style, @"(?:margin-left|padding-left):\s*(\d+)px", RegexOptions.IgnoreCase);
+				if (indentMatch.Success)
+				{
+					int pixels = int.Parse(indentMatch.Groups[1].Value, CultureInfo.InvariantCulture);
+					int twips = pixels * 15; // Approximate conversion (1px ≈ 15 twips)
+					_ = paraRtf.Append(CultureInfo.InvariantCulture, $@"\li{twips} ");
+				}
+
+				_ = paraRtf.Append(content);
+				_ = paraRtf.Append(@"\par ");
+
+				return paraRtf.ToString();
+			}, RegexOptions.IgnoreCase | RegexOptions.Singleline);
+
+			// Handle paragraphs without styles
 			text = Regex.Replace(text, @"<p[^>]*>(.*?)</p>", @"\pard $1\par ", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+			
+			// Handle divs
 			text = Regex.Replace(text, @"<div[^>]*>(.*?)</div>", @"$1", RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
 			// Convert line breaks
@@ -418,6 +405,9 @@ public static class RtfConverter
 
 			// Remove remaining HTML tags
 			text = Regex.Replace(text, @"<[^>]+>", "");
+
+			// Convert Unicode characters to RTF escape sequences
+			text = ConvertUnicodeToRtf(text);
 
 			_ = rtf.Append(text);
 			_ = rtf.Append('}');
@@ -518,7 +508,7 @@ public static class RtfConverter
 			text = text.Replace("&amp;", "&", StringComparison.InvariantCultureIgnoreCase);
 			text = text.Replace("&#38;", "&", StringComparison.InvariantCultureIgnoreCase);
 			text = text.Replace("&quot;", "\"", StringComparison.InvariantCultureIgnoreCase);
-			text = text.Replace("&#160;", "\"", StringComparison.InvariantCultureIgnoreCase);
+			text = text.Replace("&#34;", "\"", StringComparison.InvariantCultureIgnoreCase);
 			text = text.Replace("&apos;", "'", StringComparison.InvariantCultureIgnoreCase);
 			text = text.Replace("&#39;", "'", StringComparison.InvariantCultureIgnoreCase);
 			text = text.Replace("&cent;", "¢", StringComparison.InvariantCultureIgnoreCase);
@@ -536,15 +526,15 @@ public static class RtfConverter
 			text = text.Replace("&trade;", "™", StringComparison.InvariantCultureIgnoreCase);
 			text = text.Replace("&#8482;", "™", StringComparison.InvariantCultureIgnoreCase);
 			text = text.Replace("&macr;", "¯", StringComparison.InvariantCultureIgnoreCase);
-			text = text.Replace("&#0175;", "¯", StringComparison.InvariantCultureIgnoreCase);
+			text = text.Replace("&#175;", "¯", StringComparison.InvariantCultureIgnoreCase);
 			text = text.Replace("&mdash;", "—", StringComparison.InvariantCultureIgnoreCase);
-			text = text.Replace("&#0151;", "—", StringComparison.InvariantCultureIgnoreCase);
+			text = text.Replace("&#151;", "—", StringComparison.InvariantCultureIgnoreCase);
 			text = text.Replace("&ndash;", "–", StringComparison.InvariantCultureIgnoreCase);
-			text = text.Replace("&#0150;", "–", StringComparison.InvariantCultureIgnoreCase);
+			text = text.Replace("&#150;", "–", StringComparison.InvariantCultureIgnoreCase);
 			text = text.Replace("&micro;", "µ", StringComparison.InvariantCultureIgnoreCase);
-			text = text.Replace("&#0181;", "µ", StringComparison.InvariantCultureIgnoreCase);
+			text = text.Replace("&#181;", "µ", StringComparison.InvariantCultureIgnoreCase);
 			text = text.Replace("&times;", "×", StringComparison.InvariantCultureIgnoreCase);
-			text = text.Replace("&#0215;", "×", StringComparison.InvariantCultureIgnoreCase);
+			text = text.Replace("&#215;", "×", StringComparison.InvariantCultureIgnoreCase);
 
 			// Clean up extra whitespace on each line
 			text = Regex.Replace(text, @"[ \t]+", " ");
@@ -564,5 +554,74 @@ public static class RtfConverter
 			Debug.WriteLine($"HTML to plain text conversion error: {ex.Message}");
 			return $"{ex.GetType().Name}: {ex.Message}";
 		}
+	}
+
+	// Add this helper method
+	private static string DecodeHtmlEntities(string text)
+	{
+		text = text.Replace("&nbsp;", " ", StringComparison.InvariantCultureIgnoreCase);
+		text = text.Replace("&#160;", " ", StringComparison.InvariantCultureIgnoreCase);
+		text = text.Replace("&lt;", "<", StringComparison.InvariantCultureIgnoreCase);
+		text = text.Replace("&#60;", "<", StringComparison.InvariantCultureIgnoreCase);
+		text = text.Replace("&gt;", ">", StringComparison.InvariantCultureIgnoreCase);
+		text = text.Replace("&#62;", ">", StringComparison.InvariantCultureIgnoreCase);
+		text = text.Replace("&amp;", "&", StringComparison.InvariantCultureIgnoreCase);
+		text = text.Replace("&#38;", "&", StringComparison.InvariantCultureIgnoreCase);
+		text = text.Replace("&quot;", "\"", StringComparison.InvariantCultureIgnoreCase);
+		text = text.Replace("&#34;", "\"", StringComparison.InvariantCultureIgnoreCase);
+		text = text.Replace("&apos;", "'", StringComparison.InvariantCultureIgnoreCase);
+		text = text.Replace("&#39;", "'", StringComparison.InvariantCultureIgnoreCase);
+		text = text.Replace("&cent;", "¢", StringComparison.InvariantCultureIgnoreCase);
+		text = text.Replace("&#162;", "¢", StringComparison.InvariantCultureIgnoreCase);
+		text = text.Replace("&pound;", "£", StringComparison.InvariantCultureIgnoreCase);
+		text = text.Replace("&#163;", "£", StringComparison.InvariantCultureIgnoreCase);
+		text = text.Replace("&yen;", "¥", StringComparison.InvariantCultureIgnoreCase);
+		text = text.Replace("&#165;", "¥", StringComparison.InvariantCultureIgnoreCase);
+		text = text.Replace("&euro;", "€", StringComparison.InvariantCultureIgnoreCase);
+		text = text.Replace("&#8364;", "€", StringComparison.InvariantCultureIgnoreCase);
+		text = text.Replace("&copy;", "©", StringComparison.InvariantCultureIgnoreCase);
+		text = text.Replace("&#169;", "©", StringComparison.InvariantCultureIgnoreCase);
+		text = text.Replace("&reg;", "®", StringComparison.InvariantCultureIgnoreCase);
+		text = text.Replace("&#174;", "®", StringComparison.InvariantCultureIgnoreCase);
+		text = text.Replace("&trade;", "™", StringComparison.InvariantCultureIgnoreCase);
+		text = text.Replace("&#8482;", "™", StringComparison.InvariantCultureIgnoreCase);
+		text = text.Replace("&macr;", "¯", StringComparison.InvariantCultureIgnoreCase);
+		text = text.Replace("&#175;", "¯", StringComparison.InvariantCultureIgnoreCase);
+		text = text.Replace("&mdash;", "—", StringComparison.InvariantCultureIgnoreCase);
+		text = text.Replace("&#151;", "—", StringComparison.InvariantCultureIgnoreCase);
+		text = text.Replace("&ndash;", "–", StringComparison.InvariantCultureIgnoreCase);
+		text = text.Replace("&#150;", "–", StringComparison.InvariantCultureIgnoreCase);
+		text = text.Replace("&micro;", "µ", StringComparison.InvariantCultureIgnoreCase);
+		text = text.Replace("&#181;", "µ", StringComparison.InvariantCultureIgnoreCase);
+		text = text.Replace("&times;", "×", StringComparison.InvariantCultureIgnoreCase);
+		text = text.Replace("&#215;", "×", StringComparison.InvariantCultureIgnoreCase);
+
+		return text;
+	}
+
+	/// <summary>
+	/// Converts Unicode characters to RTF Unicode escape sequences.
+	/// </summary>
+	/// <param name="text">The text containing Unicode characters.</param>
+	/// <returns>Text with Unicode characters converted to RTF escape sequences.</returns>
+	private static string ConvertUnicodeToRtf(string text)
+	{
+		StringBuilder result = new();
+		
+		foreach (char c in text)
+		{
+			if (c > 127) // Non-ASCII character
+			{
+				// Convert to RTF Unicode escape sequence
+				// Format: \uN? where N is the signed 16-bit value
+				_ = result.Append(CultureInfo.InvariantCulture, $@"\u{(short)c}?" );
+			}
+			else
+			{
+				_ = result.Append(c);
+			}
+		}
+		
+		return result.ToString();
 	}
 }

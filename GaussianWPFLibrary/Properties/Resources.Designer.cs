@@ -88,7 +88,7 @@ namespace GaussianWPFLibrary.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to api/vi/ElectronicStates.
+        ///   Looks up a localized string similar to api/v1/ElectronicStates.
         /// </summary>
         internal static string ElectronicStatesEndpoint {
             get {

@@ -14,7 +14,7 @@ public static class Constants
 		"Bold", "Italic", "Underline", "|",
 		"SuperScript", "SubScript", "|",
 		"FontName", "FontSize", "FontColor", "BackgroundColor", "|",
-		"Blockquote", "InsertCode", "OrderedList", "UnorderedList", "Indent", "Outdent", "|",
+		"OrderedList", "UnorderedList", "Indent", "Outdent", "|",
 		"SourceCode", "Preview", "Undo", "Redo", "Maximize", "Minimize"
 	];
 }

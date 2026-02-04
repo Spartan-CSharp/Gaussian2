@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="GaussianWPF.Controls.ContactControl" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:GaussianWPF.Controls" mc:Ignorable="d" d:DesignWidth="1240" d:DesignHeight="648" Name="ContactUserControl" FontSize="18">
+﻿<UserControl x:Class="GaussianWPF.Controls.ContactControl" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008" xmlns:local="clr-namespace:GaussianWPF.Controls" mc:Ignorable="d" d:DesignWidth="1240" d:DesignHeight="648" Name="ContactUserControl" FontSize="16">
 	<Grid Name="ContactGrid">
 		<Grid.RowDefinitions>
 			<RowDefinition Name="Row0" Height="Auto" />
@@ -12,10 +12,10 @@
 		</Grid.ColumnDefinitions>
 
 		<!-- Row 0 -->
-		<TextBlock Name="ContactHeaderTextBlock" Grid.Row="0" Grid.Column="0" Margin="0 0 0 10" FontSize="24" FontWeight="Bold" Text="Contact" />
+		<TextBlock Name="ContactHeaderTextBlock" Grid.Row="0" Grid.Column="0" Margin="0 0 0 10" FontSize="40" FontWeight="SemiBold" Text="Contact" />
 
 		<!-- Row 1 -->
-		<TextBlock Name="ContactMessageTextBlock" Grid.Row="1" Grid.Column="0" Margin="0 0 0 20" FontSize="22" FontWeight="SemiBold" Text="Your contact page." />
+		<TextBlock Name="ContactMessageTextBlock" Grid.Row="1" Grid.Column="0" Margin="0 0 0 20" FontSize="28" FontWeight="SemiBold" Text="Your contact page." />
 
 		<!-- Row 2 -->
 		<StackPanel Name="AddressStackPanel" Grid.Row="2" Grid.Column="0" Orientation="Vertical" Margin="0 20 0 20">

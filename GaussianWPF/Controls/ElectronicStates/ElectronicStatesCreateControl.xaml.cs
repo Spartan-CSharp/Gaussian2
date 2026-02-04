@@ -1,8 +1,12 @@
 ﻿using System.ComponentModel;
+using System.Globalization;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
+using System.Windows.Documents;
+using System.Windows.Media;
 
 using GaussianCommonLibrary.Models;
 
@@ -23,6 +27,10 @@ public partial class ElectronicStatesCreateControl : UserControl, INotifyPropert
 {
 	private readonly ILogger<ElectronicStatesCreateControl> _logger;
 	private readonly IElectronicStatesEndpoint _endpoint;
+	private SolidColorBrush _currentFontColor = new(Colors.Black);
+	private SolidColorBrush _currentBackgroundColor = new(Colors.Yellow);
+	private readonly List<SolidColorBrush> _recentFontColors = [];
+	private readonly List<SolidColorBrush> _recentBackgroundColors = [];
 
 	/// <summary>
 	/// Initializes a new instance of the <see cref="ElectronicStatesCreateControl"/> class with dependency injection.
@@ -174,6 +182,12 @@ public partial class ElectronicStatesCreateControl : UserControl, INotifyPropert
 		base.OnInitialized(e);
 		DataContext = this;
 		PropertyChanged += ElectronicStatesCreateControl_PropertyChanged;
+		FontFamilyComboBox.ItemsSource = Fonts.SystemFontFamilies.Where(ff => ff.Source is "Segoe UI" or "Arial" or "Consolas" or "Georgia" or "Impact" or "Tahoma" or "Times New Roman" or "Verdana").OrderByDescending(ff => ff.Source.Equals("Segoe UI", StringComparison.OrdinalIgnoreCase)).ThenBy(ff => ff.Source);
+		FontFamilyComboBox.SelectedItem = new FontFamily("Segoe UI");
+		FontSizeComboBox.ItemsSource = new List<double>() { 32.0/3.0, 40.0/3.0, 16.0, 56.0/3.0, 24.0, 32.0, 48.0 };
+		FontSizeComboBox.SelectedItem = 16.0;
+		// Initialize color pickers
+		InitializeColorPickers();
 
 		if (_logger.IsEnabled(LogLevel.Debug))
 		{
@@ -223,6 +237,197 @@ public partial class ElectronicStatesCreateControl : UserControl, INotifyPropert
 		{
 			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(ElectronicStatesCreateControl), nameof(ElectronicStatesCreateControl_PropertyChanged));
 		}
+	}
+
+	private void SuperscriptToggleButton_Click(object sender, RoutedEventArgs e)
+	{
+		TextSelection selection = DescriptionRichTextBox.Selection;
+		if (selection.IsEmpty)
+		{
+			return;
+		}
+
+		// Get current baseline alignment
+		object currentAlignment = selection.GetPropertyValue(Inline.BaselineAlignmentProperty);
+
+		// Toggle superscript
+		BaselineAlignment newAlignment = (currentAlignment != DependencyProperty.UnsetValue &&
+										 currentAlignment.Equals(BaselineAlignment.Superscript))
+			? BaselineAlignment.Baseline
+			: BaselineAlignment.Superscript;
+
+		selection.ApplyPropertyValue(Inline.BaselineAlignmentProperty, newAlignment);
+
+		// Optionally reduce font size for better appearance
+		if (newAlignment == BaselineAlignment.Superscript)
+		{
+			object currentSize = selection.GetPropertyValue(Inline.FontSizeProperty);
+			if (currentSize != DependencyProperty.UnsetValue)
+			{
+				double fontSize = (double)currentSize;
+				selection.ApplyPropertyValue(Inline.FontSizeProperty, fontSize * 0.7);
+			}
+		}
+		else
+		{
+			// Reset font size when removing superscript
+			object currentSize = selection.GetPropertyValue(Inline.FontSizeProperty);
+			if (currentSize != DependencyProperty.UnsetValue)
+			{
+				double fontSize = (double)currentSize;
+				selection.ApplyPropertyValue(Inline.FontSizeProperty, fontSize / 0.7);
+			}
+		}
+
+		// Update button state
+		SuperscriptToggleButton.IsChecked = newAlignment == BaselineAlignment.Superscript;
+		SubscriptToggleButton.IsChecked = false; // Can't be both
+	}
+
+	private void SubscriptToggleButton_Click(object sender, RoutedEventArgs e)
+	{
+		TextSelection selection = DescriptionRichTextBox.Selection;
+		if (selection.IsEmpty)
+		{
+			return;
+		}
+
+		// Get current baseline alignment
+		object currentAlignment = selection.GetPropertyValue(Inline.BaselineAlignmentProperty);
+
+		// Toggle subscript
+		BaselineAlignment newAlignment = (currentAlignment != DependencyProperty.UnsetValue &&
+										 currentAlignment.Equals(BaselineAlignment.Subscript))
+			? BaselineAlignment.Baseline
+			: BaselineAlignment.Subscript;
+
+		selection.ApplyPropertyValue(Inline.BaselineAlignmentProperty, newAlignment);
+
+		// Optionally reduce font size for better appearance
+		if (newAlignment == BaselineAlignment.Subscript)
+		{
+			object currentSize = selection.GetPropertyValue(Inline.FontSizeProperty);
+			if (currentSize != DependencyProperty.UnsetValue)
+			{
+				double fontSize = (double)currentSize;
+				selection.ApplyPropertyValue(Inline.FontSizeProperty, fontSize * 0.7);
+			}
+		}
+		else
+		{
+			// Reset font size when removing subscript
+			object currentSize = selection.GetPropertyValue(Inline.FontSizeProperty);
+			if (currentSize != DependencyProperty.UnsetValue)
+			{
+				double fontSize = (double)currentSize;
+				selection.ApplyPropertyValue(Inline.FontSizeProperty, fontSize / 0.7);
+			}
+		}
+
+		// Update button state
+		SubscriptToggleButton.IsChecked = newAlignment == BaselineAlignment.Subscript;
+		SuperscriptToggleButton.IsChecked = false; // Can't be both
+	}
+
+	private void FontFamilyComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+	{
+		if (FontFamilyComboBox.SelectedItem != null)
+		{
+			DescriptionRichTextBox.Selection.ApplyPropertyValue(Inline.FontFamilyProperty, FontFamilyComboBox.SelectedItem);
+		}
+	}
+
+	private void FontSizeComboBox_SelectionChanged(object sender, SelectionChangedEventArgs e)
+	{
+		if (FontSizeComboBox.SelectedItem != null)
+		{
+			DescriptionRichTextBox.Selection.ApplyPropertyValue(Inline.FontSizeProperty, FontSizeComboBox.SelectedItem);
+		}
+	}
+
+	private void FontColorButton_Click(object sender, RoutedEventArgs e)
+	{
+		ApplyFontColor(_currentFontColor);
+	}
+
+	private void FontColorPickerButton_Click(object sender, RoutedEventArgs e)
+	{
+		FontColorPopup.IsOpen = !FontColorPopup.IsOpen;
+	}
+
+	private void BackgroundColorButton_Click(object sender, RoutedEventArgs e)
+	{
+		ApplyBackgroundColor(_currentBackgroundColor);
+	}
+
+	private void BackgroundColorPickerButton_Click(object sender, RoutedEventArgs e)
+	{
+		BackgroundColorPopup.IsOpen = !BackgroundColorPopup.IsOpen;
+	}
+
+	private void DescriptionRichTextBox_SelectionChanged(object sender, RoutedEventArgs e)
+	{
+		object temp = DescriptionRichTextBox.Selection.GetPropertyValue(Inline.FontWeightProperty);
+		BoldToggleButton.IsChecked = temp != DependencyProperty.UnsetValue && temp.Equals(FontWeights.Bold);
+		temp = DescriptionRichTextBox.Selection.GetPropertyValue(Inline.FontStyleProperty);
+		ItalicToggleButton.IsChecked = temp != DependencyProperty.UnsetValue && temp.Equals(FontStyles.Italic);
+		temp = DescriptionRichTextBox.Selection.GetPropertyValue(Inline.TextDecorationsProperty);
+		UnderlineToggleButton.IsChecked = temp != DependencyProperty.UnsetValue && temp.Equals(TextDecorations.Underline);
+
+		object alignmentTemp = DescriptionRichTextBox.Selection.GetPropertyValue(Inline.BaselineAlignmentProperty);
+		SuperscriptToggleButton.IsChecked = alignmentTemp != DependencyProperty.UnsetValue &&
+			alignmentTemp.Equals(BaselineAlignment.Superscript);
+		SubscriptToggleButton.IsChecked = alignmentTemp != DependencyProperty.UnsetValue &&
+			alignmentTemp.Equals(BaselineAlignment.Subscript);
+
+		temp = DescriptionRichTextBox.Selection.GetPropertyValue(Inline.FontFamilyProperty);
+		FontFamilyComboBox.SelectedItem = temp;
+
+		temp = DescriptionRichTextBox.Selection.GetPropertyValue(Inline.FontSizeProperty);
+		if (temp != DependencyProperty.UnsetValue)
+		{
+			double fontSize = (double)temp;
+
+			// If superscript or subscript, show the "base" size (before 0.7x reduction)
+			bool isSuperOrSubscript = alignmentTemp != DependencyProperty.UnsetValue &&
+				(alignmentTemp.Equals(BaselineAlignment.Superscript) ||
+				 alignmentTemp.Equals(BaselineAlignment.Subscript));
+
+			if (isSuperOrSubscript)
+			{
+				fontSize /= 0.7; // Reverse the scaling to show base size
+			}
+
+			double roundedSize = Math.Round(fontSize);
+
+			// Try to select the matching item in the ComboBox
+			if (FontSizeComboBox.Items.Contains(roundedSize))
+			{
+				FontSizeComboBox.SelectedItem = roundedSize;
+			}
+			else
+			{
+				FontSizeComboBox.Text = roundedSize.ToString(CultureInfo.InvariantCulture);
+			}
+		}
+		else
+		{
+			FontSizeComboBox.SelectedItem = null;
+			FontSizeComboBox.Text = string.Empty;
+		}
+
+		//// Update color previews based on current selection
+		//object foreground = DescriptionRichTextBox.Selection.GetPropertyValue(Inline.ForegroundProperty);
+		//if (foreground is SolidColorBrush foregroundBrush)
+		//{
+		//	FontColorRectangle.Fill = foregroundBrush;
+		//}
+
+		//object background = DescriptionRichTextBox.Selection.GetPropertyValue(Inline.BackgroundProperty);
+		//if (background is SolidColorBrush backgroundBrush)
+		//{
+		//	BackgroundColorRectangle.Fill = backgroundBrush;
+		//}
 	}
 
 	private void CreateButton_Click(object sender, RoutedEventArgs e)
@@ -302,122 +507,135 @@ public partial class ElectronicStatesCreateControl : UserControl, INotifyPropert
 		}
 	}
 
-	private void BoldButton_Click(object sender, RoutedEventArgs e)
+	private void InitializeColorPickers()
 	{
-		if (_logger.IsEnabled(LogLevel.Debug))
+		// Initialize font color picker
+		foreach (Color color in Constants.FontColors)
 		{
-			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.",
-				nameof(ElectronicStatesCreateControl), nameof(BoldButton_Click), sender, e);
+			Button colorButton = CreateColorButton(color, true);
+			FontColorGrid.Children.Add(colorButton);
 		}
 
-		DescriptionRichTextBox.ToggleFontWeight();
-
-		if (_logger.IsEnabled(LogLevel.Debug))
+		// Initialize background color picker
+		foreach (Color color in Constants.BackgroundColors)
 		{
-			_logger.LogDebug("{UserControl} {EventHandler} returning.",
-				nameof(ElectronicStatesCreateControl), nameof(BoldButton_Click));
+			Button colorButton = CreateColorButton(color, false);
+			BackgroundColorGrid.Children.Add(colorButton);
 		}
+
+		// Initialize recent colors sections (empty initially)
+		UpdateRecentColors(true);
+		UpdateRecentColors(false);
 	}
 
-	private void ItalicButton_Click(object sender, RoutedEventArgs e)
+	private Button CreateColorButton(Color color, bool isFontColor)
 	{
-		if (_logger.IsEnabled(LogLevel.Debug))
+		Button button = new()
 		{
-			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.",
-				nameof(ElectronicStatesCreateControl), nameof(ItalicButton_Click), sender, e);
-		}
+			Width = 20,
+			Height = 20,
+			Margin = new Thickness(2),
+			Background = new SolidColorBrush(color),
+			BorderBrush = new SolidColorBrush(Colors.Gray),
+			BorderThickness = new Thickness(1),
+			ToolTip = $"#{color.R:X2}{color.G:X2}{color.B:X2}"
+		};
 
-		DescriptionRichTextBox.ToggleFontStyle();
-
-		if (_logger.IsEnabled(LogLevel.Debug))
+		button.Click += (sender, e) =>
 		{
-			_logger.LogDebug("{UserControl} {EventHandler} returning.",
-				nameof(ElectronicStatesCreateControl), nameof(ItalicButton_Click));
-		}
+			if (isFontColor)
+			{
+				ApplyFontColor(new SolidColorBrush(color));
+				FontColorPopup.IsOpen = false;
+			}
+			else
+			{
+				ApplyBackgroundColor(new SolidColorBrush(color));
+				BackgroundColorPopup.IsOpen = false;
+			}
+		};
+
+		return button;
 	}
 
-	private void UnderlineButton_Click(object sender, RoutedEventArgs e)
+	private void ApplyFontColor(SolidColorBrush color)
 	{
-		if (_logger.IsEnabled(LogLevel.Debug))
+		if (!DescriptionRichTextBox.Selection.IsEmpty)
 		{
-			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.",
-				nameof(ElectronicStatesCreateControl), nameof(UnderlineButton_Click), sender, e);
+			DescriptionRichTextBox.Selection.ApplyPropertyValue(Inline.ForegroundProperty, color);
 		}
 
-		DescriptionRichTextBox.ToggleUnderline();
+		_currentFontColor = color;
+		FontColorRectangle.Fill = color;
 
-		if (_logger.IsEnabled(LogLevel.Debug))
-		{
-			_logger.LogDebug("{UserControl} {EventHandler} returning.",
-				nameof(ElectronicStatesCreateControl), nameof(UnderlineButton_Click));
-		}
+		// Add to recent colors
+		AddToRecentColors(color, true);
 	}
 
-	private void SubscriptButton_Click(object sender, RoutedEventArgs e)
+	private void ApplyBackgroundColor(SolidColorBrush color)
 	{
-		if (_logger.IsEnabled(LogLevel.Debug))
+		if (!DescriptionRichTextBox.Selection.IsEmpty)
 		{
-			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.",
-				nameof(ElectronicStatesCreateControl), nameof(SubscriptButton_Click), sender, e);
+			DescriptionRichTextBox.Selection.ApplyPropertyValue(Inline.BackgroundProperty, color);
 		}
 
-		DescriptionRichTextBox.ToggleBaselineAlignment(BaselineAlignment.Subscript);
+		_currentBackgroundColor = color;
+		BackgroundColorRectangle.Fill = color;
 
-		if (_logger.IsEnabled(LogLevel.Debug))
-		{
-			_logger.LogDebug("{UserControl} {EventHandler} returning.",
-				nameof(ElectronicStatesCreateControl), nameof(SubscriptButton_Click));
-		}
+		// Add to recent colors
+		AddToRecentColors(color, false);
 	}
 
-	private void SuperscriptButton_Click(object sender, RoutedEventArgs e)
+	private void AddToRecentColors(SolidColorBrush color, bool isFontColor)
 	{
-		if (_logger.IsEnabled(LogLevel.Debug))
+		List<SolidColorBrush> recentList = isFontColor ? _recentFontColors : _recentBackgroundColors;
+
+		// Remove if already exists
+		SolidColorBrush? existing = recentList.FirstOrDefault(c => c.Color == color.Color);
+		if (existing != null)
 		{
-			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.",
-				nameof(ElectronicStatesCreateControl), nameof(SuperscriptButton_Click), sender, e);
+			recentList.Remove(existing);
 		}
 
-		DescriptionRichTextBox.ToggleBaselineAlignment(BaselineAlignment.Superscript);
+		// Add to front
+		recentList.Insert(0, color);
 
-		if (_logger.IsEnabled(LogLevel.Debug))
+		// Keep only 10 recent colors
+		if (recentList.Count > 10)
 		{
-			_logger.LogDebug("{UserControl} {EventHandler} returning.",
-				nameof(ElectronicStatesCreateControl), nameof(SuperscriptButton_Click));
+			recentList.RemoveAt(10);
 		}
+
+		// Update UI
+		UpdateRecentColors(isFontColor);
 	}
 
-	private void BulletsButton_Click(object sender, RoutedEventArgs e)
+	private void UpdateRecentColors(bool isFontColor)
 	{
-		if (_logger.IsEnabled(LogLevel.Debug))
+		UniformGrid grid = isFontColor ? FontColorRecentGrid : BackgroundColorRecentGrid;
+		List<SolidColorBrush> recentList = isFontColor ? _recentFontColors : _recentBackgroundColors;
+
+		grid.Children.Clear();
+
+		foreach (SolidColorBrush colorBrush in recentList)
 		{
-			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.",
-				nameof(ElectronicStatesCreateControl), nameof(BulletsButton_Click), sender, e);
+			Button colorButton = CreateColorButton(colorBrush.Color, isFontColor);
+			grid.Children.Add(colorButton);
 		}
 
-		DescriptionRichTextBox.ToggleList(TextMarkerStyle.Disc);
-
-		if (_logger.IsEnabled(LogLevel.Debug))
+		// Fill remaining slots with empty placeholders
+		for (int i = recentList.Count; i < 10; i++)
 		{
-			_logger.LogDebug("{UserControl} {EventHandler} returning.",
-				nameof(ElectronicStatesCreateControl), nameof(BulletsButton_Click));
-		}
-	}
-
-	private void NumberingButton_Click(object sender, RoutedEventArgs e)
-	{
-		if (_logger.IsEnabled(LogLevel.Debug))
-		{
-			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.",
-				nameof(ElectronicStatesCreateControl), nameof(NumberingButton_Click), sender, e);
-		}
-
-		DescriptionRichTextBox.ToggleList(TextMarkerStyle.Decimal);
-
-		if (_logger.IsEnabled(LogLevel.Debug))
-		{
-			_logger.LogDebug("{UserControl} {EventHandler} returning.",
-				nameof(ElectronicStatesCreateControl), nameof(NumberingButton_Click));
+			Border placeholder = new()
+			{
+				Width = 20,
+				Height = 20,
+				Margin = new Thickness(2),
+				Background = new SolidColorBrush(Colors.Transparent),
+				BorderBrush = new SolidColorBrush(Colors.LightGray),
+				BorderThickness = new Thickness(1)
+			};
+			grid.Children.Add(placeholder);
 		}
 	}
 }
