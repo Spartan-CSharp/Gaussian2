@@ -3,15 +3,12 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
-// Register code page encodings required by RtfPipe (must be before any RtfPipe usage)
-System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1JGaF5cXGpCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdlWX5dcXVVRWhYUEdzV0BWYEs=");
-
 // Add services to the container.
-builder.ConfigureIdentity()
+builder
+	.LicenseSyncfusion()
+	.ConfigureIdentity()
 	.ConfigureViewsAndPages()
 	.ConfigureIdentityOptions()
 	.ConfigureApiAndSwagger()
@@ -30,7 +27,8 @@ if (logger.IsEnabled(LogLevel.Information))
 	logger.LogInformation("{Class} Top Level Statements Entry Point called with {ArgumentCount} command-line arguments: {Arguments}.", nameof(Program), args.Length, string.Join(", ", args));
 }
 
-app.ConfigurePipeline()
+app.SetStaticConfigurations()
+	.ConfigurePipeline()
 	.ConfigureAuthorizationAndAuthentication()
 	.ConfigureMaps()
 	.Run();

@@ -12,7 +12,7 @@ namespace GaussianWPF.WPFHelpers;
 /// </summary>
 internal static class RTBHelpers
 {
-	internal static double _scriptFontSizeFactor = 0.7;
+	internal static readonly double _scriptFontSizeFactor = 9.5/12.0;
 
 	/// <summary>
 	/// Extracts the plain text content from a <see cref="RichTextBox"/> control, removing all formatting.

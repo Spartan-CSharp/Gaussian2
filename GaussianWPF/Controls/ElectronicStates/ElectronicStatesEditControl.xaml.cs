@@ -561,7 +561,7 @@ public partial class ElectronicStatesEditControl : UserControl, INotifyPropertyC
 			if (result is not null)
 			{
 				ElectronicState.LastUpdatedDate = result.LastUpdatedDate;
-				ChildControlEvent?.Invoke(this, new ChildControlEventArgs<ElectronicStatesEditControl>("save", null));
+				ChildControlEvent?.Invoke(this, new ChildControlEventArgs<ElectronicStatesEditControl>("save", ElectronicStateId));
 			}
 
 			if (_logger.IsEnabled(LogLevel.Debug))

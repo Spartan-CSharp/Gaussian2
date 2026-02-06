@@ -542,7 +542,7 @@ public partial class MethodFamiliesEditControl : UserControl, INotifyPropertyCha
 			if (result is not null)
 			{
 				MethodFamily.LastUpdatedDate = result.LastUpdatedDate;
-				ChildControlEvent?.Invoke(this, new ChildControlEventArgs<MethodFamiliesEditControl>("save", null));
+				ChildControlEvent?.Invoke(this, new ChildControlEventArgs<MethodFamiliesEditControl>("save", MethodFamilyId));
 			}
 
 			if (_logger.IsEnabled(LogLevel.Debug))

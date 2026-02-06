@@ -33,7 +33,7 @@ public class ElectronicStateViewModel
 		Id = model.Id;
 		Name = model.Name;
 		Keyword = model.Keyword;
-		DescriptionHtml = RtfConverter.RtfToHtml(model.DescriptionRtf);
+		DescriptionHtml = RtfConverter.RtfToHtmlConverter(model.DescriptionRtf);
 		CreatedDate = model.CreatedDate;
 		LastUpdatedDate = model.LastUpdatedDate;
 		Archived = model.Archived;
@@ -102,8 +102,8 @@ public class ElectronicStateViewModel
 			Id = Id,
 			Name = Name,
 			Keyword = Keyword,
-			DescriptionRtf = RtfConverter.HtmlToRtf(DescriptionHtml),
-			DescriptionText = RtfConverter.HtmlToPlainText(DescriptionHtml),
+			DescriptionRtf = RtfConverter.HtmlToRtfConverter(DescriptionHtml),
+			DescriptionText = RtfConverter.HtmlToTextConverter(DescriptionHtml),
 			CreatedDate = CreatedDate,
 			LastUpdatedDate = LastUpdatedDate,
 			Archived = Archived

@@ -35,7 +35,7 @@ public class BaseMethodViewModel
 		Id = model.Id;
 		Keyword = model.Keyword;
 		MethodFamilyId = model.MethodFamily.Id.ToString(CultureInfo.InvariantCulture);
-		DescriptionHtml = RtfConverter.RtfToHtml(model.DescriptionRtf);
+		DescriptionHtml = RtfConverter.RtfToHtmlConverter(model.DescriptionRtf);
 		CreatedDate = model.CreatedDate;
 		LastUpdatedDate = model.LastUpdatedDate;
 		Archived = model.Archived;
@@ -71,7 +71,7 @@ public class BaseMethodViewModel
 		Id = model.Id;
 		Keyword = model.Keyword;
 		MethodFamilyId = model.MethodFamily.Id.ToString(CultureInfo.InvariantCulture);
-		DescriptionHtml = RtfConverter.RtfToHtml(model.DescriptionRtf);
+		DescriptionHtml = RtfConverter.RtfToHtmlConverter(model.DescriptionRtf);
 		CreatedDate = model.CreatedDate;
 		LastUpdatedDate = model.LastUpdatedDate;
 		Archived = model.Archived;
@@ -107,7 +107,7 @@ public class BaseMethodViewModel
 		Id = model.Id;
 		Keyword = model.Keyword;
 		MethodFamilyId = model.MethodFamilyId.ToString(CultureInfo.InvariantCulture);
-		DescriptionHtml = RtfConverter.RtfToHtml(model.DescriptionRtf);
+		DescriptionHtml = RtfConverter.RtfToHtmlConverter(model.DescriptionRtf);
 		CreatedDate = model.CreatedDate;
 		LastUpdatedDate = model.LastUpdatedDate;
 		Archived = model.Archived;
@@ -234,8 +234,8 @@ public class BaseMethodViewModel
 			Id = Id,
 			Keyword = Keyword,
 			MethodFamily = methodFamily,
-			DescriptionRtf = RtfConverter.HtmlToRtf(DescriptionHtml),
-			DescriptionText = RtfConverter.HtmlToPlainText(DescriptionHtml),
+			DescriptionRtf = RtfConverter.HtmlToRtfConverter(DescriptionHtml),
+			DescriptionText = RtfConverter.HtmlToTextConverter(DescriptionHtml),
 			CreatedDate = CreatedDate,
 			LastUpdatedDate = LastUpdatedDate,
 			Archived = Archived
@@ -254,8 +254,8 @@ public class BaseMethodViewModel
 			Id = Id,
 			Keyword = Keyword,
 			MethodFamily = methodFamily,
-			DescriptionRtf = RtfConverter.HtmlToRtf(DescriptionHtml),
-			DescriptionText = RtfConverter.HtmlToPlainText(DescriptionHtml),
+			DescriptionRtf = RtfConverter.HtmlToRtfConverter(DescriptionHtml),
+			DescriptionText = RtfConverter.HtmlToTextConverter(DescriptionHtml),
 			CreatedDate = CreatedDate,
 			LastUpdatedDate = LastUpdatedDate,
 			Archived = Archived
@@ -273,8 +273,8 @@ public class BaseMethodViewModel
 			Id = Id,
 			Keyword = Keyword,
 			MethodFamilyId = int.Parse(MethodFamilyId, CultureInfo.InvariantCulture),
-			DescriptionRtf = RtfConverter.HtmlToRtf(DescriptionHtml),
-			DescriptionText = RtfConverter.HtmlToPlainText(DescriptionHtml),
+			DescriptionRtf = RtfConverter.HtmlToRtfConverter(DescriptionHtml),
+			DescriptionText = RtfConverter.HtmlToTextConverter(DescriptionHtml),
 			CreatedDate = CreatedDate,
 			LastUpdatedDate = LastUpdatedDate,
 			Archived = Archived

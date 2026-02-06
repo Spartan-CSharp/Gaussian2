@@ -4,6 +4,7 @@ using System.Text;
 using GaussianMVC.Data;
 using GaussianMVC.Properties;
 
+using GaussianMVCLibrary.Converters;
 using GaussianMVCLibrary.DataAccess;
 
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -17,6 +18,13 @@ namespace GaussianMVC;
 
 internal static class StartupHelpers
 {
+	internal static WebApplicationBuilder LicenseSyncfusion(this WebApplicationBuilder builder)
+	{
+		string licenseKey = builder.Configuration.GetValue<string>("SyncfusionLicenseKey") ?? throw new InvalidOperationException("Syncfusion license key not found.");
+		Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense(licenseKey);
+		return builder;
+	}
+
 	internal static WebApplicationBuilder ConfigureIdentity(this WebApplicationBuilder builder)
 	{
 		string connectionString = builder.Configuration.GetConnectionString(Resources.IDDatabaseConnectionStringName) ?? throw new InvalidOperationException($"Connection string '{Resources.IDDatabaseConnectionStringName}' not found.");
@@ -216,6 +224,12 @@ internal static class StartupHelpers
 			.AddTransient<IElectronicStatesCrud, ElectronicStatesCrud>();
 
 		return builder;
+	}
+
+	internal static WebApplication SetStaticConfigurations(this WebApplication app)
+	{
+		RtfConverter.SetConfiguration(app.Configuration);
+		return app;
 	}
 
 	internal static WebApplication ConfigurePipeline(this WebApplication app)
