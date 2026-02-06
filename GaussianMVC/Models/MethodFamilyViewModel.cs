@@ -30,7 +30,7 @@ public class MethodFamilyViewModel
 		ArgumentNullException.ThrowIfNull(model, nameof(model));
 		Id = model.Id;
 		Name = model.Name;
-		DescriptionHtml = RtfConverter.RtfToHtml(model.DescriptionRtf);
+		DescriptionHtml = RtfConverter.RtfToHtmlConverter(model.DescriptionRtf);
 		CreatedDate = model.CreatedDate;
 		LastUpdatedDate = model.LastUpdatedDate;
 		Archived = model.Archived;
@@ -89,8 +89,8 @@ public class MethodFamilyViewModel
 		{
 			Id = Id,
 			Name = Name,
-			DescriptionRtf = RtfConverter.HtmlToRtf(DescriptionHtml),
-			DescriptionText = RtfConverter.HtmlToPlainText(DescriptionHtml),
+			DescriptionRtf = RtfConverter.HtmlToRtfConverter(DescriptionHtml),
+			DescriptionText = RtfConverter.HtmlToTextConverter(DescriptionHtml),
 			CreatedDate = CreatedDate,
 			LastUpdatedDate = LastUpdatedDate,
 			Archived = Archived
