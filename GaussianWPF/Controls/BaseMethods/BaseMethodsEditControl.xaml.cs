@@ -620,7 +620,7 @@ public partial class BaseMethodsEditControl : UserControl, INotifyPropertyChange
 			if (result is not null)
 			{
 				BaseMethod.LastUpdatedDate = result.LastUpdatedDate;
-				ChildControlEvent?.Invoke(this, new ChildControlEventArgs<BaseMethodsEditControl>("save", null));
+				ChildControlEvent?.Invoke(this, new ChildControlEventArgs<BaseMethodsEditControl>("save", BaseMethodId));
 			}
 
 			if (_logger.IsEnabled(LogLevel.Debug))

@@ -562,7 +562,7 @@ public partial class CalculationTypesEditControl : UserControl, INotifyPropertyC
 			if (result is not null)
 			{
 				CalculationType.LastUpdatedDate = result.LastUpdatedDate;
-				ChildControlEvent?.Invoke(this, new ChildControlEventArgs<CalculationTypesEditControl>("save", null));
+				ChildControlEvent?.Invoke(this, new ChildControlEventArgs<CalculationTypesEditControl>("save", CalculationTypeId));
 			}
 
 			if (_logger.IsEnabled(LogLevel.Debug))
