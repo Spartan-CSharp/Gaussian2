@@ -212,7 +212,7 @@ public partial class ElectronicStatesCreateControl : UserControl, INotifyPropert
 
 				// Populate the RichTextBox with RTF
 				DescriptionRichTextBox.SetRtfText(ElectronicState.DescriptionRtf);
-				CanSave = ElectronicState.Name?.Length is > 0 and <= 50 && ElectronicState.Keyword?.Length is > 0 and <= 20 && (ElectronicState.DescriptionText?.Length is <= 2000 || string.IsNullOrEmpty(ElectronicState.DescriptionText));
+				CanSave = (ElectronicState.Name?.Length is > 0 and <= 50 || ElectronicState.Keyword?.Length is > 0 and <= 20) && (ElectronicState.DescriptionText?.Length is <= 2000 || string.IsNullOrEmpty(ElectronicState.DescriptionText));
 			}
 			else
 			{
