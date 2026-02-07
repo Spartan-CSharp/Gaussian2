@@ -16,5 +16,5 @@ BEGIN
 	WHERE
 		[Archived] = 0
 	ORDER BY
-		[Name] ASC;
+		[Name] ASC, [Keyword] ASC;
 END

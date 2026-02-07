@@ -12,7 +12,7 @@
 		</Grid.ColumnDefinitions>
 
 		<!-- Row 0 -->
-		<TextBlock Name="IndexHeaderTextBlock" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="0 0 0 10" FontSize="40" FontWeight="SemiBold" Text="Calculation Types" />
+		<TextBlock Name="IndexHeaderTextBlock" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2" Margin="0 0 0 10" FontSize="40" FontWeight="SemiBold" Text="Base Methods" />
 
 		<!-- Row 1 -->
 		<TextBlock Name="ErrorMessageTextBlock" Foreground="Red" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="2" Margin="0 0 0 20" MaxWidth="800" FontWeight="SemiBold" TextWrapping="Wrap" Visibility="{Binding IsErrorVisible, Converter={StaticResource BooleanToVisibilityConverter}, FallbackValue=Collapsed}" Text="{Binding ErrorMessage, UpdateSourceTrigger=PropertyChanged}" />

@@ -59,7 +59,7 @@ public class MethodFamiliesEndpoint(ILogger<MethodFamiliesEndpoint> logger, IApi
 		}
 
 		_apiHelper.ApiClient.DefaultRequestHeaders.Date = DateTimeOffset.UtcNow;
-		Uri apiEndpoint = new($"{Resources.MethodFamiliesEndpoint}/Intermediate", UriKind.Relative);
+		Uri apiEndpoint = new($"{Resources.MethodFamiliesEndpoint}/List", UriKind.Relative);
 		using HttpResponseMessage response = await _apiHelper.ApiClient.GetAsync(apiEndpoint).ConfigureAwait(false);
 
 		if (response.IsSuccessStatusCode)
