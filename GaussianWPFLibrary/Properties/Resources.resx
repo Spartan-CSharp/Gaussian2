@@ -145,4 +145,8 @@
     <value>api/v1/MethodFamilies</value>
     <comment>The API Endpoint for Method Families</comment>
   </data>
+  <data name="SpinStatesEndpoint" xml:space="preserve">
+    <value>api/v1/SpinStates</value>
+    <comment>The API Endpoint for Spin States</comment>
+  </data>
 </root>

@@ -30,6 +30,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 	private readonly IAbstractFactory<MethodFamiliesControl> _methodFamiliesFactory;
 	private readonly IAbstractFactory<BaseMethodsControl> _baseMethodsFactory;
 	private readonly IAbstractFactory<ElectronicStatesControl> _electronicStatesFactory;
+	private readonly IAbstractFactory<SpinStatesControl> _spinStatesFactory;
 	private readonly IAbstractFactory<AboutControl> _aboutFactory;
 	private readonly IAbstractFactory<PrivacyControl> _privacyFactory;
 	private readonly IAbstractFactory<ContactControl> _contactFactory;
@@ -47,11 +48,12 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 	/// <param name="methodFamiliesFactory">The factory for creating method families controls.</param>
 	/// <param name="baseMethodsFactory">The factory for creating base methods controls.</param>
 	/// <param name="electronicStatesFactory">The factory for creating electronic states controls.</param>
+	/// <param name="spinStatesFactory">The factory for creating spin states controls.</param>
 	/// <param name="aboutFactory">The factory for creating about controls.</param>
 	/// <param name="privacyFactory">The factory for creating privacy controls.</param>
 	/// <param name="contactFactory">The factory for creating contact controls.</param>
 	/// <param name="errorFactory">The factory for creating error controls.</param>
-	public MainWindow(ILogger<MainWindow> logger, ILoggedInUserModel loggedInUser, IApiHelper apiHelper, HomeControl homeControl, IAbstractFactory<LoginControl> loginFactory, IAbstractFactory<CalculationTypesControl> calculationTypesFactory, IAbstractFactory<MethodFamiliesControl> methodFamiliesFactory, IAbstractFactory<BaseMethodsControl> baseMethodsFactory, IAbstractFactory<ElectronicStatesControl> electronicStatesFactory, IAbstractFactory<AboutControl> aboutFactory, IAbstractFactory<PrivacyControl> privacyFactory, IAbstractFactory<ContactControl> contactFactory, IAbstractFactory<ErrorControl> errorFactory)
+	public MainWindow(ILogger<MainWindow> logger, ILoggedInUserModel loggedInUser, IApiHelper apiHelper, HomeControl homeControl, IAbstractFactory<LoginControl> loginFactory, IAbstractFactory<CalculationTypesControl> calculationTypesFactory, IAbstractFactory<MethodFamiliesControl> methodFamiliesFactory, IAbstractFactory<BaseMethodsControl> baseMethodsFactory, IAbstractFactory<ElectronicStatesControl> electronicStatesFactory, IAbstractFactory<SpinStatesControl> spinStatesFactory, IAbstractFactory<AboutControl> aboutFactory, IAbstractFactory<PrivacyControl> privacyFactory, IAbstractFactory<ContactControl> contactFactory, IAbstractFactory<ErrorControl> errorFactory)
 	{
 		_logger = logger;
 		_loggedInUser = loggedInUser;
@@ -62,6 +64,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 		_methodFamiliesFactory = methodFamiliesFactory;
 		_baseMethodsFactory = baseMethodsFactory;
 		_electronicStatesFactory = electronicStatesFactory;
+		_spinStatesFactory = spinStatesFactory;
 		_aboutFactory = aboutFactory;
 		_privacyFactory = privacyFactory;
 		_contactFactory = contactFactory;
@@ -391,6 +394,22 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 		if (_logger.IsEnabled(LogLevel.Debug))
 		{
 			_logger.LogDebug("{Window} {EventHandler} returning.", nameof(MainWindow), nameof(ElectronicStates_Click));
+		}
+	}
+
+	private void SpinStates_Click(object sender, RoutedEventArgs e)
+	{
+		if (_logger.IsEnabled(LogLevel.Information))
+		{
+			_logger.LogInformation("{Window} {EventHandler} called with {Sender} and {EventArgs}.", nameof(MainWindow), nameof(SpinStates_Click), sender, e);
+		}
+
+		SpinStatesControl spinStatesControl = _spinStatesFactory.Create();
+		MainContent.Content = spinStatesControl;
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{Window} {EventHandler} returning.", nameof(MainWindow), nameof(SpinStates_Click));
 		}
 	}
 

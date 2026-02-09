@@ -1,0 +1,14 @@
+﻿CREATE TABLE [dbo].[SpinStates]
+(
+	[Id] INT NOT NULL IDENTITY(1,1),
+	[Name] NVARCHAR(50) NULL,
+	[Keyword] NVARCHAR(20) NULL,
+	[DescriptionRtf] NVARCHAR(MAX) NULL,
+	[DescriptionText] NVARCHAR(2000) NULL,
+	[CreatedDate] DATETIME2(7) NOT NULL DEFAULT (GETUTCDATE()),
+	[LastUpdatedDate] DATETIME2(7) NOT NULL DEFAULT (GETUTCDATE()),
+	[Archived] BIT NOT NULL DEFAULT 0,
+	CONSTRAINT [PK_SpinStates] PRIMARY KEY CLUSTERED ([Id] ASC),
+	CONSTRAINT [UQ_SpinStates_Name] UNIQUE NONCLUSTERED ([Keyword] ASC),
+	CONSTRAINT [CK_SpinStates_Name_or_Keyword] CHECK ([Name] IS NOT NULL OR [Keyword] IS NOT NULL)
+)

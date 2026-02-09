@@ -93,6 +93,12 @@
     <Build Include="dbo\Programmability\Stored Procedures\spElectronicStates_GetAll.sql" />
     <Build Include="dbo\Programmability\Stored Procedures\spElectronicStates_GetById.sql" />
     <Build Include="dbo\Programmability\Stored Procedures\spElectronicStates_Update.sql" />
+    <Build Include="dbo\Tables\SpinStates.sql" />
+    <Build Include="dbo\Programmability\Stored Procedures\spSpinStates_Create.sql" />
+    <Build Include="dbo\Programmability\Stored Procedures\spSpinStates_Delete.sql" />
+    <Build Include="dbo\Programmability\Stored Procedures\spSpinStates_GetAll.sql" />
+    <Build Include="dbo\Programmability\Stored Procedures\spSpinStates_GetById.sql" />
+    <Build Include="dbo\Programmability\Stored Procedures\spSpinStates_Update.sql" />
   </ItemGroup>
   <ItemGroup>
     <PreDeploy Include="PreScripts\Script.PreDeployment.sql" />

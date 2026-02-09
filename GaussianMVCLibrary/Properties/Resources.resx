@@ -209,4 +209,24 @@
     <value>spMethodFamilies_Update</value>
     <comment>The Stored Procedure Name for Updating a Method Family by Id</comment>
   </data>
+  <data name="SpinStatesCreate" xml:space="preserve">
+    <value>spSpinStates_Create</value>
+    <comment>The Stored Procedure Name for Creating a new Spin State</comment>
+  </data>
+  <data name="SpinStatesDelete" xml:space="preserve">
+    <value>spSpinStates_Delete</value>
+    <comment>The Stored Procedure Name for Deleting a Spin State by Id</comment>
+  </data>
+  <data name="SpinStatesGetAll" xml:space="preserve">
+    <value>spSpinStates_GetAll</value>
+    <comment>The Stored Procedure Name for Getting All Spin States</comment>
+  </data>
+  <data name="SpinStatesGetById" xml:space="preserve">
+    <value>spSpinStates_GetById</value>
+    <comment>The Stored Procedure Name for Getting a Spin State by Id</comment>
+  </data>
+  <data name="SpinStatesUpdate" xml:space="preserve">
+    <value>spSpinStates_Update</value>
+    <comment>The Stored Procedure Name for Updating a Spin State by Id</comment>
+  </data>
 </root>

@@ -504,6 +504,7 @@ Archived
 
 ### SpinStates Table
 Id
+Name
 Keyword
 DescriptionRtf
 DescriptionText
@@ -513,6 +514,7 @@ Archived
 
 ### ElectronicStates Table
 Id
+Name
 Keyword
 DescriptionRtf
 DescriptionText

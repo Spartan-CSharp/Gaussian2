@@ -193,7 +193,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 	- [x] Method Families
 	- [x] Base Methods
 	- [x] Electronic States
-	- [ ] Spin States
+	- [x] Spin States
 	- [ ] Electronic State/Method Families
 	- [ ] Spin State/Electronic State/Method Families
 	- [ ] Full Methods

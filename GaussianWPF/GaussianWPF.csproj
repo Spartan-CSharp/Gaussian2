@@ -155,6 +155,24 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Compile Update="Controls\SpinStates\SpinStatesCreateControl.xaml.cs">
+		  <SubType>Code</SubType>
+		</Compile>
+		<Compile Update="Controls\SpinStates\SpinStatesDeleteControl.xaml.cs">
+		  <SubType>Code</SubType>
+		</Compile>
+		<Compile Update="Controls\SpinStates\SpinStatesDetailsControl.xaml.cs">
+		  <SubType>Code</SubType>
+		</Compile>
+		<Compile Update="Controls\SpinStates\SpinStatesEditControl.xaml.cs">
+		  <SubType>Code</SubType>
+		</Compile>
+		<Compile Update="Controls\SpinStates\SpinStatesIndexControl.xaml.cs">
+		  <SubType>Code</SubType>
+		</Compile>
+		<Compile Update="Controls\SpinStatesControl.xaml.cs">
+		  <SubType>Code</SubType>
+		</Compile>
 		<Compile Update="Controls\MethodFamiliesControl.xaml.cs">
 		  <SubType>Code</SubType>
 		</Compile>

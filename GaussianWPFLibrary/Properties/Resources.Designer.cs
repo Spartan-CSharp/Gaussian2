@@ -122,5 +122,14 @@ namespace GaussianWPFLibrary.Properties {
                 return ResourceManager.GetString("MethodFamiliesEndpoint", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to api/v1/SpinStates.
+        /// </summary>
+        internal static string SpinStatesEndpoint {
+            get {
+                return ResourceManager.GetString("SpinStatesEndpoint", resourceCulture);
+            }
+        }
     }
 }
