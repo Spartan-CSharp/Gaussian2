@@ -135,7 +135,7 @@
   </data>
   <data name="BaseMethodsGetByMethodFamilyId" xml:space="preserve">
     <value>spBaseMethods_GetByMethodFamilyId</value>
-    <comment>The Stored Procedure Name for Getting a Base Method by its Method Family Id</comment>
+    <comment>The Stored Procedure Name for Getting Base Methods by their Method Family Id</comment>
   </data>
   <data name="BaseMethodsUpdate" xml:space="preserve">
     <value>spBaseMethods_Update</value>
@@ -180,6 +180,42 @@
   <data name="ElectronicStatesGetById" xml:space="preserve">
     <value>spElectronicStates_GetById</value>
     <comment>The Stored Procedure Name for Getting an Electronic State by Id</comment>
+  </data>
+  <data name="ElectronicStatesGetList" xml:space="preserve">
+    <value>spElectronicStates_GetList</value>
+    <comment>The Stored Procedure Name for Getting a List of Electronic State Ids, Names, and Keywords</comment>
+  </data>
+  <data name="ElectronicStatesMethodFamiliesCreate" xml:space="preserve">
+    <value>spElectronicStatesMethodFamilies_Create</value>
+    <comment>The Stored Procedure Name for Creating a new Electronic State/Method Family Combination</comment>
+  </data>
+  <data name="ElectronicStatesMethodFamiliesDelete" xml:space="preserve">
+    <value>spElectronicStatesMethodFamilies_Delete</value>
+    <comment>The Stored Procedure Name for Deleting an Electronic State/Method Family Combination by Id</comment>
+  </data>
+  <data name="ElectronicStatesMethodFamiliesGetAll" xml:space="preserve">
+    <value>spElectronicStatesMethodFamilies_GetAll</value>
+    <comment>The Stored Procedure Name for Getting All Electronic State/Method Family Combinations</comment>
+  </data>
+  <data name="ElectronicStatesMethodFamiliesGetByElectronicStateId" xml:space="preserve">
+    <value>spElectronicStatesMethodFamilies_GetByElectronicStateId</value>
+    <comment>The Stored Procedure Name for Getting Electronic State/Method Family Combinations by their Electronic State Id</comment>
+  </data>
+  <data name="ElectronicStatesMethodFamiliesGetByElectronicStateIdAndMethodFamilyId" xml:space="preserve">
+    <value>spElectronicStatesMethodFamilies_GetByElectronicStateIdAndMethodFamilyId</value>
+    <comment>The Stored Procedure Name for Getting Electronic State/Method Family Combinations by their Electronic State Id and their Method Family Id</comment>
+  </data>
+  <data name="ElectronicStatesMethodFamiliesGetById" xml:space="preserve">
+    <value>spElectronicStatesMethodFamilies_GetById</value>
+    <comment>The Stored Procedure Name for Getting an Electronic State/Method Family Combination by Id</comment>
+  </data>
+  <data name="ElectronicStatesMethodFamiliesGetByMethodFamilyId" xml:space="preserve">
+    <value>spElectronicStatesMethodFamilies_GetByMethodFamilyId</value>
+    <comment>The Stored Procedure Name for Getting Electronic State/Method Family Combinations by their Method Family Id</comment>
+  </data>
+  <data name="ElectronicStatesMethodFamiliesUpdate" xml:space="preserve">
+    <value>spElectronicStatesMethodFamilies_Update</value>
+    <comment>The Stored Procedure Name for Updating an Electronic State/Method Family Combination by Id</comment>
   </data>
   <data name="ElectronicStatesUpdate" xml:space="preserve">
     <value>spElectronicStates_Update</value>

@@ -13,8 +13,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace GaussianMVC.Controllers;
 
 /// <summary>
-/// Controller for managing electronic states in the Gaussian MVC application.
-/// Provides CRUD operations for electronic state entities.
+/// Controller for managing Electronic States in the Gaussian MVC application.
+/// Provides CRUD operations for Electronic State entities.
 /// </summary>
 public class ElectronicStatesController(ILogger<ElectronicStatesController> logger, IElectronicStatesCrud crud) : Controller
 {
@@ -22,9 +22,9 @@ public class ElectronicStatesController(ILogger<ElectronicStatesController> logg
 	private readonly IElectronicStatesCrud _crud = crud;
 
 	/// <summary>
-	/// Displays a list of all electronic states.
+	/// Displays a list of all Electronic States.
 	/// </summary>
-	/// <returns>A view containing a list of electronic state view models.</returns>
+	/// <returns>A view containing a list of Electronic State view models.</returns>
 	// GET: ElectronicStates
 	[HttpGet]
 	public async Task<ActionResult<List<ElectronicStateViewModel>>> IndexAsync()
@@ -75,10 +75,10 @@ public class ElectronicStatesController(ILogger<ElectronicStatesController> logg
 	}
 
 	/// <summary>
-	/// Displays detailed information about a specific electronic state.
+	/// Displays detailed information about a specific Electronic State.
 	/// </summary>
-	/// <param name="id">The unique identifier of the electronic state to display.</param>
-	/// <returns>A view containing the electronic state details, or null if not found.</returns>
+	/// <param name="id">The unique identifier of the Electronic State to display.</param>
+	/// <returns>A view containing the Electronic State details, or null if not found.</returns>
 	// GET: ElectronicStates/Details/5
 	[HttpGet]
 	public async Task<ActionResult<ElectronicStateViewModel?>> DetailsAsync(int id)
@@ -123,9 +123,9 @@ public class ElectronicStatesController(ILogger<ElectronicStatesController> logg
 	}
 
 	/// <summary>
-	/// Displays the form for creating a new electronic state.
+	/// Displays the form for creating a new Electronic State.
 	/// </summary>
-	/// <returns>A view containing an empty electronic state view model.</returns>
+	/// <returns>A view containing an empty Electronic State view model.</returns>
 	// GET: ElectronicStates/CreateAsync
 	[HttpGet]
 	public async Task<ActionResult<ElectronicStateViewModel>> CreateAsync()
@@ -169,9 +169,9 @@ public class ElectronicStatesController(ILogger<ElectronicStatesController> logg
 	}
 
 	/// <summary>
-	/// Processes the creation of a new electronic state.
+	/// Processes the creation of a new Electronic State.
 	/// </summary>
-	/// <param name="model">The electronic state view model containing the data to create.</param>
+	/// <param name="model">The Electronic State view model containing the data to create.</param>
 	/// <returns>Redirects to the index page on success, or returns to the create view with validation errors.</returns>
 	/// <exception cref="ArgumentNullException">Thrown when the model parameter is null.</exception>
 	// POST: ElectronicStates/CreateAsync
@@ -248,10 +248,10 @@ public class ElectronicStatesController(ILogger<ElectronicStatesController> logg
 	}
 
 	/// <summary>
-	/// Displays the form for editing an existing electronic state.
+	/// Displays the form for editing an existing Electronic State.
 	/// </summary>
-	/// <param name="id">The unique identifier of the electronic state to edit.</param>
-	/// <returns>A view containing the electronic state view model to edit, or null if not found.</returns>
+	/// <param name="id">The unique identifier of the Electronic State to edit.</param>
+	/// <returns>A view containing the Electronic State view model to edit, or null if not found.</returns>
 	// GET: ElectronicStates/Edit/5
 	[HttpGet]
 	public async Task<ActionResult<ElectronicStateViewModel?>> EditAsync(int id)
@@ -296,10 +296,10 @@ public class ElectronicStatesController(ILogger<ElectronicStatesController> logg
 	}
 
 	/// <summary>
-	/// Processes the update of an existing electronic state.
+	/// Processes the update of an existing Electronic State.
 	/// </summary>
-	/// <param name="id">The unique identifier of the electronic state to update.</param>
-	/// <param name="model">The electronic state view model containing the updated data.</param>
+	/// <param name="id">The unique identifier of the Electronic State to update.</param>
+	/// <param name="model">The Electronic State view model containing the updated data.</param>
 	/// <returns>Redirects to the index page on success, or returns to the edit view with validation errors.</returns>
 	/// <exception cref="ArgumentNullException">Thrown when the model parameter is null.</exception>
 	/// <remarks>
@@ -388,10 +388,10 @@ public class ElectronicStatesController(ILogger<ElectronicStatesController> logg
 	}
 
 	/// <summary>
-	/// Displays the confirmation page for deleting an electronic state.
+	/// Displays the confirmation page for deleting an Electronic State.
 	/// </summary>
-	/// <param name="id">The unique identifier of the electronic state to delete.</param>
-	/// <returns>A view containing the electronic state view model to delete, or null if not found.</returns>
+	/// <param name="id">The unique identifier of the Electronic State to delete.</param>
+	/// <returns>A view containing the Electronic State view model to delete, or null if not found.</returns>
 	/// <remarks>
 	/// GET: ElectronicStates/Delete/5
 	/// </remarks>
@@ -438,10 +438,10 @@ public class ElectronicStatesController(ILogger<ElectronicStatesController> logg
 	}
 
 	/// <summary>
-	/// Processes the deletion of an electronic state.
+	/// Processes the deletion of an Electronic State.
 	/// </summary>
-	/// <param name="id">The unique identifier of the electronic state to delete.</param>
-	/// <param name="model">The electronic state view model containing the data to confirm deletion.</param>
+	/// <param name="id">The unique identifier of the Electronic State to delete.</param>
+	/// <param name="model">The Electronic State view model containing the data to confirm deletion.</param>
 	/// <returns>Redirects to the index page on success, or returns to the delete view if validation fails.</returns>
 	/// <remarks>
 	/// POST: ElectronicStates/Delete/5

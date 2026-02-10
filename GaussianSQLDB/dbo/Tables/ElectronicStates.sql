@@ -9,6 +9,6 @@
 	[LastUpdatedDate] DATETIME2(7) NOT NULL DEFAULT (GETUTCDATE()),
 	[Archived] BIT NOT NULL DEFAULT 0,
 	CONSTRAINT [PK_ElectronicStates] PRIMARY KEY CLUSTERED ([Id] ASC),
-	CONSTRAINT [UQ_ElectronicStates_Name] UNIQUE NONCLUSTERED ([Keyword] ASC),
+	CONSTRAINT [UQ_ElectronicStates_Name_or_Keyword] UNIQUE NONCLUSTERED ([Name] ASC, [Keyword] ASC),
 	CONSTRAINT [CK_ElectronicStates_Name_or_Keyword] CHECK ([Name] IS NOT NULL OR [Keyword] IS NOT NULL)
 )

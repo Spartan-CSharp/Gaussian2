@@ -51,6 +51,36 @@ public class ElectronicStatesEndpoint(ILogger<ElectronicStatesEndpoint> logger, 
 
 	/// <inheritdoc/>
 	/// <exception cref="HttpIOException">Thrown when the API request fails or returns an unsuccessful status code.</exception>
+	public async Task<List<ElectronicStateRecord>?> GetListAsync()
+	{
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{Class} {Method} called.", nameof(ElectronicStatesEndpoint), nameof(GetListAsync));
+		}
+
+		_apiHelper.ApiClient.DefaultRequestHeaders.Date = DateTimeOffset.UtcNow;
+		Uri apiEndpoint = new($"{Resources.ElectronicStatesEndpoint}/List", UriKind.Relative);
+		using HttpResponseMessage response = await _apiHelper.ApiClient.GetAsync(apiEndpoint).ConfigureAwait(false);
+
+		if (response.IsSuccessStatusCode)
+		{
+			List<ElectronicStateRecord>? result = await response.Content.ReadFromJsonAsync<List<ElectronicStateRecord>>().ConfigureAwait(false);
+
+			if (_logger.IsEnabled(LogLevel.Trace))
+			{
+				_logger.LogTrace("{Class} {Method} returning {ModelCount} {ModelName}.", nameof(ElectronicStatesEndpoint), nameof(GetListAsync), result?.Count, nameof(ElectronicStateRecord));
+			}
+
+			return result;
+		}
+		else
+		{
+			throw new HttpIOException(HttpRequestError.InvalidResponse, response.ReasonPhrase);
+		}
+	}
+
+	/// <inheritdoc/>
+	/// <exception cref="HttpIOException">Thrown when the API request fails or returns an unsuccessful status code.</exception>
 	public async Task<ElectronicStateFullModel?> GetByIdAsync(int id)
 	{
 		if (_logger.IsEnabled(LogLevel.Debug))

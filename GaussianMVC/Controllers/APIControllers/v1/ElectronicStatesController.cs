@@ -16,8 +16,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace GaussianMVC.Controllers.APIControllers.V1;
 
 /// <summary>
-/// API controller for managing electronic states with CRUD operations.
-/// Provides RESTful endpoints for retrieving, creating, updating, and deleting electronic state records.
+/// API controller for managing Electronic States with CRUD operations.
+/// Provides RESTful endpoints for retrieving, creating, updating, and deleting Electronic State records.
 /// </summary>
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
@@ -28,14 +28,14 @@ public class ElectronicStatesController(ILogger<ElectronicStatesController> logg
 	private readonly IElectronicStatesCrud _crud = crud;
 
 	/// <summary>
-	/// Retrieves all electronic states from the database.
+	/// Retrieves all Electronic States from the database.
 	/// </summary>
 	/// <returns>
 	/// An <see cref="ActionResult{T}"/> containing a list of <see cref="ElectronicStateFullModel"/> objects.
-	/// Returns 200 OK with the list of electronic states, or 500 Internal Server Error if an exception occurs.
+	/// Returns 200 OK with the list of Electronic States, or 500 Internal Server Error if an exception occurs.
 	/// </returns>
-	/// <response code="200">Returns the list of all electronic states.</response>
-	/// <response code="500">An validationError occurred while retrieving the electronic states.</response>
+	/// <response code="200">Returns the list of all Electronic States.</response>
+	/// <response code="500">An validationError occurred while retrieving the Electronic States.</response>
 	// GET: api/v1/ElectronicStates
 	[HttpGet()]
 	public async Task<ActionResult<List<ElectronicStateFullModel>>> GetAsync()
@@ -68,17 +68,58 @@ public class ElectronicStatesController(ILogger<ElectronicStatesController> logg
 	}
 
 	/// <summary>
-	/// Retrieves a specific electronic state by its unique identifier.
+	/// Retrieves a simplified list of Electronic States.
 	/// </summary>
-	/// <param name="id">The unique identifier of the electronic state to retrieve.</param>
+	/// <returns>
+	/// An <see cref="ActionResult"/> containing a list of <see cref="ElectronicStateRecord"/> objects.
+	/// Returns 200 OK with the list of Electronic State records on success.
+	/// Returns 500 Internal Server Error if an error occurs during retrieval.
+	/// </returns>
+	/// <response code="200">Returns the list of Electronic State records.</response>
+	/// <response code="500">If an internal server error occurs.</response>
+	// GET: api/v1/ElectronicStates/List
+	[HttpGet("List")]
+	public async Task<ActionResult<List<ElectronicStateRecord>>> GetListAsync()
+	{
+		try
+		{
+			if (_logger.IsEnabled(LogLevel.Debug))
+			{
+				_logger.LogDebug("{Method} {Controller} {Action} called.", HttpContext.Request.Method, nameof(ElectronicStatesController), nameof(GetListAsync));
+			}
+
+			List<ElectronicStateRecord> electronicStates = await _crud.GetElectronicStateListAsync().ConfigureAwait(false);
+
+			if (_logger.IsEnabled(LogLevel.Debug))
+			{
+				_logger.LogDebug("{Method} {Controller} {Action} returning {ModelCount} {Model}", HttpContext.Request.Method, nameof(ElectronicStatesController), nameof(GetListAsync), electronicStates.Count, nameof(ElectronicStateRecord));
+			}
+
+			return Ok(electronicStates);
+		}
+		catch (Exception ex)
+		{
+			if (_logger.IsEnabled(LogLevel.Error))
+			{
+				_logger.LogError(ex, "{Method} {Controller} {Action} had an error.", HttpContext.Request.Method, nameof(ElectronicStatesController), nameof(GetListAsync));
+			}
+
+			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
+		}
+	}
+
+	/// <summary>
+	/// Retrieves a specific Electronic State by its unique identifier.
+	/// </summary>
+	/// <param name="id">The unique identifier of the Electronic State to retrieve.</param>
 	/// <returns>
 	/// An <see cref="ActionResult{T}"/> containing the <see cref="ElectronicStateFullModel"/> if found.
-	/// Returns 200 OK with the electronic state, 404 Not Found if the electronic state doesn't exist, 
+	/// Returns 200 OK with the Electronic State, 404 Not Found if the Electronic State doesn't exist, 
 	/// or 500 Internal Server Error if an exception occurs.
 	/// </returns>
-	/// <response code="200">Returns the requested electronic state.</response>
-	/// <response code="404">No electronic state was found with the specified ID.</response>
-	/// <response code="500">An validationError occurred while retrieving the electronic state.</response>
+	/// <response code="200">Returns the requested Electronic State.</response>
+	/// <response code="404">No Electronic State was found with the specified ID.</response>
+	/// <response code="500">An validationError occurred while retrieving the Electronic State.</response>
 	// GET api/v1/ElectronicStates/5
 	[HttpGet("{id}")]
 	public async Task<ActionResult<ElectronicStateFullModel>> GetAsync(int id)
@@ -111,16 +152,16 @@ public class ElectronicStatesController(ILogger<ElectronicStatesController> logg
 	}
 
 	/// <summary>
-	/// Creates a new electronic state in the database.
+	/// Creates a new Electronic State in the database.
 	/// </summary>
-	/// <param name="model">The <see cref="ElectronicStateFullModel"/> containing the data for the new electronic state.</param>
+	/// <param name="model">The <see cref="ElectronicStateFullModel"/> containing the data for the new Electronic State.</param>
 	/// <returns>
 	/// An <see cref="ActionResult{T}"/> containing the created <see cref="ElectronicStateFullModel"/>.
-	/// Returns 201 Created with the new electronic state and location header, 
+	/// Returns 201 Created with the new Electronic State and location header, 
 	/// or 500 Internal Server Error if an exception occurs.
 	/// </returns>
-	/// <response code="201">Returns the newly created electronic state.</response>
-	/// <response code="500">An validationError occurred while creating the electronic state.</response>
+	/// <response code="201">Returns the newly created Electronic State.</response>
+	/// <response code="500">An validationError occurred while creating the Electronic State.</response>
 	// POST api/v1/ElectronicStates
 	[HttpPost]
 	public async Task<ActionResult<ElectronicStateFullModel>> PostAsync([FromBody] ElectronicStateAPIModel model)
@@ -180,18 +221,18 @@ public class ElectronicStatesController(ILogger<ElectronicStatesController> logg
 	}
 
 	/// <summary>
-	/// Updates an existing electronic state in the database.
+	/// Updates an existing Electronic State in the database.
 	/// </summary>
-	/// <param name="id">The unique identifier of the electronic state to update. Must match the ID in the model.</param>
+	/// <param name="id">The unique identifier of the Electronic State to update. Must match the ID in the model.</param>
 	/// <param name="model">The <see cref="ElectronicStateAPIModel"/> containing the updated data.</param>
 	/// <returns>
 	/// An <see cref="ActionResult{T}"/> containing the updated <see cref="ElectronicStateFullModel"/>.
-	/// Returns 200 OK with the updated electronic state, 400 Bad Request if the route ID doesn't match the model ID,
+	/// Returns 200 OK with the updated Electronic State, 400 Bad Request if the route ID doesn't match the model ID,
 	/// or 500 Internal Server Error if an exception occurs.
 	/// </returns>
-	/// <response code="200">Returns the updated electronic state.</response>
+	/// <response code="200">Returns the updated Electronic State.</response>
 	/// <response code="400">The route parameter ID does not match the model ID.</response>
-	/// <response code="500">An validationError occurred while updating the electronic state.</response>
+	/// <response code="500">An validationError occurred while updating the Electronic State.</response>
 	// PUT api/V1/ElectronicStates/5
 	[HttpPut("{id}")]
 	public async Task<ActionResult<ElectronicStateFullModel>> PutAsync(int id, [FromBody] ElectronicStateAPIModel model)
@@ -262,16 +303,16 @@ public class ElectronicStatesController(ILogger<ElectronicStatesController> logg
 	}
 
 	/// <summary>
-	/// Deletes an electronic state from the database.
+	/// Deletes an Electronic State from the database.
 	/// </summary>
-	/// <param name="id">The unique identifier of the electronic state to delete.</param>
+	/// <param name="id">The unique identifier of the Electronic State to delete.</param>
 	/// <returns>
 	/// An <see cref="ActionResult"/> indicating the result of the delete operation.
 	/// Returns 200 OK if the deletion was successful, 
 	/// or 500 Internal Server Error if an exception occurs.
 	/// </returns>
-	/// <response code="200">The electronic state was successfully deleted.</response>
-	/// <response code="500">An validationError occurred while deleting the electronic state.</response>
+	/// <response code="200">The Electronic State was successfully deleted.</response>
+	/// <response code="500">An validationError occurred while deleting the Electronic State.</response>
 	// DELETE api/V1/ElectronicStates/5
 	[HttpDelete("{id}")]
 	public async Task<ActionResult> DeleteAsync(int id)

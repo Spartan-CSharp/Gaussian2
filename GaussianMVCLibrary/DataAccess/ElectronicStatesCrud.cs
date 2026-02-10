@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 namespace GaussianMVCLibrary.DataAccess;
 
 /// <summary>
-/// Provides CRUD operations for managing electronic states.
+/// Provides CRUD operations for managing Electronic States.
 /// </summary>
 /// <param name="dbData">The database data access interface.</param>
 /// <param name="logger">The logger instance for this class.</param>
@@ -63,6 +63,25 @@ public class ElectronicStatesCrud(IDbData dbData, ILogger<ElectronicStatesCrud> 
 		if (_logger.IsEnabled(LogLevel.Trace))
 		{
 			_logger.LogTrace("{Class} {Method} returning {ModelCount} {ModelName}.", nameof(ElectronicStatesCrud), nameof(GetAllElectronicStatesAsync), output.Count, nameof(ElectronicStateFullModel));
+		}
+
+		return output;
+	}
+
+	/// <inheritdoc/>
+	public async Task<List<ElectronicStateRecord>> GetElectronicStateListAsync()
+	{
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{Class} {Method} called.", nameof(ElectronicStatesCrud), nameof(GetElectronicStateListAsync));
+		}
+
+		DynamicParameters p = new();
+		List<ElectronicStateRecord> output = await _dbData.LoadDataAsync<ElectronicStateRecord, dynamic>(Resources.ElectronicStatesGetList, p, Resources.DataDatabaseConnectionString).ConfigureAwait(false);
+
+		if (_logger.IsEnabled(LogLevel.Trace))
+		{
+			_logger.LogTrace("{Class} {Method} returning {ModelCount} {ModelName}.", nameof(ElectronicStatesCrud), nameof(GetElectronicStateListAsync), output.Count, nameof(ElectronicStateRecord));
 		}
 
 		return output;

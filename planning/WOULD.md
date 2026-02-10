@@ -158,7 +158,7 @@ Yes, users should be able to mark experiments with these statuses to reflect the
 
 ##### I. What fields must be searchable?
 
-For version 1, the only requirement is to return calculations that reference a specific input parameter (Calculation Type, method, basis set, spin state, electronic state, molecule). Future versions should include a full-text search of results and discussions.
+For version 1, the only requirement is to return calculations that reference a specific input parameter (Calculation Type, method, basis set, Spin State, Electronic State, molecule). Future versions should include a full-text search of results and discussions.
 
 ##### II. Should search be exact match, partial match, or fuzzy?
 
@@ -495,6 +495,7 @@ Archived
 Id
 ElectronicStateId -- Links to ElectronicStates.Id
 MethodFamilyId -- Links to MethodFamilies.Id
+Name
 Keyword
 DescriptionRtf
 DescriptionText

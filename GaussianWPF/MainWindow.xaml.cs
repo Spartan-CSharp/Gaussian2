@@ -30,6 +30,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 	private readonly IAbstractFactory<MethodFamiliesControl> _methodFamiliesFactory;
 	private readonly IAbstractFactory<BaseMethodsControl> _baseMethodsFactory;
 	private readonly IAbstractFactory<ElectronicStatesControl> _electronicStatesFactory;
+	private readonly IAbstractFactory<ElectronicStatesMethodFamiliesControl> _electronicStatesMethodFamiliesFactory;
 	private readonly IAbstractFactory<SpinStatesControl> _spinStatesFactory;
 	private readonly IAbstractFactory<AboutControl> _aboutFactory;
 	private readonly IAbstractFactory<PrivacyControl> _privacyFactory;
@@ -44,16 +45,17 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 	/// <param name="apiHelper">The API helper for HTTP client operations.</param>
 	/// <param name="homeControl">The home control to display on startup.</param>
 	/// <param name="loginFactory">The factory for creating login controls.</param>
-	/// <param name="calculationTypesFactory">The factory for creating calculation types controls.</param>
-	/// <param name="methodFamiliesFactory">The factory for creating method families controls.</param>
-	/// <param name="baseMethodsFactory">The factory for creating base methods controls.</param>
-	/// <param name="electronicStatesFactory">The factory for creating electronic states controls.</param>
-	/// <param name="spinStatesFactory">The factory for creating spin states controls.</param>
+	/// <param name="calculationTypesFactory">The factory for creating Calculation Types controls.</param>
+	/// <param name="methodFamiliesFactory">The factory for creating Method Families controls.</param>
+	/// <param name="baseMethodsFactory">The factory for creating Base Methods controls.</param>
+	/// <param name="electronicStatesFactory">The factory for creating Electronic States controls.</param>
+	/// <param name="electronicStatesMethodFamiliesFactory">The factory for creating Electronic State/Method Family Combinations controls.</param>
+	/// <param name="spinStatesFactory">The factory for creating Spin States controls.</param>
 	/// <param name="aboutFactory">The factory for creating about controls.</param>
 	/// <param name="privacyFactory">The factory for creating privacy controls.</param>
 	/// <param name="contactFactory">The factory for creating contact controls.</param>
 	/// <param name="errorFactory">The factory for creating error controls.</param>
-	public MainWindow(ILogger<MainWindow> logger, ILoggedInUserModel loggedInUser, IApiHelper apiHelper, HomeControl homeControl, IAbstractFactory<LoginControl> loginFactory, IAbstractFactory<CalculationTypesControl> calculationTypesFactory, IAbstractFactory<MethodFamiliesControl> methodFamiliesFactory, IAbstractFactory<BaseMethodsControl> baseMethodsFactory, IAbstractFactory<ElectronicStatesControl> electronicStatesFactory, IAbstractFactory<SpinStatesControl> spinStatesFactory, IAbstractFactory<AboutControl> aboutFactory, IAbstractFactory<PrivacyControl> privacyFactory, IAbstractFactory<ContactControl> contactFactory, IAbstractFactory<ErrorControl> errorFactory)
+	public MainWindow(ILogger<MainWindow> logger, ILoggedInUserModel loggedInUser, IApiHelper apiHelper, HomeControl homeControl, IAbstractFactory<LoginControl> loginFactory, IAbstractFactory<CalculationTypesControl> calculationTypesFactory, IAbstractFactory<MethodFamiliesControl> methodFamiliesFactory, IAbstractFactory<BaseMethodsControl> baseMethodsFactory, IAbstractFactory<ElectronicStatesControl> electronicStatesFactory, IAbstractFactory<ElectronicStatesMethodFamiliesControl> electronicStatesMethodFamiliesFactory, IAbstractFactory<SpinStatesControl> spinStatesFactory, IAbstractFactory<AboutControl> aboutFactory, IAbstractFactory<PrivacyControl> privacyFactory, IAbstractFactory<ContactControl> contactFactory, IAbstractFactory<ErrorControl> errorFactory)
 	{
 		_logger = logger;
 		_loggedInUser = loggedInUser;
@@ -64,6 +66,7 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 		_methodFamiliesFactory = methodFamiliesFactory;
 		_baseMethodsFactory = baseMethodsFactory;
 		_electronicStatesFactory = electronicStatesFactory;
+		_electronicStatesMethodFamiliesFactory = electronicStatesMethodFamiliesFactory;
 		_spinStatesFactory = spinStatesFactory;
 		_aboutFactory = aboutFactory;
 		_privacyFactory = privacyFactory;
@@ -394,6 +397,22 @@ public partial class MainWindow : Window, INotifyPropertyChanged
 		if (_logger.IsEnabled(LogLevel.Debug))
 		{
 			_logger.LogDebug("{Window} {EventHandler} returning.", nameof(MainWindow), nameof(ElectronicStates_Click));
+		}
+	}
+
+	private void ElectronicStatesMethodFamilies_Click(object sender, RoutedEventArgs e)
+	{
+		if (_logger.IsEnabled(LogLevel.Information))
+		{
+			_logger.LogInformation("{Window} {EventHandler} called with {Sender} and {EventArgs}.", nameof(MainWindow), nameof(ElectronicStatesMethodFamilies_Click), sender, e);
+		}
+
+		ElectronicStatesMethodFamiliesControl electronicStatesMethodFamiliesControl = _electronicStatesMethodFamiliesFactory.Create();
+		MainContent.Content = electronicStatesMethodFamiliesControl;
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{Window} {EventHandler} returning.", nameof(MainWindow), nameof(ElectronicStatesMethodFamilies_Click));
 		}
 	}
 

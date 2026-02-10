@@ -205,6 +205,87 @@ namespace GaussianMVCLibrary.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to spElectronicStates_GetList.
+        /// </summary>
+        internal static string ElectronicStatesGetList {
+            get {
+                return ResourceManager.GetString("ElectronicStatesGetList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to spElectronicStatesMethodFamilies_Create.
+        /// </summary>
+        internal static string ElectronicStatesMethodFamiliesCreate {
+            get {
+                return ResourceManager.GetString("ElectronicStatesMethodFamiliesCreate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to spElectronicStatesMethodFamilies_Delete.
+        /// </summary>
+        internal static string ElectronicStatesMethodFamiliesDelete {
+            get {
+                return ResourceManager.GetString("ElectronicStatesMethodFamiliesDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to spElectronicStatesMethodFamilies_GetAll.
+        /// </summary>
+        internal static string ElectronicStatesMethodFamiliesGetAll {
+            get {
+                return ResourceManager.GetString("ElectronicStatesMethodFamiliesGetAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to spElectronicStatesMethodFamilies_GetByElectronicStateId.
+        /// </summary>
+        internal static string ElectronicStatesMethodFamiliesGetByElectronicStateId {
+            get {
+                return ResourceManager.GetString("ElectronicStatesMethodFamiliesGetByElectronicStateId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to spElectronicStatesMethodFamilies_GetByElectronicStateIdAndMethodFamilyId.
+        /// </summary>
+        internal static string ElectronicStatesMethodFamiliesGetByElectronicStateIdAndMethodFamilyId {
+            get {
+                return ResourceManager.GetString("ElectronicStatesMethodFamiliesGetByElectronicStateIdAndMethodFamilyId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to spElectronicStatesMethodFamilies_GetById.
+        /// </summary>
+        internal static string ElectronicStatesMethodFamiliesGetById {
+            get {
+                return ResourceManager.GetString("ElectronicStatesMethodFamiliesGetById", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to spElectronicStatesMethodFamilies_GetByMethodFamilyId.
+        /// </summary>
+        internal static string ElectronicStatesMethodFamiliesGetByMethodFamilyId {
+            get {
+                return ResourceManager.GetString("ElectronicStatesMethodFamiliesGetByMethodFamilyId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to spElectronicStatesMethodFamilies_Update.
+        /// </summary>
+        internal static string ElectronicStatesMethodFamiliesUpdate {
+            get {
+                return ResourceManager.GetString("ElectronicStatesMethodFamiliesUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to spElectronicStates_Update.
         /// </summary>
         internal static string ElectronicStatesUpdate {

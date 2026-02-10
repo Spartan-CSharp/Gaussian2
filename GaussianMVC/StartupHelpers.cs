@@ -222,6 +222,7 @@ internal static class StartupHelpers
 			.AddTransient<IMethodFamiliesCrud, MethodFamiliesCrud>()
 			.AddTransient<IBaseMethodsCrud, BaseMethodsCrud>()
 			.AddTransient<IElectronicStatesCrud, ElectronicStatesCrud>()
+			.AddTransient<IElectronicStatesMethodFamiliesCrud, ElectronicStatesMethodFamiliesCrud>()
 			.AddTransient<ISpinStatesCrud, SpinStatesCrud>();
 
 		return builder;

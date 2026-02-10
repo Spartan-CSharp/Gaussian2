@@ -1,10 +1,29 @@
 ﻿namespace GaussianCommonLibrary.Models;
 
 /// <summary>
-/// Represents a lightweight reference to a method family containing only its identifier and name.
+/// Represents a lightweight reference to a Electronic State containing only its identifier and name.
 /// </summary>
-/// <param name="Id">The unique identifier for the method family.</param>
-/// <param name="Name">The display name of the method family.</param>
+/// <param name="Id">The unique identifier for the Electronic State.</param>
+/// <param name="Name">The display name of the Electronic State.</param>
+/// <param name="Keyword">The keyword associated with the Electronic State.</param>
+public record ElectronicStateRecord(int Id, string? Name, string? Keyword)
+{
+	/// <summary>
+	/// Returns a string representation of the Electronic State Record.
+	/// Returns the keyword if no name is specified, the name if no keyword is specified, or "Name/Keyword" if both are specified.
+	/// </summary>
+	/// <returns>A formatted string representing the Electronic State Record.</returns>
+	public override string? ToString()
+	{
+		return string.IsNullOrWhiteSpace(Name) ? $"{Keyword}" : string.IsNullOrWhiteSpace(Keyword) ? $"{Name}" : $"{Name}/{Keyword}";
+	}
+}
+
+/// <summary>
+/// Represents a lightweight reference to a Method Family containing only its identifier and name.
+/// </summary>
+/// <param name="Id">The unique identifier for the Method Family.</param>
+/// <param name="Name">The display name of the Method Family.</param>
 public record MethodFamilyRecord(int Id, string Name);
 
 /// <summary>

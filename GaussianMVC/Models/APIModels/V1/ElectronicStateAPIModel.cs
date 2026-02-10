@@ -7,8 +7,8 @@ using GaussianMVC.ValidationAttributes;
 namespace GaussianMVC.Models.APIModels.V1;
 
 /// <summary>
-/// API model representing an electronic state for REST API operations.
-/// Provides data validation and conversion for electronic state entities in API v1.
+/// API model representing an Electronic State for REST API operations.
+/// Provides data validation and conversion for Electronic State entities in API v1.
 /// </summary>
 public class ElectronicStateAPIModel
 {
@@ -39,14 +39,14 @@ public class ElectronicStateAPIModel
 	}
 
 	/// <summary>
-	/// Gets or sets the unique identifier for the electronic state.
+	/// Gets or sets the unique identifier for the Electronic State.
 	/// </summary>
 	[Display(Name = "Id")]
 	[Key]
 	public int Id { get; set; }
 
 	/// <summary>
-	/// Gets or sets the name of the electronic state.
+	/// Gets or sets the name of the Electronic State.
 	/// </summary>
 	[DataType(DataType.Text)]
 	[Display(Name = "Name")]
@@ -55,7 +55,7 @@ public class ElectronicStateAPIModel
 	public string? Name { get; set; }
 
 	/// <summary>
-	/// Gets or sets the keyword associated with the electronic state.
+	/// Gets or sets the keyword associated with the Electronic State.
 	/// </summary>
 	[DataType(DataType.Text)]
 	[Display(Name = "Keyword")]
@@ -71,7 +71,7 @@ public class ElectronicStateAPIModel
 	public string? DescriptionRtf { get; set; }
 
 	/// <summary>
-	/// Gets or sets the plain text description of the electronic state.
+	/// Gets or sets the plain text description of the Electronic State.
 	/// </summary>
 	[DataType(DataType.MultilineText)]
 	[Display(Name = "Description (Text)")]
@@ -79,21 +79,21 @@ public class ElectronicStateAPIModel
 	public string? DescriptionText { get; set; }
 
 	/// <summary>
-	/// Gets or sets the date and time when the electronic state was created.
+	/// Gets or sets the date and time when the Electronic State was created.
 	/// </summary>
 	[DataType(DataType.DateTime)]
 	[Display(Name = "Created Date")]
 	public DateTime CreatedDate { get; set; }
 
 	/// <summary>
-	/// Gets or sets the date and time when the electronic state was last updated.
+	/// Gets or sets the date and time when the Electronic State was last updated.
 	/// </summary>
 	[DataType(DataType.DateTime)]
 	[Display(Name = "Last Updated Date")]
 	public DateTime LastUpdatedDate { get; set; }
 
 	/// <summary>
-	/// Gets or sets a value indicating whether the electronic state is archived.
+	/// Gets or sets a value indicating whether the Electronic State is archived.
 	/// </summary>
 	[Display(Name = "Archived")]
 	public bool Archived { get; set; }
@@ -118,7 +118,16 @@ public class ElectronicStateAPIModel
 	}
 
 	/// <summary>
-	/// Returns a string representation of the electronic state.
+	/// Converts this API model to a <see cref="ElectronicStateRecord"/> instance.
+	/// </summary>
+	/// <returns>A new <see cref="ElectronicStateRecord"/> containing the Id, Name, and Keyword properties.</returns>
+	public ElectronicStateRecord ToRecord()
+	{
+		return new ElectronicStateRecord(Id, Name, Keyword);
+	}
+
+	/// <summary>
+	/// Returns a string representation of the Electronic State.
 	/// </summary>
 	/// <returns>The Name if available, otherwise the Keyword, or a combination of both in the format "Name/Keyword".</returns>
 	public override string? ToString()

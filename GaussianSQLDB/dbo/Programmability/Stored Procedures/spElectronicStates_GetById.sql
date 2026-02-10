@@ -1,5 +1,5 @@
 ﻿CREATE PROCEDURE [dbo].[spElectronicStates_GetById]
-	@Id int
+	@Id INT
 AS
 BEGIN
 	SET NOCOUNT ON;
@@ -18,5 +18,5 @@ BEGIN
 		[Id] = @Id AND
 		[Archived] = 0
 	ORDER BY
-		[Name] ASC;
+		[Name] ASC, [Keyword] ASC;
 END

@@ -4,6 +4,7 @@ using GaussianWPF.Controls;
 using GaussianWPF.Controls.BaseMethods;
 using GaussianWPF.Controls.CalculationTypes;
 using GaussianWPF.Controls.ElectronicStates;
+using GaussianWPF.Controls.ElectronicStatesMethodFamilies;
 using GaussianWPF.Controls.MethodFamilies;
 using GaussianWPF.Controls.SpinStates;
 using GaussianWPF.FactoryHelpers;
@@ -95,6 +96,7 @@ public partial class App : Application
 		_ = services.AddSingleton<IMethodFamiliesEndpoint, MethodFamiliesEndpoint>();
 		_ = services.AddSingleton<IBaseMethodsEndpoint, BaseMethodsEndpoint>();
 		_ = services.AddSingleton<IElectronicStatesEndpoint, ElectronicStatesEndpoint>();
+		_ = services.AddSingleton<IElectronicStatesMethodFamiliesEndpoint, ElectronicStatesMethodFamiliesEndpoint>();
 		_ = services.AddSingleton<ISpinStatesEndpoint, SpinStatesEndpoint>();
 		_ = services.AddSingleton<ILoggedInUserModel, LoggedInUserModel>();
 
@@ -106,6 +108,7 @@ public partial class App : Application
 		_ = services.AddFormFactory<MethodFamiliesControl>();
 		_ = services.AddFormFactory<BaseMethodsControl>();
 		_ = services.AddFormFactory<ElectronicStatesControl>();
+		_ = services.AddFormFactory<ElectronicStatesMethodFamiliesControl>();
 		_ = services.AddFormFactory<SpinStatesControl>();
 		_ = services.AddFormFactory<AboutControl>();
 		_ = services.AddFormFactory<PrivacyControl>();
@@ -133,6 +136,11 @@ public partial class App : Application
 		_ = services.AddFormFactory<ElectronicStatesCreateControl>();
 		_ = services.AddFormFactory<ElectronicStatesEditControl>();
 		_ = services.AddFormFactory<ElectronicStatesDeleteControl>();
+		_ = services.AddFormFactory<ElectronicStatesMethodFamiliesIndexControl>();
+		_ = services.AddFormFactory<ElectronicStatesMethodFamiliesDetailsControl>();
+		_ = services.AddFormFactory<ElectronicStatesMethodFamiliesCreateControl>();
+		_ = services.AddFormFactory<ElectronicStatesMethodFamiliesEditControl>();
+		_ = services.AddFormFactory<ElectronicStatesMethodFamiliesDeleteControl>();
 		_ = services.AddFormFactory<SpinStatesIndexControl>();
 		_ = services.AddFormFactory<SpinStatesDetailsControl>();
 		_ = services.AddFormFactory<SpinStatesCreateControl>();

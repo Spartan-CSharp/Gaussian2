@@ -97,6 +97,15 @@ namespace GaussianWPFLibrary.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to api/v1/ElectronicStatesMethodFamilies.
+        /// </summary>
+        internal static string ElectronicStatesMethodFamiliesEndpoint {
+            get {
+                return ResourceManager.GetString("ElectronicStatesMethodFamiliesEndpoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to api/v1/Home.
         /// </summary>
         internal static string HomeEndpoint {
