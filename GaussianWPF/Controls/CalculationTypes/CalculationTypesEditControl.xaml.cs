@@ -342,9 +342,9 @@ public partial class CalculationTypesEditControl : UserControl, INotifyPropertyC
 			}
 		}
 
-		if (e.PropertyName is (nameof(CalculationTypeName)) or (nameof(Keyword)))
+		if (e.PropertyName is nameof(CalculationTypeName) or nameof(Keyword))
 		{
-			CanSave = CalculationTypeName?.Length is > 0 and <= 200 && Keyword?.Length is > 0 and <= 50;
+			CanSave = CalculationTypeName?.Length is > 0 and <= 200 && Keyword?.Length is > 0 and <= 50 && (DescriptionRichTextBox.GetPlainText()?.Length is <= 4000 || string.IsNullOrEmpty(DescriptionRichTextBox.GetPlainText()));
 		}
 
 		if (e.PropertyName == nameof(ErrorMessage))
@@ -539,6 +539,21 @@ public partial class CalculationTypesEditControl : UserControl, INotifyPropertyC
 		if (_logger.IsEnabled(LogLevel.Debug))
 		{
 			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(CalculationTypesEditControl), nameof(DescriptionRichTextBox_SelectionChanged));
+		}
+	}
+
+	private void DescriptionRichTextBox_TextChanged(object sender, TextChangedEventArgs e)
+	{
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.", nameof(CalculationTypesEditControl), nameof(DescriptionRichTextBox_TextChanged), sender, e);
+		}
+
+		CanSave = CalculationTypeName?.Length is > 0 and <= 200 && Keyword?.Length is > 0 and <= 50 && (DescriptionRichTextBox.GetPlainText()?.Length is <= 4000 || string.IsNullOrEmpty(DescriptionRichTextBox.GetPlainText()));
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(CalculationTypesEditControl), nameof(DescriptionRichTextBox_TextChanged));
 		}
 	}
 

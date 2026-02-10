@@ -341,9 +341,9 @@ public partial class SpinStatesEditControl : UserControl, INotifyPropertyChanged
 			}
 		}
 
-		if (e.PropertyName is (nameof(SpinStateName)) or (nameof(Keyword)))
+		if (e.PropertyName is nameof(SpinStateName) or nameof(Keyword))
 		{
-			CanSave = SpinStateName?.Length is > 0 and <= 200 || Keyword?.Length is > 0 and <= 50;
+			CanSave = (SpinStateName?.Length is > 0 and <= 200 || Keyword?.Length is > 0 and <= 50) && (DescriptionRichTextBox.GetPlainText()?.Length is <= 4000 || string.IsNullOrEmpty(DescriptionRichTextBox.GetPlainText()));
 		}
 
 		if (e.PropertyName == nameof(ErrorMessage))
@@ -538,6 +538,21 @@ public partial class SpinStatesEditControl : UserControl, INotifyPropertyChanged
 		if (_logger.IsEnabled(LogLevel.Debug))
 		{
 			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(SpinStatesEditControl), nameof(DescriptionRichTextBox_SelectionChanged));
+		}
+	}
+
+	private void DescriptionRichTextBox_TextChanged(object sender, TextChangedEventArgs e)
+	{
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.", nameof(SpinStatesEditControl), nameof(DescriptionRichTextBox_TextChanged), sender, e);
+		}
+
+		CanSave = (SpinStateName?.Length is > 0 and <= 200 || Keyword?.Length is > 0 and <= 50) && (DescriptionRichTextBox.GetPlainText()?.Length is <= 4000 || string.IsNullOrEmpty(DescriptionRichTextBox.GetPlainText()));
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(SpinStatesEditControl), nameof(DescriptionRichTextBox_TextChanged));
 		}
 	}
 

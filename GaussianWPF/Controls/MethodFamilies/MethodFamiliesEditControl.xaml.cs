@@ -325,7 +325,7 @@ public partial class MethodFamiliesEditControl : UserControl, INotifyPropertyCha
 
 		if (e.PropertyName is nameof(MethodFamilyName))
 		{
-			CanSave = MethodFamilyName?.Length is > 0 and <= 200;
+			CanSave = MethodFamilyName?.Length is > 0 and <= 200 && (DescriptionRichTextBox.GetPlainText()?.Length is <= 4000 || string.IsNullOrEmpty(DescriptionRichTextBox.GetPlainText()));
 		}
 
 		if (e.PropertyName == nameof(ErrorMessage))
@@ -520,6 +520,21 @@ public partial class MethodFamiliesEditControl : UserControl, INotifyPropertyCha
 		if (_logger.IsEnabled(LogLevel.Debug))
 		{
 			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(MethodFamiliesEditControl), nameof(DescriptionRichTextBox_SelectionChanged));
+		}
+	}
+
+	private void DescriptionRichTextBox_TextChanged(object sender, TextChangedEventArgs e)
+	{
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.", nameof(MethodFamiliesEditControl), nameof(DescriptionRichTextBox_TextChanged), sender, e);
+		}
+
+		CanSave = MethodFamilyName?.Length is > 0 and <= 200 && (DescriptionRichTextBox.GetPlainText()?.Length is <= 4000 || string.IsNullOrEmpty(DescriptionRichTextBox.GetPlainText()));
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(MethodFamiliesEditControl), nameof(DescriptionRichTextBox_TextChanged));
 		}
 	}
 

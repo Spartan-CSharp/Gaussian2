@@ -223,9 +223,9 @@ public partial class ElectronicStatesCreateControl : UserControl, INotifyPropert
 			}
 		}
 
-		if (e.PropertyName is (nameof(ElectronicStateName)) or (nameof(Keyword)))
+		if (e.PropertyName is nameof(ElectronicStateName) or nameof(Keyword))
 		{
-			CanSave = ElectronicStateName?.Length is > 0 and <= 200 || Keyword?.Length is > 0 and <= 50;
+			CanSave = (ElectronicStateName?.Length is > 0 and <= 200 || Keyword?.Length is > 0 and <= 50) && (DescriptionRichTextBox.GetPlainText()?.Length is <= 4000 || string.IsNullOrEmpty(DescriptionRichTextBox.GetPlainText()));
 		}
 
 		if (e.PropertyName == nameof(ErrorMessage))
@@ -420,6 +420,21 @@ public partial class ElectronicStatesCreateControl : UserControl, INotifyPropert
 		if (_logger.IsEnabled(LogLevel.Debug))
 		{
 			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(ElectronicStatesCreateControl), nameof(DescriptionRichTextBox_SelectionChanged));
+		}
+	}
+
+	private void DescriptionRichTextBox_TextChanged(object sender, TextChangedEventArgs e)
+	{
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.", nameof(ElectronicStatesCreateControl), nameof(DescriptionRichTextBox_TextChanged), sender, e);
+		}
+
+		CanSave = (ElectronicStateName?.Length is > 0 and <= 200 || Keyword?.Length is > 0 and <= 50) && (DescriptionRichTextBox.GetPlainText()?.Length is <= 4000 || string.IsNullOrEmpty(DescriptionRichTextBox.GetPlainText()));
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(ElectronicStatesCreateControl), nameof(DescriptionRichTextBox_TextChanged));
 		}
 	}
 

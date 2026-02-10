@@ -299,7 +299,7 @@ public partial class ElectronicStatesMethodFamiliesCreateControl : UserControl, 
 
 				// Populate the RichTextBox with RTF
 				DescriptionRichTextBox.SetRtfText(ElectronicStateMethodFamily.DescriptionRtf);
-				CanSave = (ElectronicStateMethodFamily.Name?.Length is > 0 and <= 200 || ElectronicStateMethodFamily.Keyword?.Length is > 0 and <= 50) && ElectronicStateMethodFamily.ElectronicState is not null && (ElectronicStateMethodFamily.ElectronicState.Name?.Length is > 0 and <= 200 || ElectronicStateMethodFamily.ElectronicState.Keyword?.Length is > 0 and <= 50) && (ElectronicStateMethodFamily.MethodFamily is null || ElectronicStateMethodFamily.Keyword?.Length is > 0 and <= 50) && (ElectronicStateMethodFamily.DescriptionText?.Length is <= 4000 || string.IsNullOrEmpty(ElectronicStateMethodFamily.DescriptionText));
+				CanSave = (ElectronicStateMethodFamily.Name?.Length is > 0 and <= 200 || ElectronicStateMethodFamily.Keyword?.Length is > 0 and <= 50) && ElectronicStateMethodFamily.ElectronicState is not null && (ElectronicStateMethodFamily.DescriptionText?.Length is <= 4000 || string.IsNullOrEmpty(ElectronicStateMethodFamily.DescriptionText));
 			}
 			else
 			{
@@ -312,9 +312,9 @@ public partial class ElectronicStatesMethodFamiliesCreateControl : UserControl, 
 			}
 		}
 
-		if (e.PropertyName is (nameof(ElectronicStateMethodFamilyName)) or (nameof(Keyword)) or (nameof(SelectedElectronicState)))
+		if (e.PropertyName is nameof(ElectronicStateMethodFamilyName) or nameof(Keyword) or nameof(SelectedElectronicState) or nameof(SelectedMethodFamily))
 		{
-			CanSave = SelectedElectronicState is not null && (ElectronicStateMethodFamilyName?.Length is > 0 and <= 200 || Keyword?.Length is > 0 and <= 50);
+			CanSave = (ElectronicStateMethodFamilyName?.Length is > 0 and <= 200 || Keyword?.Length is > 0 and <= 50) && SelectedElectronicState is not null && (DescriptionRichTextBox.GetPlainText()?.Length is <= 4000 || string.IsNullOrEmpty(DescriptionRichTextBox.GetPlainText()));
 		}
 
 		if (e.PropertyName is nameof(ElectronicStateList))
@@ -523,6 +523,21 @@ public partial class ElectronicStatesMethodFamiliesCreateControl : UserControl, 
 		if (_logger.IsEnabled(LogLevel.Debug))
 		{
 			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(ElectronicStatesMethodFamiliesCreateControl), nameof(DescriptionRichTextBox_SelectionChanged));
+		}
+	}
+
+	private void DescriptionRichTextBox_TextChanged(object sender, TextChangedEventArgs e)
+	{
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.", nameof(ElectronicStatesMethodFamiliesCreateControl), nameof(DescriptionRichTextBox_TextChanged), sender, e);
+		}
+
+		CanSave = (ElectronicStateMethodFamilyName?.Length is > 0 and <= 200 || Keyword?.Length is > 0 and <= 50) && SelectedElectronicState is not null && (DescriptionRichTextBox.GetPlainText()?.Length is <= 4000 || string.IsNullOrEmpty(DescriptionRichTextBox.GetPlainText()));
+
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{UserControl} {EventHandler} returning.", nameof(ElectronicStatesMethodFamiliesCreateControl), nameof(DescriptionRichTextBox_TextChanged));
 		}
 	}
 
