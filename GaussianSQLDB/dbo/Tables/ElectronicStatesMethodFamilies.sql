@@ -1,12 +1,12 @@
 ﻿CREATE TABLE [dbo].[ElectronicStatesMethodFamilies]
 (
 	[Id] INT NOT NULL IDENTITY(1,1),
-	[Name] NVARCHAR(100) NULL,
-	[Keyword] NVARCHAR(20) NULL,
+	[Name] NVARCHAR(200) NULL,
+	[Keyword] NVARCHAR(50) NULL,
 	[ElectronicStateId] INT NOT NULL,
 	[MethodFamilyId] INT NULL,
 	[DescriptionRtf] NVARCHAR(MAX) NULL,
-	[DescriptionText] NVARCHAR(2000) NULL,
+	[DescriptionText] NVARCHAR(4000) NULL,
 	[CreatedDate] DATETIME2(7) NOT NULL DEFAULT (GETUTCDATE()),
 	[LastUpdatedDate] DATETIME2(7) NOT NULL DEFAULT (GETUTCDATE()),
 	[Archived] BIT NOT NULL DEFAULT 0,

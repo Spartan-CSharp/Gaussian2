@@ -212,7 +212,7 @@ public partial class CalculationTypesCreateControl : UserControl, INotifyPropert
 
 				// Populate the RichTextBox with RTF
 				DescriptionRichTextBox.SetRtfText(CalculationType.DescriptionRtf);
-				CanSave = CalculationType.Name?.Length is > 0 and <= 200 && CalculationType.Keyword?.Length is > 0 and <= 30 && (CalculationType.DescriptionText?.Length is <= 2000 || string.IsNullOrEmpty(CalculationType.DescriptionText));
+				CanSave = CalculationType.Name?.Length is > 0 and <= 200 && CalculationType.Keyword?.Length is > 0 and <= 50 && (CalculationType.DescriptionText?.Length is <= 4000 || string.IsNullOrEmpty(CalculationType.DescriptionText));
 			}
 			else
 			{
@@ -225,7 +225,7 @@ public partial class CalculationTypesCreateControl : UserControl, INotifyPropert
 
 		if (e.PropertyName is (nameof(CalculationTypeName)) or (nameof(Keyword)))
 		{
-			CanSave = CalculationTypeName?.Length is > 0 and <= 200 && Keyword?.Length is > 0 and <= 30;
+			CanSave = CalculationTypeName?.Length is > 0 and <= 200 && Keyword?.Length is > 0 and <= 50;
 		}
 
 		if (e.PropertyName == nameof(ErrorMessage))

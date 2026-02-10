@@ -245,7 +245,7 @@ public partial class MethodFamiliesEditControl : UserControl, INotifyPropertyCha
 				// Populate the RichTextBox with RTF
 				DescriptionRichTextBox.SetRtfText(MethodFamily.DescriptionRtf);
 				ModelIsNotNull = true;
-				CanSave = MethodFamily.Name?.Length is > 0 and <= 200 && (MethodFamily.DescriptionText?.Length is <= 2000 || string.IsNullOrEmpty(MethodFamily.DescriptionText));
+				CanSave = MethodFamily.Name?.Length is > 0 and <= 200 && (MethodFamily.DescriptionText?.Length is <= 4000 || string.IsNullOrEmpty(MethodFamily.DescriptionText));
 			}
 			else
 			{
@@ -272,7 +272,7 @@ public partial class MethodFamiliesEditControl : UserControl, INotifyPropertyCha
 						// Populate the RichTextBox with RTF
 						DescriptionRichTextBox.SetRtfText(MethodFamily.DescriptionRtf);
 						ModelIsNotNull = true;
-						CanSave = MethodFamily.Name?.Length is > 0 and <= 200 && (MethodFamily.DescriptionText?.Length is <= 2000 || string.IsNullOrEmpty(MethodFamily.DescriptionText));
+						CanSave = MethodFamily.Name?.Length is > 0 and <= 200 && (MethodFamily.DescriptionText?.Length is <= 4000 || string.IsNullOrEmpty(MethodFamily.DescriptionText));
 					}
 					else
 					{

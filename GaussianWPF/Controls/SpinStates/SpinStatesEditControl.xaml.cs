@@ -259,7 +259,7 @@ public partial class SpinStatesEditControl : UserControl, INotifyPropertyChanged
 				// Populate the RichTextBox with RTF
 				DescriptionRichTextBox.SetRtfText(SpinState.DescriptionRtf);
 				ModelIsNotNull = true;
-				CanSave = (SpinState.Name?.Length is > 0 and <= 50 || SpinState.Keyword?.Length is > 0 and <= 20) && (SpinState.DescriptionText?.Length is <= 2000 || string.IsNullOrEmpty(SpinState.DescriptionText));
+				CanSave = (SpinState.Name?.Length is > 0 and <= 200 || SpinState.Keyword?.Length is > 0 and <= 50) && (SpinState.DescriptionText?.Length is <= 4000 || string.IsNullOrEmpty(SpinState.DescriptionText));
 			}
 			else
 			{
@@ -288,7 +288,7 @@ public partial class SpinStatesEditControl : UserControl, INotifyPropertyChanged
 						// Populate the RichTextBox with RTF
 						DescriptionRichTextBox.SetRtfText(SpinState.DescriptionRtf);
 						ModelIsNotNull = true;
-						CanSave = (SpinState.Name?.Length is > 0 and <= 50 || SpinState.Keyword?.Length is > 0 and <= 20) && (SpinState.DescriptionText?.Length is <= 2000 || string.IsNullOrEmpty(SpinState.DescriptionText));
+						CanSave = (SpinState.Name?.Length is > 0 and <= 200 || SpinState.Keyword?.Length is > 0 and <= 50) && (SpinState.DescriptionText?.Length is <= 4000 || string.IsNullOrEmpty(SpinState.DescriptionText));
 					}
 					else
 					{
@@ -343,7 +343,7 @@ public partial class SpinStatesEditControl : UserControl, INotifyPropertyChanged
 
 		if (e.PropertyName is (nameof(SpinStateName)) or (nameof(Keyword)))
 		{
-			CanSave = SpinStateName?.Length is > 0 and <= 50 || Keyword?.Length is > 0 and <= 20;
+			CanSave = SpinStateName?.Length is > 0 and <= 200 || Keyword?.Length is > 0 and <= 50;
 		}
 
 		if (e.PropertyName == nameof(ErrorMessage))

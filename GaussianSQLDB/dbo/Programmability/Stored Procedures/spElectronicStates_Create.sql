@@ -1,8 +1,8 @@
 ﻿CREATE PROCEDURE [dbo].[spElectronicStates_Create]
-	@Name NVARCHAR(50),
-	@Keyword NVARCHAR(20),
+	@Name NVARCHAR(200),
+	@Keyword NVARCHAR(50),
 	@DescriptionRtf NVARCHAR(MAX),
-	@DescriptionText NVARCHAR(2000),
+	@DescriptionText NVARCHAR(4000),
 	@Id INT = 0 OUTPUT
 AS
 BEGIN

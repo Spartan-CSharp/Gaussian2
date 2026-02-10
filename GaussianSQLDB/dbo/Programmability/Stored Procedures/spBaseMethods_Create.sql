@@ -1,8 +1,8 @@
 ﻿CREATE PROCEDURE [dbo].[spBaseMethods_Create]
-	@Keyword NVARCHAR(20),
+	@Keyword NVARCHAR(50),
 	@MethodFamilyId INT,
 	@DescriptionRtf NVARCHAR(MAX),
-	@DescriptionText NVARCHAR(2000),
+	@DescriptionText NVARCHAR(4000),
 	@Id INT = 0 OUTPUT
 AS
 BEGIN

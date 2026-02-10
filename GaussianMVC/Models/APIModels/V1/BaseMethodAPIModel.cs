@@ -83,7 +83,7 @@ public class BaseMethodAPIModel
 	/// </summary>
 	[DataType(DataType.Text)]
 	[Display(Name = "Keyword")]
-	[MaxLength(20)]
+	[MaxLength(50)]
 	[Required]
 	public string Keyword { get; set; } = string.Empty;
 
@@ -106,7 +106,7 @@ public class BaseMethodAPIModel
 	/// </summary>
 	[DataType(DataType.MultilineText)]
 	[Display(Name = "Description (Text)")]
-	[MaxLength(2000)]
+	[MaxLength(4000)]
 	public string? DescriptionText { get; set; }
 
 	/// <summary>

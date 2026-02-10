@@ -299,7 +299,7 @@ public partial class ElectronicStatesMethodFamiliesCreateControl : UserControl, 
 
 				// Populate the RichTextBox with RTF
 				DescriptionRichTextBox.SetRtfText(ElectronicStateMethodFamily.DescriptionRtf);
-				CanSave = (ElectronicStateMethodFamily.Name?.Length is > 0 and <= 100 || ElectronicStateMethodFamily.Keyword?.Length is > 0 and <= 20) && ElectronicStateMethodFamily.ElectronicState is not null && (ElectronicStateMethodFamily.ElectronicState.Name?.Length is > 0 and <= 50 || ElectronicStateMethodFamily.ElectronicState.Keyword?.Length is > 0 and <= 20) && (ElectronicStateMethodFamily.MethodFamily is null || ElectronicStateMethodFamily.Keyword?.Length is > 0 and <= 20) && (ElectronicStateMethodFamily.DescriptionText?.Length is <= 2000 || string.IsNullOrEmpty(ElectronicStateMethodFamily.DescriptionText));
+				CanSave = (ElectronicStateMethodFamily.Name?.Length is > 0 and <= 200 || ElectronicStateMethodFamily.Keyword?.Length is > 0 and <= 50) && ElectronicStateMethodFamily.ElectronicState is not null && (ElectronicStateMethodFamily.ElectronicState.Name?.Length is > 0 and <= 200 || ElectronicStateMethodFamily.ElectronicState.Keyword?.Length is > 0 and <= 50) && (ElectronicStateMethodFamily.MethodFamily is null || ElectronicStateMethodFamily.Keyword?.Length is > 0 and <= 50) && (ElectronicStateMethodFamily.DescriptionText?.Length is <= 4000 || string.IsNullOrEmpty(ElectronicStateMethodFamily.DescriptionText));
 			}
 			else
 			{
@@ -314,7 +314,7 @@ public partial class ElectronicStatesMethodFamiliesCreateControl : UserControl, 
 
 		if (e.PropertyName is (nameof(ElectronicStateMethodFamilyName)) or (nameof(Keyword)) or (nameof(SelectedElectronicState)))
 		{
-			CanSave = SelectedElectronicState is not null && (ElectronicStateMethodFamilyName?.Length is > 0 and <= 100 || Keyword?.Length is > 0 and <= 20);
+			CanSave = SelectedElectronicState is not null && (ElectronicStateMethodFamilyName?.Length is > 0 and <= 200 || Keyword?.Length is > 0 and <= 50);
 		}
 
 		if (e.PropertyName is nameof(ElectronicStateList))

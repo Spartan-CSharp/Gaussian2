@@ -280,7 +280,7 @@ public partial class BaseMethodsEditControl : UserControl, INotifyPropertyChange
 				// Populate the RichTextBox with RTF
 				DescriptionRichTextBox.SetRtfText(BaseMethod.DescriptionRtf);
 				ModelIsNotNull = true;
-				CanSave = BaseMethod.MethodFamily is not null && BaseMethod.Keyword?.Length is > 0 and <= 20 && (BaseMethod.DescriptionText?.Length is <= 2000 || string.IsNullOrEmpty(BaseMethod.DescriptionText));
+				CanSave = BaseMethod.MethodFamily is not null && BaseMethod.Keyword?.Length is > 0 and <= 50 && (BaseMethod.DescriptionText?.Length is <= 4000 || string.IsNullOrEmpty(BaseMethod.DescriptionText));
 			}
 			else
 			{
@@ -317,7 +317,7 @@ public partial class BaseMethodsEditControl : UserControl, INotifyPropertyChange
 						// Populate the RichTextBox with RTF
 						DescriptionRichTextBox.SetRtfText(BaseMethod.DescriptionRtf);
 						ModelIsNotNull = true;
-						CanSave = BaseMethod.MethodFamily is not null && BaseMethod.Keyword?.Length is > 0 and <= 20 && (BaseMethod.DescriptionText?.Length is <= 2000 || string.IsNullOrEmpty(BaseMethod.DescriptionText));
+						CanSave = BaseMethod.MethodFamily is not null && BaseMethod.Keyword?.Length is > 0 and <= 50 && (BaseMethod.DescriptionText?.Length is <= 4000 || string.IsNullOrEmpty(BaseMethod.DescriptionText));
 					}
 					else if (results is not null)
 					{
@@ -339,7 +339,7 @@ public partial class BaseMethodsEditControl : UserControl, INotifyPropertyChange
 						// Populate the RichTextBox with RTF
 						DescriptionRichTextBox.SetRtfText(BaseMethod.DescriptionRtf);
 						ModelIsNotNull = true;
-						CanSave = BaseMethod.MethodFamily is not null && BaseMethod.Keyword?.Length is > 0 and <= 20 && (BaseMethod.DescriptionText?.Length is <= 2000 || string.IsNullOrEmpty(BaseMethod.DescriptionText));
+						CanSave = BaseMethod.MethodFamily is not null && BaseMethod.Keyword?.Length is > 0 and <= 50 && (BaseMethod.DescriptionText?.Length is <= 4000 || string.IsNullOrEmpty(BaseMethod.DescriptionText));
 					}
 					else if (methodFamilies is not null && methodFamilies.Count > 0)
 					{
@@ -410,7 +410,7 @@ public partial class BaseMethodsEditControl : UserControl, INotifyPropertyChange
 
 		if (e.PropertyName is (nameof(Keyword)) or (nameof(SelectedMethodFamily)))
 		{
-			CanSave = SelectedMethodFamily is not null && Keyword?.Length is > 0 and <= 20;
+			CanSave = SelectedMethodFamily is not null && Keyword?.Length is > 0 and <= 50;
 		}
 
 		if (e.PropertyName is nameof(MethodFamilyList))

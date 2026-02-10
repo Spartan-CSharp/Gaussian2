@@ -50,7 +50,7 @@ public class ElectronicStateAPIModel
 	/// </summary>
 	[DataType(DataType.Text)]
 	[Display(Name = "Name")]
-	[MaxLength(50)]
+	[MaxLength(200)]
 	[RequireAtLeastOne(nameof(Keyword), ErrorMessage = "Either Name or Keyword must be provided.")]
 	public string? Name { get; set; }
 
@@ -59,7 +59,7 @@ public class ElectronicStateAPIModel
 	/// </summary>
 	[DataType(DataType.Text)]
 	[Display(Name = "Keyword")]
-	[MaxLength(20)]
+	[MaxLength(50)]
 	[RequireAtLeastOne(nameof(Name), ErrorMessage = "Either Name or Keyword must be provided.")]
 	public string? Keyword { get; set; }
 
@@ -75,7 +75,7 @@ public class ElectronicStateAPIModel
 	/// </summary>
 	[DataType(DataType.MultilineText)]
 	[Display(Name = "Description (Text)")]
-	[MaxLength(2000)]
+	[MaxLength(4000)]
 	public string? DescriptionText { get; set; }
 
 	/// <summary>

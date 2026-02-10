@@ -1,10 +1,10 @@
 ﻿CREATE TABLE [dbo].[SpinStates]
 (
 	[Id] INT NOT NULL IDENTITY(1,1),
-	[Name] NVARCHAR(50) NULL,
-	[Keyword] NVARCHAR(20) NULL,
+	[Name] NVARCHAR(200) NULL,
+	[Keyword] NVARCHAR(50) NULL,
 	[DescriptionRtf] NVARCHAR(MAX) NULL,
-	[DescriptionText] NVARCHAR(2000) NULL,
+	[DescriptionText] NVARCHAR(4000) NULL,
 	[CreatedDate] DATETIME2(7) NOT NULL DEFAULT (GETUTCDATE()),
 	[LastUpdatedDate] DATETIME2(7) NOT NULL DEFAULT (GETUTCDATE()),
 	[Archived] BIT NOT NULL DEFAULT 0,

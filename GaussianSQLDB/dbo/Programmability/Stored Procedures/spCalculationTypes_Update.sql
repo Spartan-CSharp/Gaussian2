@@ -1,9 +1,9 @@
 ﻿CREATE PROCEDURE [dbo].[spCalculationTypes_Update]
 	@Id INT,
 	@Name NVARCHAR(200),
-	@Keyword NVARCHAR(30),
+	@Keyword NVARCHAR(50),
 	@DescriptionRtf NVARCHAR(MAX),
-	@DescriptionText NVARCHAR(2000)
+	@DescriptionText NVARCHAR(4000)
 AS
 BEGIN
 	SET NOCOUNT ON;

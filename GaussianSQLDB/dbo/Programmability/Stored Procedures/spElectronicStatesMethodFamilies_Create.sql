@@ -1,10 +1,10 @@
 ﻿CREATE PROCEDURE [dbo].[spElectronicStatesMethodFamilies_Create]
-	@Name NVARCHAR(100),
-	@Keyword NVARCHAR(20),
+	@Name NVARCHAR(200),
+	@Keyword NVARCHAR(50),
 	@ElectronicStateId INT,
 	@MethodFamilyId INT,
 	@DescriptionRtf NVARCHAR(MAX),
-	@DescriptionText NVARCHAR(2000),
+	@DescriptionText NVARCHAR(4000),
 	@Id INT = 0 OUTPUT
 AS
 BEGIN

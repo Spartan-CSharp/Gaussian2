@@ -2,7 +2,7 @@
 	@Id INT,
 	@Name NVARCHAR(200),
 	@DescriptionRtf NVARCHAR(MAX),
-	@DescriptionText NVARCHAR(2000)
+	@DescriptionText NVARCHAR(4000)
 AS
 BEGIN
 	SET NOCOUNT ON;

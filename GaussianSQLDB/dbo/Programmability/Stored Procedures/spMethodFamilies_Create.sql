@@ -1,7 +1,7 @@
 ﻿CREATE PROCEDURE [dbo].[spMethodFamilies_Create]
 	@Name NVARCHAR(200),
 	@DescriptionRtf NVARCHAR(MAX),
-	@DescriptionText NVARCHAR(2000),
+	@DescriptionText NVARCHAR(4000),
 	@Id INT = 0 OUTPUT
 AS
 BEGIN

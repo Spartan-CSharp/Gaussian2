@@ -1,10 +1,10 @@
 ﻿CREATE TABLE [dbo].[BaseMethods]
 (
 	[Id] INT NOT NULL IDENTITY(1,1),
-	[Keyword] NVARCHAR(20) NOT NULL,
+	[Keyword] NVARCHAR(50) NOT NULL,
 	[MethodFamilyId] INT NOT NULL,
 	[DescriptionRtf] NVARCHAR(MAX) NULL,
-	[DescriptionText] NVARCHAR(2000) NULL,
+	[DescriptionText] NVARCHAR(4000) NULL,
 	[CreatedDate] DATETIME2(7) NOT NULL DEFAULT (GETUTCDATE()),
 	[LastUpdatedDate] DATETIME2(7) NOT NULL DEFAULT (GETUTCDATE()),
 	[Archived] BIT NOT NULL DEFAULT 0,

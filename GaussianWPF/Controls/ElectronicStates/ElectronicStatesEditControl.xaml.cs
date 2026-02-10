@@ -259,7 +259,7 @@ public partial class ElectronicStatesEditControl : UserControl, INotifyPropertyC
 				// Populate the RichTextBox with RTF
 				DescriptionRichTextBox.SetRtfText(ElectronicState.DescriptionRtf);
 				ModelIsNotNull = true;
-				CanSave = (ElectronicState.Name?.Length is > 0 and <= 50 || ElectronicState.Keyword?.Length is > 0 and <= 20) && (ElectronicState.DescriptionText?.Length is <= 2000 || string.IsNullOrEmpty(ElectronicState.DescriptionText));
+				CanSave = (ElectronicState.Name?.Length is > 0 and <= 200 || ElectronicState.Keyword?.Length is > 0 and <= 50) && (ElectronicState.DescriptionText?.Length is <= 4000 || string.IsNullOrEmpty(ElectronicState.DescriptionText));
 			}
 			else
 			{
@@ -288,7 +288,7 @@ public partial class ElectronicStatesEditControl : UserControl, INotifyPropertyC
 						// Populate the RichTextBox with RTF
 						DescriptionRichTextBox.SetRtfText(ElectronicState.DescriptionRtf);
 						ModelIsNotNull = true;
-						CanSave = (ElectronicState.Name?.Length is > 0 and <= 50 || ElectronicState.Keyword?.Length is > 0 and <= 20) && (ElectronicState.DescriptionText?.Length is <= 2000 || string.IsNullOrEmpty(ElectronicState.DescriptionText));
+						CanSave = (ElectronicState.Name?.Length is > 0 and <= 200 || ElectronicState.Keyword?.Length is > 0 and <= 50) && (ElectronicState.DescriptionText?.Length is <= 4000 || string.IsNullOrEmpty(ElectronicState.DescriptionText));
 					}
 					else
 					{
@@ -343,7 +343,7 @@ public partial class ElectronicStatesEditControl : UserControl, INotifyPropertyC
 
 		if (e.PropertyName is (nameof(ElectronicStateName)) or (nameof(Keyword)))
 		{
-			CanSave = ElectronicStateName?.Length is > 0 and <= 50 || Keyword?.Length is > 0 and <= 20;
+			CanSave = ElectronicStateName?.Length is > 0 and <= 200 || Keyword?.Length is > 0 and <= 50;
 		}
 
 		if (e.PropertyName == nameof(ErrorMessage))

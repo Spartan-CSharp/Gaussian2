@@ -63,7 +63,7 @@ public class MethodFamilyViewModel
 	/// </summary>
 	[DataType(DataType.MultilineText)]
 	[Display(Name = "Description")]
-	[MaxLength(2000)]
+	[MaxLength(4000)]
 	public string? DescriptionText { get; set; }
 
 	/// <summary>

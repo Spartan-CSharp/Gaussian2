@@ -164,7 +164,7 @@ public class BaseMethodViewModel
 	/// </summary>
 	[DataType(DataType.Text)]
 	[Display(Name = "Keyword")]
-	[MaxLength(20)]
+	[MaxLength(50)]
 	[Required]
 	public string Keyword { get; set; } = string.Empty;
 

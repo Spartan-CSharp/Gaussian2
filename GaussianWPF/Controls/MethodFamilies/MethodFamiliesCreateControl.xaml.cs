@@ -198,7 +198,7 @@ public partial class MethodFamiliesCreateControl : UserControl, INotifyPropertyC
 
 				// Populate the RichTextBox with RTF
 				DescriptionRichTextBox.SetRtfText(MethodFamily.DescriptionRtf);
-				CanSave = MethodFamily.Name?.Length is > 0 and <= 200 && (MethodFamily.DescriptionText?.Length is <= 2000 || string.IsNullOrEmpty(MethodFamily.DescriptionText));
+				CanSave = MethodFamily.Name?.Length is > 0 and <= 200 && (MethodFamily.DescriptionText?.Length is <= 4000 || string.IsNullOrEmpty(MethodFamily.DescriptionText));
 			}
 			else
 			{

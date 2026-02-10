@@ -154,7 +154,7 @@ public class ElectronicStateMethodFamilyViewModel
 	/// </summary>
 	[DataType(DataType.Text)]
 	[Display(Name = "Name")]
-	[MaxLength(100)]
+	[MaxLength(200)]
 	public string? Name { get; set; }
 
 	/// <summary>
@@ -162,7 +162,7 @@ public class ElectronicStateMethodFamilyViewModel
 	/// </summary>
 	[DataType(DataType.Text)]
 	[Display(Name = "Keyword")]
-	[MaxLength(20)]
+	[MaxLength(50)]
 	public string? Keyword { get; set; }
 
 	/// <summary>
@@ -206,7 +206,7 @@ public class ElectronicStateMethodFamilyViewModel
 	/// </summary>
 	[DataType(DataType.MultilineText)]
 	[Display(Name = "Description")]
-	[MaxLength(2000)]
+	[MaxLength(4000)]
 	public string? DescriptionText { get; set; }
 
 	/// <summary>
