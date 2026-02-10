@@ -47,7 +47,7 @@ public class ValueInUseException : Exception
 	/// <param name="message">Custom error message, or null to use the default message.</param>
 	public ValueInUseException(Type? objectType, string? message) : base(message ?? $"Cannot delete object of Type {objectType?.Name} because it has related records.")
 	{
-		ObjectType= objectType;
+		ObjectType = objectType;
 	}
 
 	/// <summary>
@@ -78,7 +78,7 @@ public class ValueInUseException : Exception
 	/// <param name="innerException">The exception that caused this exception.</param>
 	public ValueInUseException(Type? objectType, string? message, Exception? innerException) : base(message ?? $"Cannot delete object of Type {objectType?.Name} because it has related records.", innerException)
 	{
-		ObjectType= objectType;
+		ObjectType = objectType;
 	}
 
 	/// <summary>

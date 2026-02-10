@@ -144,7 +144,11 @@ public class LoginWith2faModel(
 
 		if (result.Succeeded)
 		{
-			_logger.LogInformation("User with ID '{UserId}' logged in with 2fa.", user.Id);
+			if (_logger.IsEnabled(LogLevel.Information))
+			{
+				_logger.LogInformation("User with ID '{UserId}' logged in with 2fa.", user.Id); 
+			}
+
 			return LocalRedirect(returnUrl);
 		}
 		else if (result.IsLockedOut)

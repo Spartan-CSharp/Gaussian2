@@ -93,7 +93,11 @@ public class GenerateRecoveryCodesModel(
 		IEnumerable<string> recoveryCodes = await _userManager.GenerateNewTwoFactorRecoveryCodesAsync(user, 10).ConfigureAwait(false);
 		RecoveryCodes = [.. recoveryCodes];
 
-		_logger.LogInformation("User with ID '{UserId}' has generated new 2FA recovery codes.", userId);
+		if (_logger.IsEnabled(LogLevel.Information))
+		{
+			_logger.LogInformation("User with ID '{UserId}' has generated new 2FA recovery codes.", userId); 
+		}
+
 		StatusMessage = "You have generated new recovery codes.";
 		return RedirectToPage("./ShowRecoveryCodes");
 	}

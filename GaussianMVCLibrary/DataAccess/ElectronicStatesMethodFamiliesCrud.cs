@@ -50,12 +50,7 @@ public class ElectronicStatesMethodFamiliesCrud(IDbData dbData, ILogger<Electron
 
 		if (model.MethodFamilyId is not null and > 0)
 		{
-			methodFamily = await _methodFamiliesCrud.GetMethodFamilyByIdAsync((int)model.MethodFamilyId).ConfigureAwait(false);
-
-			if (methodFamily is null)
-			{
-				throw new NullParameterException(nameof(methodFamily), $"The {nameof(methodFamily)} with ID = {model.MethodFamilyId} is null (does not exist).");
-			}
+			methodFamily = await _methodFamiliesCrud.GetMethodFamilyByIdAsync((int)model.MethodFamilyId).ConfigureAwait(false) ?? throw new NullParameterException(nameof(methodFamily), $"The {nameof(methodFamily)} with ID = {model.MethodFamilyId} is null (does not exist).");
 		}
 
 		DynamicParameters p = new();
@@ -186,12 +181,7 @@ public class ElectronicStatesMethodFamiliesCrud(IDbData dbData, ILogger<Electron
 
 			if (item.MethodFamilyId is not null and > 0)
 			{
-				methodFamily = await _methodFamiliesCrud.GetMethodFamilyByIdAsync((int)item.MethodFamilyId).ConfigureAwait(false);
-
-				if (methodFamily is null)
-				{
-					throw new NullParameterException(nameof(methodFamily), $"The {nameof(methodFamily)} with ID = {item.MethodFamilyId} is null (does not exist).");
-				}
+				methodFamily = await _methodFamiliesCrud.GetMethodFamilyByIdAsync((int)item.MethodFamilyId).ConfigureAwait(false) ?? throw new NullParameterException(nameof(methodFamily), $"The {nameof(methodFamily)} with ID = {item.MethodFamilyId} is null (does not exist).");
 			}
 
 			ElectronicStateMethodFamilyFullModel model = new()
@@ -248,12 +238,7 @@ public class ElectronicStatesMethodFamiliesCrud(IDbData dbData, ILogger<Electron
 
 			if (simpleModel.MethodFamilyId is not null and > 0)
 			{
-				methodFamily = await _methodFamiliesCrud.GetMethodFamilyByIdAsync((int)simpleModel.MethodFamilyId).ConfigureAwait(false);
-
-				if (methodFamily is null)
-				{
-					throw new NullParameterException(nameof(methodFamily), $"The {nameof(methodFamily)} with ID = {simpleModel.MethodFamilyId} is null (does not exist).");
-				}
+				methodFamily = await _methodFamiliesCrud.GetMethodFamilyByIdAsync((int)simpleModel.MethodFamilyId).ConfigureAwait(false) ?? throw new NullParameterException(nameof(methodFamily), $"The {nameof(methodFamily)} with ID = {simpleModel.MethodFamilyId} is null (does not exist).");
 			}
 
 			output = new()
@@ -307,12 +292,7 @@ public class ElectronicStatesMethodFamiliesCrud(IDbData dbData, ILogger<Electron
 
 			if (item.MethodFamilyId is not null and > 0)
 			{
-				methodFamily = await _methodFamiliesCrud.GetMethodFamilyByIdAsync((int)item.MethodFamilyId).ConfigureAwait(false);
-
-				if (methodFamily is null)
-				{
-					throw new NullParameterException(nameof(methodFamily), $"The {nameof(methodFamily)} with ID = {item.MethodFamilyId} is null (does not exist).");
-				}
+				methodFamily = await _methodFamiliesCrud.GetMethodFamilyByIdAsync((int)item.MethodFamilyId).ConfigureAwait(false) ?? throw new NullParameterException(nameof(methodFamily), $"The {nameof(methodFamily)} with ID = {item.MethodFamilyId} is null (does not exist).");
 			}
 
 			ElectronicStateMethodFamilyFullModel model = new()
@@ -357,12 +337,7 @@ public class ElectronicStatesMethodFamiliesCrud(IDbData dbData, ILogger<Electron
 
 		if (methodFamilyId is not null and > 0)
 		{
-			methodFamily = await _methodFamiliesCrud.GetMethodFamilyByIdAsync((int)methodFamilyId).ConfigureAwait(false);
-
-			if (methodFamily is null)
-			{
-				throw new NullParameterException(nameof(methodFamily), $"The {nameof(methodFamily)} with ID = {methodFamilyId} is null (does not exist).");
-			}
+			methodFamily = await _methodFamiliesCrud.GetMethodFamilyByIdAsync((int)methodFamilyId).ConfigureAwait(false) ?? throw new NullParameterException(nameof(methodFamily), $"The {nameof(methodFamily)} with ID = {methodFamilyId} is null (does not exist).");
 		}
 
 		List<ElectronicStateMethodFamilyFullModel> output = [];
@@ -426,12 +401,7 @@ public class ElectronicStatesMethodFamiliesCrud(IDbData dbData, ILogger<Electron
 
 		if (methodFamilyId is not null and > 0)
 		{
-			methodFamily = await _methodFamiliesCrud.GetMethodFamilyByIdAsync((int)methodFamilyId).ConfigureAwait(false);
-
-			if (methodFamily is null)
-			{
-				throw new NullParameterException(nameof(methodFamily), $"The {nameof(methodFamily)} with ID = {methodFamilyId} is null (does not exist).");
-			}
+			methodFamily = await _methodFamiliesCrud.GetMethodFamilyByIdAsync((int)methodFamilyId).ConfigureAwait(false) ?? throw new NullParameterException(nameof(methodFamily), $"The {nameof(methodFamily)} with ID = {methodFamilyId} is null (does not exist).");
 		}
 
 		List<ElectronicStateMethodFamilyFullModel> output = [];
@@ -486,12 +456,7 @@ public class ElectronicStatesMethodFamiliesCrud(IDbData dbData, ILogger<Electron
 
 		if (model.MethodFamilyId is not null and > 0)
 		{
-			methodFamily = await _methodFamiliesCrud.GetMethodFamilyByIdAsync((int)model.MethodFamilyId).ConfigureAwait(false);
-
-			if (methodFamily is null)
-			{
-				throw new NullParameterException(nameof(methodFamily), $"The {nameof(methodFamily)} with ID = {model.MethodFamilyId} is null (does not exist).");
-			}
+			methodFamily = await _methodFamiliesCrud.GetMethodFamilyByIdAsync((int)model.MethodFamilyId).ConfigureAwait(false) ?? throw new NullParameterException(nameof(methodFamily), $"The {nameof(methodFamily)} with ID = {model.MethodFamilyId} is null (does not exist).");
 		}
 
 		DynamicParameters p = new();

@@ -1,13 +1,168 @@
 ﻿# For more info on HTTP files go to https://aka.ms/vs/httpfile
 @GaussianMVC_HostAddress = https://localhost:7056
 
-###
-
 POST {{GaussianMVC_HostAddress}}/api/authentication/token
 Content-Type: application/json
 
 {
   //TokenRequest
+}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v1/BaseMethods
+
+###
+
+POST {{GaussianMVC_HostAddress}}/api/v1/BaseMethods
+Content-Type: application/json
+
+{
+  //BaseMethodAPIModel
+}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v1/BaseMethods/Intermediate
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v1/BaseMethods/MethodFamily
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v1/BaseMethods/Simple
+
+###
+
+@id=0
+DELETE {{GaussianMVC_HostAddress}}/api/v1/BaseMethods/{{id}}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v1/BaseMethods/{{id}}
+
+###
+
+PUT {{GaussianMVC_HostAddress}}/api/v1/BaseMethods/{{id}}
+Content-Type: application/json
+
+{
+  //BaseMethodAPIModel
+}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v1/CalculationTypes
+
+###
+
+POST {{GaussianMVC_HostAddress}}/api/v1/CalculationTypes
+Content-Type: application/json
+
+{
+  //CalculationTypeAPIModel
+}
+
+###
+
+DELETE {{GaussianMVC_HostAddress}}/api/v1/CalculationTypes/{{id}}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v1/CalculationTypes/{{id}}
+
+###
+
+PUT {{GaussianMVC_HostAddress}}/api/v1/CalculationTypes/{{id}}
+Content-Type: application/json
+
+{
+  //CalculationTypeAPIModel
+}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v1/ElectronicStates
+
+###
+
+POST {{GaussianMVC_HostAddress}}/api/v1/ElectronicStates
+Content-Type: application/json
+
+{
+  //ElectronicStateAPIModel
+}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v1/ElectronicStates/List
+
+###
+
+DELETE {{GaussianMVC_HostAddress}}/api/v1/ElectronicStates/{{id}}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v1/ElectronicStates/{{id}}
+
+###
+
+PUT {{GaussianMVC_HostAddress}}/api/v1/ElectronicStates/{{id}}
+Content-Type: application/json
+
+{
+  //ElectronicStateAPIModel
+}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v1/ElectronicStatesMethodFamilies
+
+###
+
+POST {{GaussianMVC_HostAddress}}/api/v1/ElectronicStatesMethodFamilies
+Content-Type: application/json
+
+{
+  //ElectronicStateMethodFamilyAPIModel
+}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v1/ElectronicStatesMethodFamilies/ElectronicState
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v1/ElectronicStatesMethodFamilies/ElectronicStateMethodFamily
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v1/ElectronicStatesMethodFamilies/Intermediate
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v1/ElectronicStatesMethodFamilies/MethodFamily
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v1/ElectronicStatesMethodFamilies/Simple
+
+###
+
+DELETE {{GaussianMVC_HostAddress}}/api/v1/ElectronicStatesMethodFamilies/{{id}}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v1/ElectronicStatesMethodFamilies/{{id}}
+
+###
+
+PUT {{GaussianMVC_HostAddress}}/api/v1/ElectronicStatesMethodFamilies/{{id}}
+Content-Type: application/json
+
+{
+  //ElectronicStateMethodFamilyAPIModel
 }
 
 ###
@@ -20,10 +175,6 @@ GET {{GaussianMVC_HostAddress}}/api/v1/Home/About
 
 ###
 
-GET {{GaussianMVC_HostAddress}}/api/v1/Home/Privacy
-
-###
-
 GET {{GaussianMVC_HostAddress}}/api/v1/Home/Contact
 
 ###
@@ -32,13 +183,15 @@ GET {{GaussianMVC_HostAddress}}/api/v1/Home/Error
 
 ###
 
+GET {{GaussianMVC_HostAddress}}/api/v1/Home/Privacy
+
+###
+
 GET {{GaussianMVC_HostAddress}}/api/v1/Identity/Roles
-Authorization: Bearer {{$bearerToken}}
 
 ###
 
 POST {{GaussianMVC_HostAddress}}/api/v1/Identity/Roles
-Authorization: Bearer {{$bearerToken}}
 Content-Type: application/json
 
 {
@@ -48,43 +201,45 @@ Content-Type: application/json
 ###
 
 DELETE {{GaussianMVC_HostAddress}}/api/v1/Identity/Roles/{{id}}
-Authorization: Bearer {{$bearerToken}}
 
 ###
 
 GET {{GaussianMVC_HostAddress}}/api/v1/Identity/Roles/{{id}}
-Authorization: Bearer {{$bearerToken}}
 
 ###
 
 PUT {{GaussianMVC_HostAddress}}/api/v1/Identity/Roles/{{id}}
-Authorization: Bearer {{$bearerToken}}
+Content-Type: application/json
+
+{
+  //IdentityRole
+}
 
 ###
 
 @roleId=string
 DELETE {{GaussianMVC_HostAddress}}/api/v1/Identity/Roles/{{roleId}}/Claims
-Authorization: Bearer {{$bearerToken}}
 
 ###
 
 GET {{GaussianMVC_HostAddress}}/api/v1/Identity/Roles/{{roleId}}/Claims
-Authorization: Bearer {{$bearerToken}}
 
 ###
 
 POST {{GaussianMVC_HostAddress}}/api/v1/Identity/Roles/{{roleId}}/Claims
-Authorization: Bearer {{$bearerToken}}
+Content-Type: application/json
+
+{
+  //ClaimData
+}
 
 ###
 
 GET {{GaussianMVC_HostAddress}}/api/v1/Identity/Users
-Authorization: Bearer {{$bearerToken}}
 
 ###
 
 POST {{GaussianMVC_HostAddress}}/api/v1/Identity/Users
-Authorization: Bearer {{$bearerToken}}
 Content-Type: application/json
 
 {
@@ -94,163 +249,488 @@ Content-Type: application/json
 ###
 
 DELETE {{GaussianMVC_HostAddress}}/api/v1/Identity/Users/{{id}}
-Authorization: Bearer {{$bearerToken}}
 
 ###
 
 GET {{GaussianMVC_HostAddress}}/api/v1/Identity/Users/{{id}}
-Authorization: Bearer {{$bearerToken}}
 
 ###
 
 PUT {{GaussianMVC_HostAddress}}/api/v1/Identity/Users/{{id}}
-Authorization: Bearer {{$bearerToken}}
+Content-Type: application/json
+
+{
+  //IdentityUser
+}
 
 ###
 
 @userId=string
 DELETE {{GaussianMVC_HostAddress}}/api/v1/Identity/Users/{{userId}}/Claims
-Authorization: Bearer {{$bearerToken}}
 
 ###
 
 GET {{GaussianMVC_HostAddress}}/api/v1/Identity/Users/{{userId}}/Claims
-Authorization: Bearer {{$bearerToken}}
 
 ###
 
 POST {{GaussianMVC_HostAddress}}/api/v1/Identity/Users/{{userId}}/Claims
-Authorization: Bearer {{$bearerToken}}
+Content-Type: application/json
+
+{
+  //ClaimData
+}
 
 ###
 
 PUT {{GaussianMVC_HostAddress}}/api/v1/Identity/Users/{{userId}}/Claims
-Authorization: Bearer {{$bearerToken}}
+Content-Type: application/json
+
+{
+  //ClaimData
+}
 
 ###
 
 DELETE {{GaussianMVC_HostAddress}}/api/v1/Identity/Users/{{userId}}/Roles
-Authorization: Bearer {{$bearerToken}}
 
 ###
 
 GET {{GaussianMVC_HostAddress}}/api/v1/Identity/Users/{{userId}}/Roles
-Authorization: Bearer {{$bearerToken}}
 
 ###
 
 POST {{GaussianMVC_HostAddress}}/api/v1/Identity/Users/{{userId}}/Roles
-Authorization: Bearer {{$bearerToken}}
-
-###
-
-POST {{GaussianMVC_HostAddress}}/api/v1/BaseMethods
-Authorization: Bearer {{$bearerToken}}
 Content-Type: application/json
 
 {
-  //BaseMethodSimpleModel
+  //RoleData
 }
-
-###
-
-GET {{GaussianMVC_HostAddress}}/api/v1/BaseMethods/Family
-Authorization: Bearer {{$bearerToken}}
-
-###
-
-GET {{GaussianMVC_HostAddress}}/api/v1/BaseMethods/Full
-Authorization: Bearer {{$bearerToken}}
-
-###
-
-GET {{GaussianMVC_HostAddress}}/api/v1/BaseMethods/Simple
-Authorization: Bearer {{$bearerToken}}
-
-###
-
-DELETE {{GaussianMVC_HostAddress}}/api/v1/BaseMethods/{{id}}
-Authorization: Bearer {{$bearerToken}}
-
-###
-
-GET {{GaussianMVC_HostAddress}}/api/v1/BaseMethods/{{id}}
-Authorization: Bearer {{$bearerToken}}
-
-###
-
-PUT {{GaussianMVC_HostAddress}}/api/v1/BaseMethods/{{id}}
-Authorization: Bearer {{$bearerToken}}
-
-###
-
-GET {{GaussianMVC_HostAddress}}/api/v1/CalculationTypes
-Authorization: Bearer {{$bearerToken}}
-
-###
-
-POST {{GaussianMVC_HostAddress}}/api/v1/CalculationTypes
-Authorization: Bearer {{$bearerToken}}
-Content-Type: application/json
-
-{
-  //CalculationTypeFullModel
-}
-
-###
-
-@id=0
-GET {{GaussianMVC_HostAddress}}/api/v1/CalculationTypes/{{id}}
-Authorization: Bearer {{$bearerToken}}
-
-###
-
-@id=0
-PUT {{GaussianMVC_HostAddress}}/api/v1/CalculationTypes/{{id}}
-Authorization: Bearer {{$bearerToken}}
-
-###
-
-@id=0
-DELETE {{GaussianMVC_HostAddress}}/api/v1/CalculationTypes/{{id}}
-Authorization: Bearer {{$bearerToken}}
 
 ###
 
 GET {{GaussianMVC_HostAddress}}/api/v1/MethodFamilies
-Authorization: Bearer {{$bearerToken}}
 
 ###
 
 POST {{GaussianMVC_HostAddress}}/api/v1/MethodFamilies
-Authorization: Bearer {{$bearerToken}}
 Content-Type: application/json
 
 {
-  //MethodFamilyFullModel
+  //MethodFamilyAPIModel
 }
 
 ###
 
 GET {{GaussianMVC_HostAddress}}/api/v1/MethodFamilies/List
-Authorization: Bearer {{$bearerToken}}
 
 ###
 
-@id=0
-GET {{GaussianMVC_HostAddress}}/api/v1/MethodFamilies/{{id}}
-Authorization: Bearer {{$bearerToken}}
-
-###
-
-@id=0
-PUT {{GaussianMVC_HostAddress}}/api/v1/MethodFamilies/{{id}}
-Authorization: Bearer {{$bearerToken}}
-
-###
-
-@id=0
 DELETE {{GaussianMVC_HostAddress}}/api/v1/MethodFamilies/{{id}}
-Authorization: Bearer {{$bearerToken}}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v1/MethodFamilies/{{id}}
+
+###
+
+PUT {{GaussianMVC_HostAddress}}/api/v1/MethodFamilies/{{id}}
+Content-Type: application/json
+
+{
+  //MethodFamilyAPIModel
+}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v1/SpinStates
+
+###
+
+POST {{GaussianMVC_HostAddress}}/api/v1/SpinStates
+Content-Type: application/json
+
+{
+  //SpinStateAPIModel
+}
+
+###
+
+DELETE {{GaussianMVC_HostAddress}}/api/v1/SpinStates/{{id}}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v1/SpinStates/{{id}}
+
+###
+
+PUT {{GaussianMVC_HostAddress}}/api/v1/SpinStates/{{id}}
+Content-Type: application/json
+
+{
+  //SpinStateAPIModel
+}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/basemethods
+
+###
+
+POST {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/basemethods
+Content-Type: application/json
+
+{
+  //BaseMethodAPIModel
+}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/basemethods/Intermediate
+
+###
+
+@methodFamilyId=0
+GET {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/basemethods/MethodFamily?methodFamilyId={{methodFamilyId}}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/basemethods/Simple
+
+###
+
+DELETE {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/basemethods/{{id}}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/basemethods/{{id}}
+
+###
+
+PUT {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/basemethods/{{id}}
+Content-Type: application/json
+
+{
+  //BaseMethodAPIModel
+}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/calculationtypes
+
+###
+
+POST {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/calculationtypes
+Content-Type: application/json
+
+{
+  //CalculationTypeAPIModel
+}
+
+###
+
+DELETE {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/calculationtypes/{{id}}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/calculationtypes/{{id}}
+
+###
+
+PUT {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/calculationtypes/{{id}}
+Content-Type: application/json
+
+{
+  //CalculationTypeAPIModel
+}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/electronicstates
+
+###
+
+POST {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/electronicstates
+Content-Type: application/json
+
+{
+  //ElectronicStateAPIModel
+}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/electronicstates/List
+
+###
+
+DELETE {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/electronicstates/{{id}}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/electronicstates/{{id}}
+
+###
+
+PUT {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/electronicstates/{{id}}
+Content-Type: application/json
+
+{
+  //ElectronicStateAPIModel
+}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/electronicstatesmethodfamilies
+
+###
+
+POST {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/electronicstatesmethodfamilies
+Content-Type: application/json
+
+{
+  //ElectronicStateMethodFamilyAPIModel
+}
+
+###
+
+@electronicStateId=0
+GET {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/electronicstatesmethodfamilies/ElectronicState?electronicStateId={{electronicStateId}}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/electronicstatesmethodfamilies/ElectronicStateMethodFamily?electronicStateId={{electronicStateId}}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/electronicstatesmethodfamilies/Intermediate
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/electronicstatesmethodfamilies/MethodFamily
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/electronicstatesmethodfamilies/Simple
+
+###
+
+DELETE {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/electronicstatesmethodfamilies/{{id}}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/electronicstatesmethodfamilies/{{id}}
+
+###
+
+PUT {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/electronicstatesmethodfamilies/{{id}}
+Content-Type: application/json
+
+{
+  //ElectronicStateMethodFamilyAPIModel
+}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/home
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/home/About
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/home/Contact
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/home/Error
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/home/Privacy
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/identity/Roles
+
+###
+
+POST {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/identity/Roles
+Content-Type: application/json
+
+{
+  //RoleData
+}
+
+###
+
+DELETE {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/identity/Roles/{{id}}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/identity/Roles/{{id}}
+
+###
+
+PUT {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/identity/Roles/{{id}}
+Content-Type: application/json
+
+{
+  //IdentityRole
+}
+
+###
+
+DELETE {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/identity/Roles/{{roleId}}/Claims
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/identity/Roles/{{roleId}}/Claims
+
+###
+
+POST {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/identity/Roles/{{roleId}}/Claims
+Content-Type: application/json
+
+{
+  //ClaimData
+}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/identity/Users
+
+###
+
+POST {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/identity/Users
+Content-Type: application/json
+
+{
+  //UserData
+}
+
+###
+
+DELETE {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/identity/Users/{{id}}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/identity/Users/{{id}}
+
+###
+
+PUT {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/identity/Users/{{id}}
+Content-Type: application/json
+
+{
+  //IdentityUser
+}
+
+###
+
+DELETE {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/identity/Users/{{userId}}/Claims
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/identity/Users/{{userId}}/Claims
+
+###
+
+POST {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/identity/Users/{{userId}}/Claims
+Content-Type: application/json
+
+{
+  //ClaimData
+}
+
+###
+
+PUT {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/identity/Users/{{userId}}/Claims
+Content-Type: application/json
+
+{
+  //ClaimData
+}
+
+###
+
+DELETE {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/identity/Users/{{userId}}/Roles
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/identity/Users/{{userId}}/Roles
+
+###
+
+POST {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/identity/Users/{{userId}}/Roles
+Content-Type: application/json
+
+{
+  //RoleData
+}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/methodfamilies
+
+###
+
+POST {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/methodfamilies
+Content-Type: application/json
+
+{
+  //MethodFamilyAPIModel
+}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/methodfamilies/List
+
+###
+
+DELETE {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/methodfamilies/{{id}}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/methodfamilies/{{id}}
+
+###
+
+PUT {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/methodfamilies/{{id}}
+Content-Type: application/json
+
+{
+  //MethodFamilyAPIModel
+}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/spinstates
+
+###
+
+POST {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/spinstates
+Content-Type: application/json
+
+{
+  //SpinStateAPIModel
+}
+
+###
+
+DELETE {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/spinstates/{{id}}
+
+###
+
+GET {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/spinstates/{{id}}
+
+###
+
+PUT {{GaussianMVC_HostAddress}}/api/v{version:apiVersion}/spinstates/{{id}}
+Content-Type: application/json
+
+{
+  //SpinStateAPIModel
+}
 
 ###

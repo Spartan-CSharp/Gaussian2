@@ -105,7 +105,11 @@ public class LoginWithRecoveryCodeModel(
 
 		if (result.Succeeded)
 		{
-			_logger.LogInformation("User with ID '{UserId}' logged in with a recovery code.", user.Id);
+			if (_logger.IsEnabled(LogLevel.Information))
+			{
+				_logger.LogInformation("User with ID '{UserId}' logged in with a recovery code.", user.Id); 
+			}
+
 			return LocalRedirect(returnUrl ?? Url.Content("~/"));
 		}
 

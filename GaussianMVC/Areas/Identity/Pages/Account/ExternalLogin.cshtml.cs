@@ -171,7 +171,11 @@ public class ExternalLoginModel : PageModel
 		Microsoft.AspNetCore.Identity.SignInResult result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true).ConfigureAwait(false);
 		if (result.Succeeded)
 		{
-			_logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
+			if (_logger.IsEnabled(LogLevel.Information))
+			{
+				_logger.LogInformation("{Name} logged in with {LoginProvider} provider.", info.Principal.Identity.Name, info.LoginProvider);
+			}
+
 			return LocalRedirect(returnUrl);
 		}
 
@@ -247,7 +251,10 @@ public class ExternalLoginModel : PageModel
 				result = await _userManager.AddLoginAsync(user, info).ConfigureAwait(false);
 				if (result.Succeeded)
 				{
-					_logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider);
+					if (_logger.IsEnabled(LogLevel.Information))
+					{
+						_logger.LogInformation("User created an account using {Name} provider.", info.LoginProvider); 
+					}
 
 					string userId = await _userManager.GetUserIdAsync(user).ConfigureAwait(false);
 					string code = await _userManager.GenerateEmailConfirmationTokenAsync(user).ConfigureAwait(false);

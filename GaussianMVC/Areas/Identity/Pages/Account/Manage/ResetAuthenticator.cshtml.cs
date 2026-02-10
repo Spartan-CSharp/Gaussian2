@@ -68,7 +68,11 @@ public class ResetAuthenticatorModel(
 		_ = await _userManager.ResetAuthenticatorKeyAsync(user).ConfigureAwait(false);
 
 		_ = await _userManager.GetUserIdAsync(user).ConfigureAwait(false);
-		_logger.LogInformation("User with ID '{UserId}' has reset their authentication app key.", user.Id);
+
+		if (_logger.IsEnabled(LogLevel.Information))
+		{
+			_logger.LogInformation("User with ID '{UserId}' has reset their authentication app key.", user.Id); 
+		}
 
 		await _signInManager.RefreshSignInAsync(user).ConfigureAwait(false);
 		StatusMessage = "Your authenticator app key has been reset, you will need to configure your authenticator app using the new key.";

@@ -24,7 +24,7 @@ public class ElectronicStateMethodFamilyViewModel
 	/// <param name="model">The Electronic State/Method Family Combination full model containing the source data.</param>
 	/// <param name="electronicStates">The list of available Electronic States for dropdown selection.</param>
 	/// <param name="methodFamilies">The list of available Method Families for dropdown selection.</param>
-	/// <exception cref="ArgumentNullException">Thrown when <paramref name="model"/> or <paramref name="electronicState"/> or <paramref name="methodFamilies"/> is null.</exception>
+	/// <exception cref="ArgumentNullException">Thrown when <paramref name="model"/> or <paramref name="electronicStates"/> or <paramref name="methodFamilies"/> is null.</exception>
 	public ElectronicStateMethodFamilyViewModel(ElectronicStateMethodFamilyFullModel model, IList<ElectronicStateRecord> electronicStates, IList<MethodFamilyRecord> methodFamilies)
 	{
 		ArgumentNullException.ThrowIfNull(model, nameof(model));
@@ -58,7 +58,7 @@ public class ElectronicStateMethodFamilyViewModel
 	/// <param name="model">The Electronic State/Method Family Combination intermediate model containing the source data.</param>
 	/// <param name="electronicStates">The list of available Electronic States for dropdown selection.</param>
 	/// <param name="methodFamilies">The list of available Method Families for dropdown selection.</param>
-	/// <exception cref="ArgumentNullException">Thrown when <paramref name="model"/> or <paramref name="electronicState"/> or <paramref name="methodFamilies"/> is null.</exception>
+	/// <exception cref="ArgumentNullException">Thrown when <paramref name="model"/> or <paramref name="electronicStates"/> or <paramref name="methodFamilies"/> is null.</exception>
 	public ElectronicStateMethodFamilyViewModel(ElectronicStateMethodFamilyIntermediateModel model, IList<ElectronicStateRecord> electronicStates, IList<MethodFamilyRecord> methodFamilies)
 	{
 		ArgumentNullException.ThrowIfNull(model, nameof(model));
@@ -92,7 +92,7 @@ public class ElectronicStateMethodFamilyViewModel
 	/// <param name="model">The Electronic State/Method Family Combination simple model containing the source data.</param>
 	/// <param name="electronicStates">The list of available Electronic States for dropdown selection.</param>
 	/// <param name="methodFamilies">The list of available Method Families for dropdown selection.</param>
-	/// <exception cref="ArgumentNullException">Thrown when <paramref name="model"/> or <paramref name="electronicState"/> or <paramref name="methodFamilies"/> is null.</exception>
+	/// <exception cref="ArgumentNullException">Thrown when <paramref name="model"/> or <paramref name="electronicStates"/> or <paramref name="methodFamilies"/> is null.</exception>
 	public ElectronicStateMethodFamilyViewModel(ElectronicStateMethodFamilySimpleModel model, IList<ElectronicStateRecord> electronicStates, IList<MethodFamilyRecord> methodFamilies)
 	{
 		ArgumentNullException.ThrowIfNull(model, nameof(model));
@@ -125,7 +125,7 @@ public class ElectronicStateMethodFamilyViewModel
 	/// </summary>
 	/// <param name="electronicStates">The list of available Electronic States for dropdown selection.</param>
 	/// <param name="methodFamilies">The list of available Method Families for dropdown selection.</param>
-	/// <exception cref="ArgumentNullException">Thrown when <paramref name="electronicState"/> or <paramref name="methodFamilies"/> is null.</exception>
+	/// <exception cref="ArgumentNullException">Thrown when <paramref name="electronicStates"/> or <paramref name="methodFamilies"/> is null.</exception>
 	public ElectronicStateMethodFamilyViewModel(IList<ElectronicStateRecord> electronicStates, IList<MethodFamilyRecord> methodFamilies)
 	{
 		ArgumentNullException.ThrowIfNull(electronicStates, nameof(electronicStates));

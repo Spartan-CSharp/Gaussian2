@@ -142,7 +142,11 @@ public class EnableAuthenticatorModel(
 
 		_ = await _userManager.SetTwoFactorEnabledAsync(user, true).ConfigureAwait(false);
 		string userId = await _userManager.GetUserIdAsync(user).ConfigureAwait(false);
-		_logger.LogInformation("User with ID '{UserId}' has enabled 2FA with an authenticator app.", userId);
+
+		if (_logger.IsEnabled(LogLevel.Information))
+		{
+			_logger.LogInformation("User with ID '{UserId}' has enabled 2FA with an authenticator app.", userId); 
+		}
 
 		StatusMessage = "Your authenticator app has been verified.";
 
