@@ -111,15 +111,15 @@ public class BaseMethodsEndpoint(ILogger<BaseMethodsEndpoint> logger, IApiHelper
 
 	/// <inheritdoc/>
 	/// <exception cref="HttpIOException">Thrown when the API request fails or returns an unsuccessful status code.</exception>
-	public async Task<List<BaseMethodFullModel>?> GetByFamilyAsync(int methodFamilyId)
+	public async Task<List<BaseMethodFullModel>?> GetByMethodFamilyAsync(int methodFamilyId)
 	{
 		if (_logger.IsEnabled(LogLevel.Debug))
 		{
-			_logger.LogDebug("{Class} {Method} called with MethodFamilyId = {MethodFamilyId}.", nameof(BaseMethodsEndpoint), nameof(GetByFamilyAsync), methodFamilyId);
+			_logger.LogDebug("{Class} {Method} called with MethodFamilyId = {MethodFamilyId}.", nameof(BaseMethodsEndpoint), nameof(GetByMethodFamilyAsync), methodFamilyId);
 		}
 
 		_apiHelper.ApiClient.DefaultRequestHeaders.Date = DateTimeOffset.UtcNow;
-		Uri apiEndpoint = new($"{Resources.BaseMethodsEndpoint}/Family?methodFamilyId={methodFamilyId}", UriKind.Relative);
+		Uri apiEndpoint = new($"{Resources.BaseMethodsEndpoint}/MethodFamily?methodFamilyId={methodFamilyId}", UriKind.Relative);
 		using HttpResponseMessage response = await _apiHelper.ApiClient.GetAsync(apiEndpoint).ConfigureAwait(false);
 
 		if (response.IsSuccessStatusCode)
@@ -128,7 +128,7 @@ public class BaseMethodsEndpoint(ILogger<BaseMethodsEndpoint> logger, IApiHelper
 
 			if (_logger.IsEnabled(LogLevel.Trace))
 			{
-				_logger.LogTrace("{Class} {Method} returning {ModelCount} {ModelName}.", nameof(BaseMethodsEndpoint), nameof(GetByFamilyAsync), result?.Count, nameof(BaseMethodFullModel));
+				_logger.LogTrace("{Class} {Method} returning {ModelCount} {ModelName}.", nameof(BaseMethodsEndpoint), nameof(GetByMethodFamilyAsync), result?.Count, nameof(BaseMethodFullModel));
 			}
 
 			return result;

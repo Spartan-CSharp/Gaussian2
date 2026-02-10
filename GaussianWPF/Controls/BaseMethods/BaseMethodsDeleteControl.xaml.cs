@@ -29,8 +29,8 @@ public partial class BaseMethodsDeleteControl : UserControl, INotifyPropertyChan
 	/// Initializes a new instance of the <see cref="BaseMethodsDeleteControl"/> class with dependency injection.
 	/// </summary>
 	/// <param name="logger">The logger instance for logging control operations.</param>
-	/// <param name="baseMethodsEndpoint">The endpoint for base method API operations.</param>
-	/// <param name="methodFamiliesEndpoint">The endpoint for method family API operations.</param>
+	/// <param name="baseMethodsEndpoint">The endpoint for Base Method API operations.</param>
+	/// <param name="methodFamiliesEndpoint">The endpoint for Method Family API operations.</param>
 	public BaseMethodsDeleteControl(ILogger<BaseMethodsDeleteControl> logger, IBaseMethodsEndpoint baseMethodsEndpoint, IMethodFamiliesEndpoint methodFamiliesEndpoint)
 	{
 		_logger = logger;
@@ -51,7 +51,7 @@ public partial class BaseMethodsDeleteControl : UserControl, INotifyPropertyChan
 	public event EventHandler<ChildControlEventArgs<BaseMethodsDeleteControl>>? ChildControlEvent;
 
 	/// <summary>
-	/// Gets or sets the base method view model being deleted.
+	/// Gets or sets the Base Method view model being deleted.
 	/// </summary>
 	/// <remarks>
 	/// When this property is set, the control automatically populates the RTF content and updates the <see cref="ModelIsNotNull"/> property.
@@ -67,10 +67,10 @@ public partial class BaseMethodsDeleteControl : UserControl, INotifyPropertyChan
 	}
 
 	/// <summary>
-	/// Gets or sets the identifier of the base method to delete.
+	/// Gets or sets the identifier of the Base Method to delete.
 	/// </summary>
 	/// <remarks>
-	/// When this property is set, the control automatically loads the base method data from the API.
+	/// When this property is set, the control automatically loads the Base Method data from the API.
 	/// </remarks>
 	public int BaseMethodId
 	{
@@ -83,7 +83,7 @@ public partial class BaseMethodsDeleteControl : UserControl, INotifyPropertyChan
 	}
 
 	/// <summary>
-	/// Gets or sets a value indicating whether a valid base method model is loaded.
+	/// Gets or sets a value indicating whether a valid Base Method model is loaded.
 	/// </summary>
 	/// <remarks>
 	/// Setting this property also updates the <see cref="ModelIsNull"/> property.
@@ -100,7 +100,7 @@ public partial class BaseMethodsDeleteControl : UserControl, INotifyPropertyChan
 	}
 
 	/// <summary>
-	/// Gets a value indicating whether no base method model is loaded.
+	/// Gets a value indicating whether no Base Method model is loaded.
 	/// </summary>
 	/// <remarks>
 	/// This property returns the inverse of <see cref="ModelIsNotNull"/>.
@@ -229,7 +229,7 @@ public partial class BaseMethodsDeleteControl : UserControl, INotifyPropertyChan
 						{
 							Id = results.Id,
 							Keyword = results.Keyword,
-							MethodFamily = null,
+							MethodFamily = results.MethodFamily.ToRecord(),
 							DescriptionRtf = results.DescriptionRtf,
 							DescriptionText = results.DescriptionText,
 							CreatedDate = results.CreatedDate,

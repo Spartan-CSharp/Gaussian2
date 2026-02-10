@@ -16,8 +16,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace GaussianMVC.Controllers.APIControllers.V1;
 
 /// <summary>
-/// API controller for managing spin states with CRUD operations.
-/// Provides RESTful endpoints for retrieving, creating, updating, and deleting spin state records.
+/// API controller for managing Spin States with CRUD operations.
+/// Provides RESTful endpoints for retrieving, creating, updating, and deleting Spin State records.
 /// </summary>
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
@@ -28,14 +28,14 @@ public class SpinStatesController(ILogger<SpinStatesController> logger, ISpinSta
 	private readonly ISpinStatesCrud _crud = crud;
 
 	/// <summary>
-	/// Retrieves all spin states from the database.
+	/// Retrieves all Spin States from the database.
 	/// </summary>
 	/// <returns>
 	/// An <see cref="ActionResult{T}"/> containing a list of <see cref="SpinStateFullModel"/> objects.
-	/// Returns 200 OK with the list of spin states, or 500 Internal Server Error if an exception occurs.
+	/// Returns 200 OK with the list of Spin States, or 500 Internal Server Error if an exception occurs.
 	/// </returns>
-	/// <response code="200">Returns the list of all spin states.</response>
-	/// <response code="500">An validationError occurred while retrieving the spin states.</response>
+	/// <response code="200">Returns the list of all Spin States.</response>
+	/// <response code="500">An validationError occurred while retrieving the Spin States.</response>
 	// GET: api/v1/SpinStates
 	[HttpGet()]
 	public async Task<ActionResult<List<SpinStateFullModel>>> GetAsync()
@@ -68,17 +68,17 @@ public class SpinStatesController(ILogger<SpinStatesController> logger, ISpinSta
 	}
 
 	/// <summary>
-	/// Retrieves a specific spin state by its unique identifier.
+	/// Retrieves a specific Spin State by its unique identifier.
 	/// </summary>
-	/// <param name="id">The unique identifier of the spin state to retrieve.</param>
+	/// <param name="id">The unique identifier of the Spin State to retrieve.</param>
 	/// <returns>
 	/// An <see cref="ActionResult{T}"/> containing the <see cref="SpinStateFullModel"/> if found.
-	/// Returns 200 OK with the spin state, 404 Not Found if the spin state doesn't exist, 
+	/// Returns 200 OK with the Spin State, 404 Not Found if the Spin State doesn't exist, 
 	/// or 500 Internal Server Error if an exception occurs.
 	/// </returns>
-	/// <response code="200">Returns the requested spin state.</response>
-	/// <response code="404">No spin state was found with the specified ID.</response>
-	/// <response code="500">An validationError occurred while retrieving the spin state.</response>
+	/// <response code="200">Returns the requested Spin State.</response>
+	/// <response code="404">No Spin State was found with the specified ID.</response>
+	/// <response code="500">An validationError occurred while retrieving the Spin State.</response>
 	// GET api/v1/SpinStates/5
 	[HttpGet("{id}")]
 	public async Task<ActionResult<SpinStateFullModel>> GetAsync(int id)
@@ -111,16 +111,16 @@ public class SpinStatesController(ILogger<SpinStatesController> logger, ISpinSta
 	}
 
 	/// <summary>
-	/// Creates a new spin state in the database.
+	/// Creates a new Spin State in the database.
 	/// </summary>
-	/// <param name="model">The <see cref="SpinStateFullModel"/> containing the data for the new spin state.</param>
+	/// <param name="model">The <see cref="SpinStateFullModel"/> containing the data for the new Spin State.</param>
 	/// <returns>
 	/// An <see cref="ActionResult{T}"/> containing the created <see cref="SpinStateFullModel"/>.
-	/// Returns 201 Created with the new spin state and location header, 
+	/// Returns 201 Created with the new Spin State and location header, 
 	/// or 500 Internal Server Error if an exception occurs.
 	/// </returns>
-	/// <response code="201">Returns the newly created spin state.</response>
-	/// <response code="500">An validationError occurred while creating the spin state.</response>
+	/// <response code="201">Returns the newly created Spin State.</response>
+	/// <response code="500">An validationError occurred while creating the Spin State.</response>
 	// POST api/v1/SpinStates
 	[HttpPost]
 	public async Task<ActionResult<SpinStateFullModel>> PostAsync([FromBody] SpinStateAPIModel model)
@@ -180,18 +180,18 @@ public class SpinStatesController(ILogger<SpinStatesController> logger, ISpinSta
 	}
 
 	/// <summary>
-	/// Updates an existing spin state in the database.
+	/// Updates an existing Spin State in the database.
 	/// </summary>
-	/// <param name="id">The unique identifier of the spin state to update. Must match the ID in the model.</param>
+	/// <param name="id">The unique identifier of the Spin State to update. Must match the ID in the model.</param>
 	/// <param name="model">The <see cref="SpinStateAPIModel"/> containing the updated data.</param>
 	/// <returns>
 	/// An <see cref="ActionResult{T}"/> containing the updated <see cref="SpinStateFullModel"/>.
-	/// Returns 200 OK with the updated spin state, 400 Bad Request if the route ID doesn't match the model ID,
+	/// Returns 200 OK with the updated Spin State, 400 Bad Request if the route ID doesn't match the model ID,
 	/// or 500 Internal Server Error if an exception occurs.
 	/// </returns>
-	/// <response code="200">Returns the updated spin state.</response>
+	/// <response code="200">Returns the updated Spin State.</response>
 	/// <response code="400">The route parameter ID does not match the model ID.</response>
-	/// <response code="500">An validationError occurred while updating the spin state.</response>
+	/// <response code="500">An validationError occurred while updating the Spin State.</response>
 	// PUT api/V1/SpinStates/5
 	[HttpPut("{id}")]
 	public async Task<ActionResult<SpinStateFullModel>> PutAsync(int id, [FromBody] SpinStateAPIModel model)
@@ -262,16 +262,16 @@ public class SpinStatesController(ILogger<SpinStatesController> logger, ISpinSta
 	}
 
 	/// <summary>
-	/// Deletes an spin state from the database.
+	/// Deletes an Spin State from the database.
 	/// </summary>
-	/// <param name="id">The unique identifier of the spin state to delete.</param>
+	/// <param name="id">The unique identifier of the Spin State to delete.</param>
 	/// <returns>
 	/// An <see cref="ActionResult"/> indicating the result of the delete operation.
 	/// Returns 200 OK if the deletion was successful, 
 	/// or 500 Internal Server Error if an exception occurs.
 	/// </returns>
-	/// <response code="200">The spin state was successfully deleted.</response>
-	/// <response code="500">An validationError occurred while deleting the spin state.</response>
+	/// <response code="200">The Spin State was successfully deleted.</response>
+	/// <response code="500">An validationError occurred while deleting the Spin State.</response>
 	// DELETE api/V1/SpinStates/5
 	[HttpDelete("{id}")]
 	public async Task<ActionResult> DeleteAsync(int id)

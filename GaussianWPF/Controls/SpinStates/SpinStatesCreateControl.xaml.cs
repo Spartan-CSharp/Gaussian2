@@ -36,7 +36,7 @@ public partial class SpinStatesCreateControl : UserControl, INotifyPropertyChang
 	/// Initializes a new instance of the <see cref="SpinStatesCreateControl"/> class with dependency injection.
 	/// </summary>
 	/// <param name="logger">The logger instance for logging control operations.</param>
-	/// <param name="endpoint">The endpoint for spin state API operations.</param>
+	/// <param name="endpoint">The endpoint for Spin State API operations.</param>
 	public SpinStatesCreateControl(ILogger<SpinStatesCreateControl> logger, ISpinStatesEndpoint endpoint)
 	{
 		_logger = logger;
@@ -56,7 +56,7 @@ public partial class SpinStatesCreateControl : UserControl, INotifyPropertyChang
 	public event EventHandler<ChildControlEventArgs<SpinStatesCreateControl>>? ChildControlEvent;
 
 	/// <summary>
-	/// Gets or sets the spin state view model being created.
+	/// Gets or sets the Spin State view model being created.
 	/// </summary>
 	public SpinStateViewModel SpinState
 	{
@@ -69,7 +69,7 @@ public partial class SpinStatesCreateControl : UserControl, INotifyPropertyChang
 	} = new();
 
 	/// <summary>
-	/// Gets or sets the name of the spin state.
+	/// Gets or sets the name of the Spin State.
 	/// </summary>
 	public string SpinStateName
 	{
@@ -82,7 +82,7 @@ public partial class SpinStatesCreateControl : UserControl, INotifyPropertyChang
 	} = string.Empty;
 
 	/// <summary>
-	/// Gets or sets the keyword that identifies the spin state.
+	/// Gets or sets the keyword that identifies the Spin State.
 	/// </summary>
 	public string Keyword
 	{

@@ -36,7 +36,7 @@ public partial class SpinStatesEditControl : UserControl, INotifyPropertyChanged
 	/// Initializes a new instance of the <see cref="SpinStatesEditControl"/> class with dependency injection.
 	/// </summary>
 	/// <param name="logger">The logger instance for logging control operations.</param>
-	/// <param name="endpoint">The endpoint for spin state API operations.</param>
+	/// <param name="endpoint">The endpoint for Spin State API operations.</param>
 	public SpinStatesEditControl(ILogger<SpinStatesEditControl> logger, ISpinStatesEndpoint endpoint)
 	{
 		_logger = logger;
@@ -56,7 +56,7 @@ public partial class SpinStatesEditControl : UserControl, INotifyPropertyChanged
 	public event EventHandler<ChildControlEventArgs<SpinStatesEditControl>>? ChildControlEvent;
 
 	/// <summary>
-	/// Gets or sets the spin state view model being edited.
+	/// Gets or sets the Spin State view model being edited.
 	/// </summary>
 	/// <remarks>
 	/// When this property is set, the control automatically populates the name, keyword, RTF content, and updates validation state.
@@ -72,10 +72,10 @@ public partial class SpinStatesEditControl : UserControl, INotifyPropertyChanged
 	}
 
 	/// <summary>
-	/// Gets or sets the identifier of the spin state to edit.
+	/// Gets or sets the identifier of the Spin State to edit.
 	/// </summary>
 	/// <remarks>
-	/// When this property is set, the control automatically loads the spin state data from the API.
+	/// When this property is set, the control automatically loads the Spin State data from the API.
 	/// </remarks>
 	public int SpinStateId
 	{
@@ -88,7 +88,7 @@ public partial class SpinStatesEditControl : UserControl, INotifyPropertyChanged
 	}
 
 	/// <summary>
-	/// Gets or sets the name of the spin state.
+	/// Gets or sets the name of the Spin State.
 	/// </summary>
 	public string SpinStateName
 	{
@@ -101,7 +101,7 @@ public partial class SpinStatesEditControl : UserControl, INotifyPropertyChanged
 	} = string.Empty;
 
 	/// <summary>
-	/// Gets or sets the keyword that identifies the spin state.
+	/// Gets or sets the keyword that identifies the Spin State.
 	/// </summary>
 	public string Keyword
 	{
@@ -114,7 +114,7 @@ public partial class SpinStatesEditControl : UserControl, INotifyPropertyChanged
 	} = string.Empty;
 
 	/// <summary>
-	/// Gets or sets a value indicating whether a valid spin state model is loaded.
+	/// Gets or sets a value indicating whether a valid Spin State model is loaded.
 	/// </summary>
 	/// <remarks>
 	/// Setting this property also updates the <see cref="ModelIsNull"/> property.
@@ -131,7 +131,7 @@ public partial class SpinStatesEditControl : UserControl, INotifyPropertyChanged
 	}
 
 	/// <summary>
-	/// Gets a value indicating whether no spin state model is loaded.
+	/// Gets a value indicating whether no Spin State model is loaded.
 	/// </summary>
 	/// <remarks>
 	/// This property returns the inverse of <see cref="ModelIsNotNull"/>.

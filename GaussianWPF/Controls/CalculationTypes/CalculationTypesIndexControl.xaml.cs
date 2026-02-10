@@ -28,7 +28,7 @@ public partial class CalculationTypesIndexControl : UserControl, INotifyProperty
 	/// Initializes a new instance of the <see cref="CalculationTypesIndexControl"/> class with dependency injection.
 	/// </summary>
 	/// <param name="logger">The logger instance for logging control operations.</param>
-	/// <param name="endpoint">The endpoint for calculation type API operations.</param>
+	/// <param name="endpoint">The endpoint for Calculation Type API operations.</param>
 	public CalculationTypesIndexControl(ILogger<CalculationTypesIndexControl> logger, ICalculationTypesEndpoint endpoint)
 	{
 		_logger = logger;
@@ -48,7 +48,7 @@ public partial class CalculationTypesIndexControl : UserControl, INotifyProperty
 	public event EventHandler<ChildControlEventArgs<CalculationTypesIndexControl>>? ChildControlEvent;
 
 	/// <summary>
-	/// Gets or sets the collection of calculation types to display in the list.
+	/// Gets or sets the collection of Calculation Types to display in the list.
 	/// </summary>
 	public Collection<CalculationTypeViewModel> CalculationTypesList
 	{
@@ -119,7 +119,7 @@ public partial class CalculationTypesIndexControl : UserControl, INotifyProperty
 
 	/// <inheritdoc/>
 	/// <summary>
-	/// Raises the OnInitialized event, sets up data binding, and loads the list of calculation types from the API.
+	/// Raises the OnInitialized event, sets up data binding, and loads the list of Calculation Types from the API.
 	/// </summary>
 	protected override void OnInitialized(EventArgs e)
 	{

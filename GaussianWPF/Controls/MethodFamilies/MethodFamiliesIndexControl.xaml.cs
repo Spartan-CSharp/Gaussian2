@@ -28,7 +28,7 @@ public partial class MethodFamiliesIndexControl : UserControl, INotifyPropertyCh
 	/// Initializes a new instance of the <see cref="MethodFamiliesIndexControl"/> class with dependency injection.
 	/// </summary>
 	/// <param name="logger">The logger instance for logging control operations.</param>
-	/// <param name="endpoint">The endpoint for method family API operations.</param>
+	/// <param name="endpoint">The endpoint for Method Family API operations.</param>
 	public MethodFamiliesIndexControl(ILogger<MethodFamiliesIndexControl> logger, IMethodFamiliesEndpoint endpoint)
 	{
 		_logger = logger;
@@ -48,7 +48,7 @@ public partial class MethodFamiliesIndexControl : UserControl, INotifyPropertyCh
 	public event EventHandler<ChildControlEventArgs<MethodFamiliesIndexControl>>? ChildControlEvent;
 
 	/// <summary>
-	/// Gets or sets the collection of method families to display in the list.
+	/// Gets or sets the collection of Method Families to display in the list.
 	/// </summary>
 	public Collection<MethodFamilyViewModel> MethodFamiliesList
 	{
@@ -119,7 +119,7 @@ public partial class MethodFamiliesIndexControl : UserControl, INotifyPropertyCh
 
 	/// <inheritdoc/>
 	/// <summary>
-	/// Raises the OnInitialzied event, sets up data binding, and loads the list of method families from the API.
+	/// Raises the OnInitialzied event, sets up data binding, and loads the list of Method Families from the API.
 	/// </summary>
 	protected override void OnInitialized(EventArgs e)
 	{

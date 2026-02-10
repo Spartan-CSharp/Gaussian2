@@ -1,7 +1,7 @@
 ﻿namespace GaussianCommonLibrary.Models;
 
 /// <summary>
-/// Represents a base method with full details including its associated method family.
+/// Represents a Base Method with full details including its associated Method Family.
 /// </summary>
 public class BaseMethodFullModel
 {
@@ -13,10 +13,10 @@ public class BaseMethodFullModel
 	}
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="BaseMethodFullModel"/> class from a simple model and method family.
+	/// Initializes a new instance of the <see cref="BaseMethodFullModel"/> class from a simple model and Method Family.
 	/// </summary>
-	/// <param name="model">The simple model containing base method properties.</param>
-	/// <param name="methodFamily">The method family to associate with this base method.</param>
+	/// <param name="model">The simple model containing Base Method properties.</param>
+	/// <param name="methodFamily">The Method Family to associate with this Base Method.</param>
 	/// <exception cref="ArgumentNullException">Thrown when <paramref name="model"/> or <paramref name="methodFamily"/> is null.</exception>
 	public BaseMethodFullModel(BaseMethodSimpleModel model, MethodFamilyFullModel methodFamily)
 	{
@@ -33,10 +33,10 @@ public class BaseMethodFullModel
 	}
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="BaseMethodFullModel"/> class from an intermediate model and method family.
+	/// Initializes a new instance of the <see cref="BaseMethodFullModel"/> class from an intermediate model and Method Family.
 	/// </summary>
-	/// <param name="model">The intermediate model containing base method properties.</param>
-	/// <param name="methodFamily">The method family to associate with this base method.</param>
+	/// <param name="model">The intermediate model containing Base Method properties.</param>
+	/// <param name="methodFamily">The Method Family to associate with this Base Method.</param>
 	/// <exception cref="ArgumentNullException">Thrown when <paramref name="model"/> or <paramref name="methodFamily"/> is null.</exception>
 	public BaseMethodFullModel(BaseMethodIntermediateModel model, MethodFamilyFullModel methodFamily)
 	{
@@ -53,17 +53,17 @@ public class BaseMethodFullModel
 	}
 
 	/// <summary>
-	/// Gets or sets the unique identifier for the base method.
+	/// Gets or sets the unique identifier for the Base Method.
 	/// </summary>
 	public int Id { get; set; }
 
 	/// <summary>
-	/// Gets or sets the keyword used to reference this base method in Gaussian input files.
+	/// Gets or sets the keyword used to reference this Base Method in Gaussian input files.
 	/// </summary>
 	public string Keyword { get; set; } = string.Empty;
 
 	/// <summary>
-	/// Gets or sets the method family to which this base method belongs.
+	/// Gets or sets the Method Family to which this Base Method belongs.
 	/// </summary>
 	public required MethodFamilyFullModel MethodFamily { get; set; }
 
@@ -88,7 +88,7 @@ public class BaseMethodFullModel
 	public DateTime LastUpdatedDate { get; set; } = DateTime.Now;
 
 	/// <summary>
-	/// Gets or sets a value indicating whether this base method is archived.
+	/// Gets or sets a value indicating whether this Base Method is archived.
 	/// </summary>
 	public bool Archived { get; set; }
 
@@ -114,7 +114,7 @@ public class BaseMethodFullModel
 	/// <summary>
 	/// Converts this full Base Method model to its intermediate representation.
 	/// </summary>
-	/// <returns>A <see cref="BaseMethodIntermediateModel"/> containing the property values with the method family as a record.</returns>
+	/// <returns>A <see cref="BaseMethodIntermediateModel"/> containing the property values with the Method Family as a record.</returns>
 	public BaseMethodIntermediateModel ToIntermediateModel()
 	{
 		return new BaseMethodIntermediateModel

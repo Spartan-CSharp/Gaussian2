@@ -36,7 +36,7 @@ public partial class ElectronicStatesCreateControl : UserControl, INotifyPropert
 	/// Initializes a new instance of the <see cref="ElectronicStatesCreateControl"/> class with dependency injection.
 	/// </summary>
 	/// <param name="logger">The logger instance for logging control operations.</param>
-	/// <param name="endpoint">The endpoint for electronic state API operations.</param>
+	/// <param name="endpoint">The endpoint for Electronic State API operations.</param>
 	public ElectronicStatesCreateControl(ILogger<ElectronicStatesCreateControl> logger, IElectronicStatesEndpoint endpoint)
 	{
 		_logger = logger;
@@ -56,7 +56,7 @@ public partial class ElectronicStatesCreateControl : UserControl, INotifyPropert
 	public event EventHandler<ChildControlEventArgs<ElectronicStatesCreateControl>>? ChildControlEvent;
 
 	/// <summary>
-	/// Gets or sets the electronic state view model being created.
+	/// Gets or sets the Electronic State view model being created.
 	/// </summary>
 	public ElectronicStateViewModel ElectronicState
 	{
@@ -69,7 +69,7 @@ public partial class ElectronicStatesCreateControl : UserControl, INotifyPropert
 	} = new();
 
 	/// <summary>
-	/// Gets or sets the name of the electronic state.
+	/// Gets or sets the name of the Electronic State.
 	/// </summary>
 	public string ElectronicStateName
 	{
@@ -82,7 +82,7 @@ public partial class ElectronicStatesCreateControl : UserControl, INotifyPropert
 	} = string.Empty;
 
 	/// <summary>
-	/// Gets or sets the keyword that identifies the electronic state.
+	/// Gets or sets the keyword that identifies the Electronic State.
 	/// </summary>
 	public string Keyword
 	{

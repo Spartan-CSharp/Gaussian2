@@ -9,8 +9,8 @@ using GaussianMVCLibrary.Converters;
 namespace GaussianMVC.Models;
 
 /// <summary>
-/// View model representing an spin state for the Gaussian MVC application.
-/// Provides data validation and conversion capabilities for spin state entities.
+/// View model representing an Spin State for the Gaussian MVC application.
+/// Provides data validation and conversion capabilities for Spin State entities.
 /// </summary>
 public class SpinStateViewModel
 {
@@ -40,14 +40,14 @@ public class SpinStateViewModel
 	}
 
 	/// <summary>
-	/// Gets or sets the unique identifier for the spin state.
+	/// Gets or sets the unique identifier for the Spin State.
 	/// </summary>
 	[Display(Name = "Id")]
 	[Key]
 	public int Id { get; set; }
 
 	/// <summary>
-	/// Gets or sets the name of the spin state.
+	/// Gets or sets the name of the Spin State.
 	/// </summary>
 	[DataType(DataType.Text)]
 	[Display(Name = "Name")]
@@ -56,7 +56,7 @@ public class SpinStateViewModel
 	public string? Name { get; set; }
 
 	/// <summary>
-	/// Gets or sets the keyword associated with the spin state.
+	/// Gets or sets the keyword associated with the Spin State.
 	/// </summary>
 	[DataType(DataType.Text)]
 	[Display(Name = "Keyword")]
@@ -72,21 +72,21 @@ public class SpinStateViewModel
 	public string? DescriptionHtml { get; set; }
 
 	/// <summary>
-	/// Gets or sets the date and time when the spin state was created.
+	/// Gets or sets the date and time when the Spin State was created.
 	/// </summary>
 	[DataType(DataType.DateTime)]
 	[Display(Name = "Created Date")]
 	public DateTime CreatedDate { get; set; }
 
 	/// <summary>
-	/// Gets or sets the date and time when the spin state was last updated.
+	/// Gets or sets the date and time when the Spin State was last updated.
 	/// </summary>
 	[DataType(DataType.DateTime)]
 	[Display(Name = "Last Updated Date")]
 	public DateTime LastUpdatedDate { get; set; }
 
 	/// <summary>
-	/// Gets or sets a value indicating whether the spin state is archived.
+	/// Gets or sets a value indicating whether the Spin State is archived.
 	/// </summary>
 	[Display(Name = "Archived")]
 	public bool Archived { get; set; }
@@ -111,7 +111,7 @@ public class SpinStateViewModel
 	}
 
 	/// <summary>
-	/// Returns a string representation of the spin state.
+	/// Returns a string representation of the Spin State.
 	/// </summary>
 	/// <returns>The Name if available, otherwise the Keyword, or a combination of both in the format "Name/Keyword".</returns>
 	public override string? ToString()

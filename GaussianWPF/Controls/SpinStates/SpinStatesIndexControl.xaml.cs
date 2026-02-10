@@ -28,7 +28,7 @@ public partial class SpinStatesIndexControl : UserControl, INotifyPropertyChange
 	/// Initializes a new instance of the <see cref="SpinStatesIndexControl"/> class with dependency injection.
 	/// </summary>
 	/// <param name="logger">The logger instance for logging control operations.</param>
-	/// <param name="endpoint">The endpoint for spin state API operations.</param>
+	/// <param name="endpoint">The endpoint for Spin State API operations.</param>
 	public SpinStatesIndexControl(ILogger<SpinStatesIndexControl> logger, ISpinStatesEndpoint endpoint)
 	{
 		_logger = logger;
@@ -48,7 +48,7 @@ public partial class SpinStatesIndexControl : UserControl, INotifyPropertyChange
 	public event EventHandler<ChildControlEventArgs<SpinStatesIndexControl>>? ChildControlEvent;
 
 	/// <summary>
-	/// Gets or sets the collection of spin states to display in the list.
+	/// Gets or sets the collection of Spin States to display in the list.
 	/// </summary>
 	public Collection<SpinStateViewModel> SpinStatesList
 	{
@@ -119,7 +119,7 @@ public partial class SpinStatesIndexControl : UserControl, INotifyPropertyChange
 
 	/// <inheritdoc/>
 	/// <summary>
-	/// Raises the OnInitialized event, sets up data binding, and loads the list of spin states from the API.
+	/// Raises the OnInitialized event, sets up data binding, and loads the list of Spin States from the API.
 	/// </summary>
 	protected override void OnInitialized(EventArgs e)
 	{

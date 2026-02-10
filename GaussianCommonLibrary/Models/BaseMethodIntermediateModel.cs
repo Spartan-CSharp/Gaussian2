@@ -1,7 +1,7 @@
 ﻿namespace GaussianCommonLibrary.Models;
 
 /// <summary>
-/// Represents a base method with method family information as a record rather than a full model.
+/// Represents a Base Method with Method Family information as a record rather than a full model.
 /// </summary>
 public class BaseMethodIntermediateModel
 {
@@ -13,10 +13,10 @@ public class BaseMethodIntermediateModel
 	}
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="BaseMethodIntermediateModel"/> class from a simple model and method family record.
+	/// Initializes a new instance of the <see cref="BaseMethodIntermediateModel"/> class from a simple model and Method Family record.
 	/// </summary>
-	/// <param name="model">The simple model containing base method properties.</param>
-	/// <param name="methodFamily">The method family record to associate with this base method.</param>
+	/// <param name="model">The simple model containing Base Method properties.</param>
+	/// <param name="methodFamily">The Method Family record to associate with this Base Method.</param>
 	/// <exception cref="ArgumentNullException">Thrown when <paramref name="model"/> or <paramref name="methodFamily"/> is null.</exception>
 	public BaseMethodIntermediateModel(BaseMethodSimpleModel model, MethodFamilyRecord methodFamily)
 	{
@@ -51,17 +51,17 @@ public class BaseMethodIntermediateModel
 	}
 
 	/// <summary>
-	/// Gets or sets the unique identifier for the base method.
+	/// Gets or sets the unique identifier for the Base Method.
 	/// </summary>
 	public int Id { get; set; }
 
 	/// <summary>
-	/// Gets or sets the keyword used to reference this base method in Gaussian input files.
+	/// Gets or sets the keyword used to reference this Base Method in Gaussian input files.
 	/// </summary>
 	public string Keyword { get; set; } = string.Empty;
 
 	/// <summary>
-	/// Gets or sets the method family record to which this base method belongs.
+	/// Gets or sets the Method Family record to which this Base Method belongs.
 	/// </summary>
 	public required MethodFamilyRecord MethodFamily { get; set; }
 
@@ -86,14 +86,14 @@ public class BaseMethodIntermediateModel
 	public DateTime LastUpdatedDate { get; set; } = DateTime.Now;
 
 	/// <summary>
-	/// Gets or sets a value indicating whether this base method is archived.
+	/// Gets or sets a value indicating whether this Base Method is archived.
 	/// </summary>
 	public bool Archived { get; set; }
 
 	/// <summary>
 	/// Converts this model to a <see cref="BaseMethodSimpleModel"/>.
 	/// </summary>
-	/// <returns>A simple model representation of this base method.</returns>
+	/// <returns>A simple model representation of this Base Method.</returns>
 	public BaseMethodSimpleModel ToSimpleModel()
 	{
 		return new BaseMethodSimpleModel
@@ -110,10 +110,10 @@ public class BaseMethodIntermediateModel
 	}
 
 	/// <summary>
-	/// Converts this model to a <see cref="BaseMethodFullModel"/> using the specified method family.
+	/// Converts this model to a <see cref="BaseMethodFullModel"/> using the specified Method Family.
 	/// </summary>
-	/// <param name="methodFamily">The method family full model to associate with the resulting full model.</param>
-	/// <returns>A full model representation of this base method.</returns>
+	/// <param name="methodFamily">The Method Family full model to associate with the resulting full model.</param>
+	/// <returns>A full model representation of this Base Method.</returns>
 	public BaseMethodFullModel ToFullModel(MethodFamilyFullModel methodFamily)
 	{
 		ArgumentNullException.ThrowIfNull(methodFamily, nameof(methodFamily));
@@ -132,7 +132,7 @@ public class BaseMethodIntermediateModel
 	}
 
 	/// <summary>
-	/// Returns a string representation of the base method.
+	/// Returns a string representation of the Base Method.
 	/// </summary>
 	/// <returns>A string in the format "Keyword".</returns>
 	public override string? ToString()

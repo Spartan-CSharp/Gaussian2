@@ -28,7 +28,7 @@ public partial class MethodFamiliesDetailsControl : UserControl, INotifyProperty
 	/// Initializes a new instance of the <see cref="MethodFamiliesDetailsControl"/> class with dependency injection.
 	/// </summary>
 	/// <param name="logger">The logger instance for logging control operations.</param>
-	/// <param name="endpoint">The endpoint for method family API operations.</param>
+	/// <param name="endpoint">The endpoint for Method Family API operations.</param>
 	public MethodFamiliesDetailsControl(ILogger<MethodFamiliesDetailsControl> logger, IMethodFamiliesEndpoint endpoint)
 	{
 		_logger = logger;
@@ -48,7 +48,7 @@ public partial class MethodFamiliesDetailsControl : UserControl, INotifyProperty
 	public event EventHandler<ChildControlEventArgs<MethodFamiliesDetailsControl>>? ChildControlEvent;
 
 	/// <summary>
-	/// Gets or sets the method family view model being displayed.
+	/// Gets or sets the Method Family view model being displayed.
 	/// </summary>
 	/// <remarks>
 	/// When this property is set, the control automatically populates the RTF content and updates the <see cref="ModelIsNotNull"/> property.
@@ -64,10 +64,10 @@ public partial class MethodFamiliesDetailsControl : UserControl, INotifyProperty
 	}
 
 	/// <summary>
-	/// Gets or sets the identifier of the method family to display.
+	/// Gets or sets the identifier of the Method Family to display.
 	/// </summary>
 	/// <remarks>
-	/// When this property is set, the control automatically loads the method family data from the API.
+	/// When this property is set, the control automatically loads the Method Family data from the API.
 	/// </remarks>
 	public int MethodFamilyId
 	{
@@ -80,7 +80,7 @@ public partial class MethodFamiliesDetailsControl : UserControl, INotifyProperty
 	}
 
 	/// <summary>
-	/// Gets or sets a value indicating whether a valid method family model is loaded.
+	/// Gets or sets a value indicating whether a valid Method Family model is loaded.
 	/// </summary>
 	/// <remarks>
 	/// Setting this property also updates the <see cref="ModelIsNull"/> property.
@@ -97,7 +97,7 @@ public partial class MethodFamiliesDetailsControl : UserControl, INotifyProperty
 	}
 
 	/// <summary>
-	/// Gets a value indicating whether no method family model is loaded.
+	/// Gets a value indicating whether no Method Family model is loaded.
 	/// </summary>
 	/// <remarks>
 	/// This property returns the inverse of <see cref="ModelIsNotNull"/>.

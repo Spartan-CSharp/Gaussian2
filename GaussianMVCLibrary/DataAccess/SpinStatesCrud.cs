@@ -11,7 +11,7 @@ using Microsoft.Extensions.Logging;
 namespace GaussianMVCLibrary.DataAccess;
 
 /// <summary>
-/// Provides CRUD operations for managing spin states.
+/// Provides CRUD operations for managing Spin States.
 /// </summary>
 /// <param name="dbData">The database data access interface.</param>
 /// <param name="logger">The logger instance for this class.</param>

@@ -36,7 +36,7 @@ public partial class MethodFamiliesEditControl : UserControl, INotifyPropertyCha
 	/// Initializes a new instance of the <see cref="MethodFamiliesEditControl"/> class with dependency injection.
 	/// </summary>
 	/// <param name="logger">The logger instance for logging control operations.</param>
-	/// <param name="endpoint">The endpoint for method family API operations.</param>
+	/// <param name="endpoint">The endpoint for Method Family API operations.</param>
 	public MethodFamiliesEditControl(ILogger<MethodFamiliesEditControl> logger, IMethodFamiliesEndpoint endpoint)
 	{
 		_logger = logger;
@@ -56,7 +56,7 @@ public partial class MethodFamiliesEditControl : UserControl, INotifyPropertyCha
 	public event EventHandler<ChildControlEventArgs<MethodFamiliesEditControl>>? ChildControlEvent;
 
 	/// <summary>
-	/// Gets or sets the method family view model being edited.
+	/// Gets or sets the Method Family view model being edited.
 	/// </summary>
 	/// <remarks>
 	/// When this property is set, the control automatically populates the name, RTF content, and updates validation state.
@@ -72,10 +72,10 @@ public partial class MethodFamiliesEditControl : UserControl, INotifyPropertyCha
 	}
 
 	/// <summary>
-	/// Gets or sets the identifier of the method family to edit.
+	/// Gets or sets the identifier of the Method Family to edit.
 	/// </summary>
 	/// <remarks>
-	/// When this property is set, the control automatically loads the method family data from the API.
+	/// When this property is set, the control automatically loads the Method Family data from the API.
 	/// </remarks>
 	public int MethodFamilyId
 	{
@@ -88,7 +88,7 @@ public partial class MethodFamiliesEditControl : UserControl, INotifyPropertyCha
 	}
 
 	/// <summary>
-	/// Gets or sets the name of the method family.
+	/// Gets or sets the name of the Method Family.
 	/// </summary>
 	public string MethodFamilyName
 	{
@@ -101,7 +101,7 @@ public partial class MethodFamiliesEditControl : UserControl, INotifyPropertyCha
 	} = string.Empty;
 
 	/// <summary>
-	/// Gets or sets a value indicating whether a valid method family model is loaded.
+	/// Gets or sets a value indicating whether a valid Method Family model is loaded.
 	/// </summary>
 	/// <remarks>
 	/// Setting this property also updates the <see cref="ModelIsNull"/> property.
@@ -118,7 +118,7 @@ public partial class MethodFamiliesEditControl : UserControl, INotifyPropertyCha
 	}
 
 	/// <summary>
-	/// Gets a value indicating whether no method family model is loaded.
+	/// Gets a value indicating whether no Method Family model is loaded.
 	/// </summary>
 	/// <remarks>
 	/// This property returns the inverse of <see cref="ModelIsNotNull"/>.

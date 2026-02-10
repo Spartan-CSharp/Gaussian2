@@ -30,8 +30,8 @@ public partial class BaseMethodsIndexControl : UserControl, INotifyPropertyChang
 	/// Initializes a new instance of the <see cref="BaseMethodsIndexControl"/> class with dependency injection.
 	/// </summary>
 	/// <param name="logger">The logger instance for logging control operations.</param>
-	/// <param name="baseMethodsEndpoint">The endpoint for base method API operations.</param>
-	/// <param name="methodFamiliesEndpoint">The endpoint for method family API operations.</param>
+	/// <param name="baseMethodsEndpoint">The endpoint for Base Method API operations.</param>
+	/// <param name="methodFamiliesEndpoint">The endpoint for Method Family API operations.</param>
 	public BaseMethodsIndexControl(ILogger<BaseMethodsIndexControl> logger, IBaseMethodsEndpoint baseMethodsEndpoint, IMethodFamiliesEndpoint methodFamiliesEndpoint)
 	{
 		_logger = logger;
@@ -52,7 +52,7 @@ public partial class BaseMethodsIndexControl : UserControl, INotifyPropertyChang
 	public event EventHandler<ChildControlEventArgs<BaseMethodsIndexControl>>? ChildControlEvent;
 
 	/// <summary>
-	/// Gets or sets the collection of base methods to display in the list.
+	/// Gets or sets the collection of Base Methods to display in the list.
 	/// </summary>
 	public Collection<BaseMethodViewModel> BaseMethodsList
 	{
@@ -123,7 +123,7 @@ public partial class BaseMethodsIndexControl : UserControl, INotifyPropertyChang
 
 	/// <inheritdoc/>
 	/// <summary>
-	/// Raises the OnInitialized event, sets up data binding, and loads the list of base methods from the API.
+	/// Raises the OnInitialized event, sets up data binding, and loads the list of Base Methods from the API.
 	/// </summary>
 	protected override void OnInitialized(EventArgs e)
 	{

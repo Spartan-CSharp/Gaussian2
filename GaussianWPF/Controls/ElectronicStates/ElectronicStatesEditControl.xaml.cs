@@ -36,7 +36,7 @@ public partial class ElectronicStatesEditControl : UserControl, INotifyPropertyC
 	/// Initializes a new instance of the <see cref="ElectronicStatesEditControl"/> class with dependency injection.
 	/// </summary>
 	/// <param name="logger">The logger instance for logging control operations.</param>
-	/// <param name="endpoint">The endpoint for electronic state API operations.</param>
+	/// <param name="endpoint">The endpoint for Electronic State API operations.</param>
 	public ElectronicStatesEditControl(ILogger<ElectronicStatesEditControl> logger, IElectronicStatesEndpoint endpoint)
 	{
 		_logger = logger;
@@ -56,7 +56,7 @@ public partial class ElectronicStatesEditControl : UserControl, INotifyPropertyC
 	public event EventHandler<ChildControlEventArgs<ElectronicStatesEditControl>>? ChildControlEvent;
 
 	/// <summary>
-	/// Gets or sets the electronic state view model being edited.
+	/// Gets or sets the Electronic State view model being edited.
 	/// </summary>
 	/// <remarks>
 	/// When this property is set, the control automatically populates the name, keyword, RTF content, and updates validation state.
@@ -72,10 +72,10 @@ public partial class ElectronicStatesEditControl : UserControl, INotifyPropertyC
 	}
 
 	/// <summary>
-	/// Gets or sets the identifier of the electronic state to edit.
+	/// Gets or sets the identifier of the Electronic State to edit.
 	/// </summary>
 	/// <remarks>
-	/// When this property is set, the control automatically loads the electronic state data from the API.
+	/// When this property is set, the control automatically loads the Electronic State data from the API.
 	/// </remarks>
 	public int ElectronicStateId
 	{
@@ -88,7 +88,7 @@ public partial class ElectronicStatesEditControl : UserControl, INotifyPropertyC
 	}
 
 	/// <summary>
-	/// Gets or sets the name of the electronic state.
+	/// Gets or sets the name of the Electronic State.
 	/// </summary>
 	public string ElectronicStateName
 	{
@@ -101,7 +101,7 @@ public partial class ElectronicStatesEditControl : UserControl, INotifyPropertyC
 	} = string.Empty;
 
 	/// <summary>
-	/// Gets or sets the keyword that identifies the electronic state.
+	/// Gets or sets the keyword that identifies the Electronic State.
 	/// </summary>
 	public string Keyword
 	{
@@ -114,7 +114,7 @@ public partial class ElectronicStatesEditControl : UserControl, INotifyPropertyC
 	} = string.Empty;
 
 	/// <summary>
-	/// Gets or sets a value indicating whether a valid electronic state model is loaded.
+	/// Gets or sets a value indicating whether a valid Electronic State model is loaded.
 	/// </summary>
 	/// <remarks>
 	/// Setting this property also updates the <see cref="ModelIsNull"/> property.
@@ -131,7 +131,7 @@ public partial class ElectronicStatesEditControl : UserControl, INotifyPropertyC
 	}
 
 	/// <summary>
-	/// Gets a value indicating whether no electronic state model is loaded.
+	/// Gets a value indicating whether no Electronic State model is loaded.
 	/// </summary>
 	/// <remarks>
 	/// This property returns the inverse of <see cref="ModelIsNotNull"/>.

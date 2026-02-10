@@ -1,5 +1,5 @@
 ﻿CREATE PROCEDURE [dbo].[spBaseMethods_GetById]
-	@Id int
+	@Id INT
 AS
 BEGIN
 	SET NOCOUNT ON;

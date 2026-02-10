@@ -27,11 +27,11 @@ public partial class ElectronicStatesControl : UserControl
 	/// Initializes a new instance of the <see cref="ElectronicStatesControl"/> class with dependency injection.
 	/// </summary>
 	/// <param name="logger">The logger instance for logging control operations.</param>
-	/// <param name="electronicStatesIndexFactory">The factory for creating electronic states index controls.</param>
-	/// <param name="electronicStatesDetailsFactory">The factory for creating electronic states details controls.</param>
-	/// <param name="electronicStatesCreateFactory">The factory for creating electronic states create controls.</param>
-	/// <param name="electronicStatesEditFactory">The factory for creating electronic states edit controls.</param>
-	/// <param name="electronicStatesDeleteFactory">The factory for creating electronic states delete controls.</param>
+	/// <param name="electronicStatesIndexFactory">The factory for creating Electronic States index controls.</param>
+	/// <param name="electronicStatesDetailsFactory">The factory for creating Electronic States details controls.</param>
+	/// <param name="electronicStatesCreateFactory">The factory for creating Electronic States create controls.</param>
+	/// <param name="electronicStatesEditFactory">The factory for creating Electronic States edit controls.</param>
+	/// <param name="electronicStatesDeleteFactory">The factory for creating Electronic States delete controls.</param>
 	public ElectronicStatesControl(ILogger<ElectronicStatesControl> logger, IAbstractFactory<ElectronicStatesIndexControl> electronicStatesIndexFactory, IAbstractFactory<ElectronicStatesDetailsControl> electronicStatesDetailsFactory, IAbstractFactory<ElectronicStatesCreateControl> electronicStatesCreateFactory, IAbstractFactory<ElectronicStatesEditControl> electronicStatesEditFactory, IAbstractFactory<ElectronicStatesDeleteControl> electronicStatesDeleteFactory)
 	{
 		_logger = logger;
@@ -46,7 +46,7 @@ public partial class ElectronicStatesControl : UserControl
 
 	/// <inheritdoc/>
 	/// <summary>
-	/// Raises the OnInitialized event and displays the electronic states index control as the initial content.
+	/// Raises the OnInitialized event and displays the Electronic States index control as the initial content.
 	/// </summary>
 	protected override void OnInitialized(EventArgs e)
 	{

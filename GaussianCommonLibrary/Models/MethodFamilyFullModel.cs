@@ -6,12 +6,12 @@
 public class MethodFamilyFullModel
 {
 	/// <summary>
-	/// Gets or sets the unique identifier for the method family.
+	/// Gets or sets the unique identifier for the Method Family.
 	/// </summary>
 	public int Id { get; set; }
 
 	/// <summary>
-	/// Gets or sets the display name of the method family.
+	/// Gets or sets the display name of the Method Family.
 	/// </summary>
 	public string Name { get; set; } = string.Empty;
 
@@ -36,23 +36,23 @@ public class MethodFamilyFullModel
 	public DateTime LastUpdatedDate { get; set; } = DateTime.Now;
 
 	/// <summary>
-	/// Gets or sets a value indicating whether this method family is archived.
+	/// Gets or sets a value indicating whether this Method Family is archived.
 	/// </summary>
 	public bool Archived { get; set; }
 
 	/// <summary>
 	/// Converts this model to a <see cref="MethodFamilyRecord"/>.
 	/// </summary>
-	/// <returns>A record containing the identifier and name of this method family.</returns>
+	/// <returns>A record containing the identifier and name of this Method Family.</returns>
 	public MethodFamilyRecord ToRecord()
 	{
 		return new MethodFamilyRecord(Id, Name);
 	}
 
 	/// <summary>
-	/// Returns the name of the method family.
+	/// Returns the name of the Method Family.
 	/// </summary>
-	/// <returns>The method family name.</returns>
+	/// <returns>The Method Family name.</returns>
 	public override string? ToString()
 	{
 		return $"{Name}";

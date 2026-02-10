@@ -28,7 +28,7 @@ public partial class SpinStatesDetailsControl : UserControl, INotifyPropertyChan
 	/// Initializes a new instance of the <see cref="SpinStatesDetailsControl"/> class with dependency injection.
 	/// </summary>
 	/// <param name="logger">The logger instance for logging control operations.</param>
-	/// <param name="endpoint">The endpoint for spin state API operations.</param>
+	/// <param name="endpoint">The endpoint for Spin State API operations.</param>
 	public SpinStatesDetailsControl(ILogger<SpinStatesDetailsControl> logger, ISpinStatesEndpoint endpoint)
 	{
 		_logger = logger;
@@ -48,7 +48,7 @@ public partial class SpinStatesDetailsControl : UserControl, INotifyPropertyChan
 	public event EventHandler<ChildControlEventArgs<SpinStatesDetailsControl>>? ChildControlEvent;
 
 	/// <summary>
-	/// Gets or sets the spin state view model being displayed.
+	/// Gets or sets the Spin State view model being displayed.
 	/// </summary>
 	/// <remarks>
 	/// When this property is set, the control automatically populates the RTF content and updates the <see cref="ModelIsNotNull"/> property.
@@ -64,10 +64,10 @@ public partial class SpinStatesDetailsControl : UserControl, INotifyPropertyChan
 	}
 
 	/// <summary>
-	/// Gets or sets the identifier of the spin state to display.
+	/// Gets or sets the identifier of the Spin State to display.
 	/// </summary>
 	/// <remarks>
-	/// When this property is set, the control automatically loads the spin state data from the API.
+	/// When this property is set, the control automatically loads the Spin State data from the API.
 	/// </remarks>
 	public int SpinStateId
 	{
@@ -80,7 +80,7 @@ public partial class SpinStatesDetailsControl : UserControl, INotifyPropertyChan
 	}
 
 	/// <summary>
-	/// Gets or sets a value indicating whether a valid spin state model is loaded.
+	/// Gets or sets a value indicating whether a valid Spin State model is loaded.
 	/// </summary>
 	/// <remarks>
 	/// Setting this property also updates the <see cref="ModelIsNull"/> property.
@@ -97,7 +97,7 @@ public partial class SpinStatesDetailsControl : UserControl, INotifyPropertyChan
 	}
 
 	/// <summary>
-	/// Gets a value indicating whether no spin state model is loaded.
+	/// Gets a value indicating whether no Spin State model is loaded.
 	/// </summary>
 	/// <remarks>
 	/// This property returns the inverse of <see cref="ModelIsNotNull"/>.

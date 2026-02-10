@@ -16,17 +16,17 @@ using Microsoft.AspNetCore.Mvc;
 namespace GaussianMVC.Controllers.APIControllers.V1;
 
 /// <summary>
-/// API controller for managing base methods.
-/// Provides CRUD operations for base method resources with support for full and simple model representations.
+/// API controller for managing Base Methods.
+/// Provides CRUD operations for Base Method resources with support for full and simple model representations.
 /// </summary>
 /// <remarks>
-/// This controller implements version 1.0 of the base methods API and supports the following operations:
-/// - Retrieving all base methods in full or simple format
-/// - Retrieving base methods by method family
-/// - Retrieving a single base method by ID
-/// - Creating new base methods
-/// - Updating existing base methods
-/// - Deleting base methods
+/// This controller implements version 1.0 of the Base Methods API and supports the following operations:
+/// - Retrieving all Base Methods in full or simple format
+/// - Retrieving Base Methods by Method Family
+/// - Retrieving a single Base Method by ID
+/// - Creating new Base Methods
+/// - Updating existing Base Methods
+/// - Deleting Base Methods
 /// </remarks>
 [Route("api/v{version:apiVersion}/[controller]")]
 [ApiController]
@@ -37,10 +37,10 @@ public class BaseMethodsController(ILogger<BaseMethodsController> logger, IBaseM
 	private readonly IBaseMethodsCrud _crud = crud;
 
 	/// <summary>
-	/// Retrieves all base methods with full details.
+	/// Retrieves all Base Methods with full details.
 	/// </summary>
-	/// <returns>A list of all base methods with complete information.</returns>
-	/// <response code="200">Returns the list of base methods successfully.</response>
+	/// <returns>A list of all Base Methods with complete information.</returns>
+	/// <response code="200">Returns the list of Base Methods successfully.</response>
 	/// <response code="500">An internal server error occurred while processing the request.</response>
 	// GET: api/v1/BaseMethods
 	[HttpGet()]
@@ -74,10 +74,10 @@ public class BaseMethodsController(ILogger<BaseMethodsController> logger, IBaseM
 	}
 
 	/// <summary>
-	/// Retrieves all base methods with intermediate details.
+	/// Retrieves all Base Methods with intermediate details.
 	/// </summary>
-	/// <returns>A list of all base methods with method family records instead of full method family models.</returns>
-	/// <response code="200">Returns the list of base methods successfully.</response>
+	/// <returns>A list of all Base Methods with Method Family records instead of full Method Family models.</returns>
+	/// <response code="200">Returns the list of Base Methods successfully.</response>
 	/// <response code="500">An internal server error occurred while processing the request.</response>
 	// GET: api/v1/BaseMethods/Intermediate
 	[HttpGet("Intermediate")]
@@ -111,10 +111,10 @@ public class BaseMethodsController(ILogger<BaseMethodsController> logger, IBaseM
 	}
 
 	/// <summary>
-	/// Retrieves all base methods with simplified details.
+	/// Retrieves all Base Methods with simplified details.
 	/// </summary>
-	/// <returns>A list of all base methods with basic information.</returns>
-	/// <response code="200">Returns the list of base methods successfully.</response>
+	/// <returns>A list of all Base Methods with basic information.</returns>
+	/// <response code="200">Returns the list of Base Methods successfully.</response>
 	/// <response code="500">An internal server error occurred while processing the request.</response>
 	// GET: api/v1/BaseMethods/Simple
 	[HttpGet("Simple")]
@@ -148,28 +148,28 @@ public class BaseMethodsController(ILogger<BaseMethodsController> logger, IBaseM
 	}
 
 	/// <summary>
-	/// Retrieves all base methods belonging to a specific method family.
+	/// Retrieves all Base Methods belonging to a specific Method Family.
 	/// </summary>
-	/// <param name="methodFamilyId">The unique identifier of the method family.</param>
-	/// <returns>A list of base methods associated with the specified method family.</returns>
-	/// <response code="200">Returns the list of base methods successfully.</response>
+	/// <param name="methodFamilyId">The unique identifier of the Method Family.</param>
+	/// <returns>A list of Base Methods associated with the specified Method Family.</returns>
+	/// <response code="200">Returns the list of Base Methods successfully.</response>
 	/// <response code="500">An internal server error occurred while processing the request.</response>
-	// GET: api/v1/BaseMethods/Family
-	[HttpGet("Family")]
-	public async Task<ActionResult<List<BaseMethodFullModel>>> GetByFamilyAsync([FromQuery(Name = "methodFamilyId")] int methodFamilyId)
+	// GET: api/v1/BaseMethods/MethodFamily?methodFamilyId=5
+	[HttpGet("MethodFamily")]
+	public async Task<ActionResult<List<BaseMethodFullModel>>> GetByMethodFamilyAsync([FromQuery(Name = "methodFamilyId")] int methodFamilyId)
 	{
 		try
 		{
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Method} {Controller} {Action} called with query parameter methodFamilyId = {MethodFamilyId}.", HttpContext.Request.Method, nameof(BaseMethodsController), nameof(GetByFamilyAsync), methodFamilyId);
+				_logger.LogDebug("{Method} {Controller} {Action} called with query parameter methodFamilyId = {MethodFamilyId}.", HttpContext.Request.Method, nameof(BaseMethodsController), nameof(GetByMethodFamilyAsync), methodFamilyId);
 			}
 
 			List<BaseMethodFullModel> baseMethods = await _crud.GetBaseMethodsByMethodFamilyIdAsync(methodFamilyId).ConfigureAwait(false);
 
 			if (_logger.IsEnabled(LogLevel.Debug))
 			{
-				_logger.LogDebug("{Method} {Controller} {Action} returning {ModelCount} {Model} with methodFamilyId = {MethodFamilyId}.", HttpContext.Request.Method, nameof(BaseMethodsController), nameof(GetByFamilyAsync), baseMethods.Count, nameof(BaseMethodFullModel), methodFamilyId);
+				_logger.LogDebug("{Method} {Controller} {Action} returning {ModelCount} {Model} with methodFamilyId = {MethodFamilyId}.", HttpContext.Request.Method, nameof(BaseMethodsController), nameof(GetByMethodFamilyAsync), baseMethods.Count, nameof(BaseMethodFullModel), methodFamilyId);
 			}
 
 			return Ok(baseMethods);
@@ -178,7 +178,7 @@ public class BaseMethodsController(ILogger<BaseMethodsController> logger, IBaseM
 		{
 			if (_logger.IsEnabled(LogLevel.Error))
 			{
-				_logger.LogError(ex, "{Method} {Controller} {Action} called with query parameter methodFamilyId = {MethodFamilyId} had an error", HttpContext.Request.Method, nameof(BaseMethodsController), nameof(GetByFamilyAsync), methodFamilyId);
+				_logger.LogError(ex, "{Method} {Controller} {Action} called with query parameter methodFamilyId = {MethodFamilyId} had an error", HttpContext.Request.Method, nameof(BaseMethodsController), nameof(GetByMethodFamilyAsync), methodFamilyId);
 			}
 
 			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
@@ -186,12 +186,12 @@ public class BaseMethodsController(ILogger<BaseMethodsController> logger, IBaseM
 	}
 
 	/// <summary>
-	/// Retrieves a single base method by its unique identifier.
+	/// Retrieves a single Base Method by its unique identifier.
 	/// </summary>
-	/// <param name="id">The unique identifier of the base method.</param>
-	/// <returns>The base method with full details if found.</returns>
-	/// <response code="200">Returns the base method successfully.</response>
-	/// <response code="404">No base method exists with the specified ID.</response>
+	/// <param name="id">The unique identifier of the Base Method.</param>
+	/// <returns>The Base Method with full details if found.</returns>
+	/// <response code="200">Returns the Base Method successfully.</response>
+	/// <response code="404">No Base Method exists with the specified ID.</response>
 	/// <response code="500">An internal server error occurred while processing the request.</response>
 	// GET api/v1/BaseMethods/5
 	[HttpGet("{id}")]
@@ -225,11 +225,11 @@ public class BaseMethodsController(ILogger<BaseMethodsController> logger, IBaseM
 	}
 
 	/// <summary>
-	/// Creates a new base method.
+	/// Creates a new Base Method.
 	/// </summary>
-	/// <param name="model">The base method model containing the data for the new base method.</param>
-	/// <returns>The newly created base method with full details.</returns>
-	/// <response code="201">Returns the newly created base method.</response>
+	/// <param name="model">The Base Method model containing the data for the new Base Method.</param>
+	/// <returns>The newly created Base Method with full details.</returns>
+	/// <response code="201">Returns the newly created Base Method.</response>
 	/// <response code="500">An internal server error occurred while processing the request.</response>
 	// POST api/v1/BaseMethods
 	[HttpPost]
@@ -290,12 +290,12 @@ public class BaseMethodsController(ILogger<BaseMethodsController> logger, IBaseM
 	}
 
 	/// <summary>
-	/// Updates an existing base method.
+	/// Updates an existing Base Method.
 	/// </summary>
-	/// <param name="id">The unique identifier of the base method to update.</param>
-	/// <param name="model">The base method model containing the updated data.</param>
-	/// <returns>The updated base method with full details.</returns>
-	/// <response code="200">Returns the updated base method successfully.</response>
+	/// <param name="id">The unique identifier of the Base Method to update.</param>
+	/// <param name="model">The Base Method model containing the updated data.</param>
+	/// <returns>The updated Base Method with full details.</returns>
+	/// <response code="200">Returns the updated Base Method successfully.</response>
 	/// <response code="400">The route parameter ID does not match the model ID.</response>
 	/// <response code="500">An internal server error occurred while processing the request.</response>
 	// PUT api/v1/BaseMethods/5
@@ -368,11 +368,11 @@ public class BaseMethodsController(ILogger<BaseMethodsController> logger, IBaseM
 	}
 
 	/// <summary>
-	/// Deletes a base method by its unique identifier.
+	/// Deletes a Base Method by its unique identifier.
 	/// </summary>
-	/// <param name="id">The unique identifier of the base method to delete.</param>
+	/// <param name="id">The unique identifier of the Base Method to delete.</param>
 	/// <returns>An action result indicating the success of the operation.</returns>
-	/// <response code="200">The base method was deleted successfully.</response>
+	/// <response code="200">The Base Method was deleted successfully.</response>
 	/// <response code="500">An internal server error occurred while processing the request.</response>
 	// DELETE api/v1/BaseMethods/5
 	[HttpDelete("{id}")]

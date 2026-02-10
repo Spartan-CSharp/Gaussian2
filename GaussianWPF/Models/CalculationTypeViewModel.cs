@@ -6,7 +6,7 @@ namespace GaussianWPF.Models;
 
 /// <summary>
 /// View model representing a Calculation Type for the Gaussian WPF application.
-/// Provides data binding and validation for calculation type operations in the desktop client.
+/// Provides data binding and validation for Calculation Type operations in the desktop client.
 /// </summary>
 public class CalculationTypeViewModel
 {

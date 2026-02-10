@@ -1,7 +1,7 @@
 ﻿namespace GaussianCommonLibrary.Models;
 
 /// <summary>
-/// Represents a base method with only the method family identifier.
+/// Represents a Base Method with only the Method Family identifier.
 /// </summary>
 public class BaseMethodSimpleModel
 {
@@ -49,17 +49,17 @@ public class BaseMethodSimpleModel
 	}
 
 	/// <summary>
-	/// Gets or sets the unique identifier for the base method.
+	/// Gets or sets the unique identifier for the Base Method.
 	/// </summary>
 	public int Id { get; set; }
 
 	/// <summary>
-	/// Gets or sets the keyword used to reference this base method in Gaussian input files.
+	/// Gets or sets the keyword used to reference this Base Method in Gaussian input files.
 	/// </summary>
 	public string Keyword { get; set; } = string.Empty;
 
 	/// <summary>
-	/// Gets or sets the identifier of the method family to which this base method belongs.
+	/// Gets or sets the identifier of the Method Family to which this Base Method belongs.
 	/// </summary>
 	public int MethodFamilyId { get; set; }
 
@@ -84,15 +84,15 @@ public class BaseMethodSimpleModel
 	public DateTime LastUpdatedDate { get; set; } = DateTime.Now;
 
 	/// <summary>
-	/// Gets or sets a value indicating whether this base method is archived.
+	/// Gets or sets a value indicating whether this Base Method is archived.
 	/// </summary>
 	public bool Archived { get; set; }
 
 	/// <summary>
 	/// Converts this model to a <see cref="BaseMethodIntermediateModel"/>.
 	/// </summary>
-	/// <param name="methodFamily">The method family record to include in the intermediate model.</param>
-	/// <returns>An intermediate model representation of this base method.</returns>
+	/// <param name="methodFamily">The Method Family record to include in the intermediate model.</param>
+	/// <returns>An intermediate model representation of this Base Method.</returns>
 	public BaseMethodIntermediateModel ToIntermediateModel(MethodFamilyRecord methodFamily)
 	{
 		ArgumentNullException.ThrowIfNull(methodFamily, nameof(methodFamily));
@@ -111,9 +111,9 @@ public class BaseMethodSimpleModel
 	}
 
 	/// <summary>
-	/// Converts this model to a <see cref="BaseMethodFullModel"/> using the specified method family.
+	/// Converts this model to a <see cref="BaseMethodFullModel"/> using the specified Method Family.
 	/// </summary>
-	/// <param name="methodFamily">The method family full model to associate with the resulting full model.</param>
+	/// <param name="methodFamily">The Method Family full model to associate with the resulting full model.</param>
 	/// <returns>A new <see cref="BaseMethodFullModel"/> instance with the properties copied from this model.</returns>
 	public BaseMethodFullModel ToFullModel(MethodFamilyFullModel methodFamily)
 	{

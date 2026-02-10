@@ -27,11 +27,11 @@ public partial class MethodFamiliesControl : UserControl
 	/// Initializes a new instance of the <see cref="MethodFamiliesControl"/> class with dependency injection.
 	/// </summary>
 	/// <param name="logger">The logger instance for logging control operations.</param>
-	/// <param name="methodFamiliesIndexFactory">The factory for creating method families index controls.</param>
-	/// <param name="methodFamiliesDetailsFactory">The factory for creating method families details controls.</param>
-	/// <param name="methodFamiliesCreateFactory">The factory for creating method families create controls.</param>
-	/// <param name="methodFamiliesEditFactory">The factory for creating method families edit controls.</param>
-	/// <param name="methodFamiliesDeleteFactory">The factory for creating method families delete controls.</param>
+	/// <param name="methodFamiliesIndexFactory">The factory for creating Method Families index controls.</param>
+	/// <param name="methodFamiliesDetailsFactory">The factory for creating Method Families details controls.</param>
+	/// <param name="methodFamiliesCreateFactory">The factory for creating Method Families create controls.</param>
+	/// <param name="methodFamiliesEditFactory">The factory for creating Method Families edit controls.</param>
+	/// <param name="methodFamiliesDeleteFactory">The factory for creating Method Families delete controls.</param>
 	public MethodFamiliesControl(ILogger<MethodFamiliesControl> logger, IAbstractFactory<MethodFamiliesIndexControl> methodFamiliesIndexFactory, IAbstractFactory<MethodFamiliesDetailsControl> methodFamiliesDetailsFactory, IAbstractFactory<MethodFamiliesCreateControl> methodFamiliesCreateFactory, IAbstractFactory<MethodFamiliesEditControl> methodFamiliesEditFactory, IAbstractFactory<MethodFamiliesDeleteControl> methodFamiliesDeleteFactory)
 	{
 		_logger = logger;
@@ -46,7 +46,7 @@ public partial class MethodFamiliesControl : UserControl
 
 	/// <inheritdoc/>
 	/// <summary>
-	/// Raises the OnInitialized event and displays the method families index control as the initial content.
+	/// Raises the OnInitialized event and displays the Method Families index control as the initial content.
 	/// </summary>
 	protected override void OnInitialized(EventArgs e)
 	{

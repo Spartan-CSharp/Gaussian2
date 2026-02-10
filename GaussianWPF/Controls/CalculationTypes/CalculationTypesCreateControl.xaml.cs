@@ -36,7 +36,7 @@ public partial class CalculationTypesCreateControl : UserControl, INotifyPropert
 	/// Initializes a new instance of the <see cref="CalculationTypesCreateControl"/> class with dependency injection.
 	/// </summary>
 	/// <param name="logger">The logger instance for logging control operations.</param>
-	/// <param name="endpoint">The endpoint for calculation type API operations.</param>
+	/// <param name="endpoint">The endpoint for Calculation Type API operations.</param>
 	public CalculationTypesCreateControl(ILogger<CalculationTypesCreateControl> logger, ICalculationTypesEndpoint endpoint)
 	{
 		_logger = logger;
@@ -56,7 +56,7 @@ public partial class CalculationTypesCreateControl : UserControl, INotifyPropert
 	public event EventHandler<ChildControlEventArgs<CalculationTypesCreateControl>>? ChildControlEvent;
 
 	/// <summary>
-	/// Gets or sets the calculation type view model being created.
+	/// Gets or sets the Calculation Type view model being created.
 	/// </summary>
 	public CalculationTypeViewModel CalculationType
 	{
@@ -69,7 +69,7 @@ public partial class CalculationTypesCreateControl : UserControl, INotifyPropert
 	} = new();
 
 	/// <summary>
-	/// Gets or sets the name of the calculation type.
+	/// Gets or sets the name of the Calculation Type.
 	/// </summary>
 	public string CalculationTypeName
 	{
@@ -82,7 +82,7 @@ public partial class CalculationTypesCreateControl : UserControl, INotifyPropert
 	} = string.Empty;
 
 	/// <summary>
-	/// Gets or sets the keyword that identifies the calculation type.
+	/// Gets or sets the keyword that identifies the Calculation Type.
 	/// </summary>
 	public string Keyword
 	{

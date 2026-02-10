@@ -13,8 +13,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace GaussianMVC.Controllers;
 
 /// <summary>
-/// Controller for managing spin states in the Gaussian MVC application.
-/// Provides CRUD operations for spin state entities.
+/// Controller for managing Spin States in the Gaussian MVC application.
+/// Provides CRUD operations for Spin State entities.
 /// </summary>
 public class SpinStatesController(ILogger<SpinStatesController> logger, ISpinStatesCrud crud) : Controller
 {
@@ -22,9 +22,9 @@ public class SpinStatesController(ILogger<SpinStatesController> logger, ISpinSta
 	private readonly ISpinStatesCrud _crud = crud;
 
 	/// <summary>
-	/// Displays a list of all spin states.
+	/// Displays a list of all Spin States.
 	/// </summary>
-	/// <returns>A view containing a list of spin state view models.</returns>
+	/// <returns>A view containing a list of Spin State view models.</returns>
 	// GET: SpinStates
 	[HttpGet]
 	public async Task<ActionResult<List<SpinStateViewModel>>> IndexAsync()
@@ -75,10 +75,10 @@ public class SpinStatesController(ILogger<SpinStatesController> logger, ISpinSta
 	}
 
 	/// <summary>
-	/// Displays detailed information about a specific spin state.
+	/// Displays detailed information about a specific Spin State.
 	/// </summary>
-	/// <param name="id">The unique identifier of the spin state to display.</param>
-	/// <returns>A view containing the spin state details, or null if not found.</returns>
+	/// <param name="id">The unique identifier of the Spin State to display.</param>
+	/// <returns>A view containing the Spin State details, or null if not found.</returns>
 	// GET: SpinStates/Details/5
 	[HttpGet]
 	public async Task<ActionResult<SpinStateViewModel?>> DetailsAsync(int id)
@@ -123,9 +123,9 @@ public class SpinStatesController(ILogger<SpinStatesController> logger, ISpinSta
 	}
 
 	/// <summary>
-	/// Displays the form for creating a new spin state.
+	/// Displays the form for creating a new Spin State.
 	/// </summary>
-	/// <returns>A view containing an empty spin state view model.</returns>
+	/// <returns>A view containing an empty Spin State view model.</returns>
 	// GET: SpinStates/CreateAsync
 	[HttpGet]
 	public async Task<ActionResult<SpinStateViewModel>> CreateAsync()
@@ -169,9 +169,9 @@ public class SpinStatesController(ILogger<SpinStatesController> logger, ISpinSta
 	}
 
 	/// <summary>
-	/// Processes the creation of a new spin state.
+	/// Processes the creation of a new Spin State.
 	/// </summary>
-	/// <param name="model">The spin state view model containing the data to create.</param>
+	/// <param name="model">The Spin State view model containing the data to create.</param>
 	/// <returns>Redirects to the index page on success, or returns to the create view with validation errors.</returns>
 	/// <exception cref="ArgumentNullException">Thrown when the model parameter is null.</exception>
 	// POST: SpinStates/CreateAsync
@@ -248,10 +248,10 @@ public class SpinStatesController(ILogger<SpinStatesController> logger, ISpinSta
 	}
 
 	/// <summary>
-	/// Displays the form for editing an existing spin state.
+	/// Displays the form for editing an existing Spin State.
 	/// </summary>
-	/// <param name="id">The unique identifier of the spin state to edit.</param>
-	/// <returns>A view containing the spin state view model to edit, or null if not found.</returns>
+	/// <param name="id">The unique identifier of the Spin State to edit.</param>
+	/// <returns>A view containing the Spin State view model to edit, or null if not found.</returns>
 	// GET: SpinStates/Edit/5
 	[HttpGet]
 	public async Task<ActionResult<SpinStateViewModel?>> EditAsync(int id)
@@ -296,10 +296,10 @@ public class SpinStatesController(ILogger<SpinStatesController> logger, ISpinSta
 	}
 
 	/// <summary>
-	/// Processes the update of an existing spin state.
+	/// Processes the update of an existing Spin State.
 	/// </summary>
-	/// <param name="id">The unique identifier of the spin state to update.</param>
-	/// <param name="model">The spin state view model containing the updated data.</param>
+	/// <param name="id">The unique identifier of the Spin State to update.</param>
+	/// <param name="model">The Spin State view model containing the updated data.</param>
 	/// <returns>Redirects to the index page on success, or returns to the edit view with validation errors.</returns>
 	/// <exception cref="ArgumentNullException">Thrown when the model parameter is null.</exception>
 	/// <remarks>
@@ -388,10 +388,10 @@ public class SpinStatesController(ILogger<SpinStatesController> logger, ISpinSta
 	}
 
 	/// <summary>
-	/// Displays the confirmation page for deleting an spin state.
+	/// Displays the confirmation page for deleting an Spin State.
 	/// </summary>
-	/// <param name="id">The unique identifier of the spin state to delete.</param>
-	/// <returns>A view containing the spin state view model to delete, or null if not found.</returns>
+	/// <param name="id">The unique identifier of the Spin State to delete.</param>
+	/// <returns>A view containing the Spin State view model to delete, or null if not found.</returns>
 	/// <remarks>
 	/// GET: SpinStates/Delete/5
 	/// </remarks>
@@ -438,10 +438,10 @@ public class SpinStatesController(ILogger<SpinStatesController> logger, ISpinSta
 	}
 
 	/// <summary>
-	/// Processes the deletion of an spin state.
+	/// Processes the deletion of an Spin State.
 	/// </summary>
-	/// <param name="id">The unique identifier of the spin state to delete.</param>
-	/// <param name="model">The spin state view model containing the data to confirm deletion.</param>
+	/// <param name="id">The unique identifier of the Spin State to delete.</param>
+	/// <param name="model">The Spin State view model containing the data to confirm deletion.</param>
 	/// <returns>Redirects to the index page on success, or returns to the delete view if validation fails.</returns>
 	/// <remarks>
 	/// POST: SpinStates/Delete/5

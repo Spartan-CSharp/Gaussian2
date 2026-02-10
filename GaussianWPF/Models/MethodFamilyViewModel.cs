@@ -6,7 +6,7 @@ namespace GaussianWPF.Models;
 
 /// <summary>
 /// View model representing a Method Family for the Gaussian WPF application.
-/// Provides data binding and validation for method family operations in the desktop client.
+/// Provides data binding and validation for Method Family operations in the desktop client.
 /// </summary>
 public class MethodFamilyViewModel
 {

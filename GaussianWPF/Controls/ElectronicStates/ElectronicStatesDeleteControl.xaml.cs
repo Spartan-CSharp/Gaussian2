@@ -28,7 +28,7 @@ public partial class ElectronicStatesDeleteControl : UserControl, INotifyPropert
 	/// Initializes a new instance of the <see cref="ElectronicStatesDeleteControl"/> class with dependency injection.
 	/// </summary>
 	/// <param name="logger">The logger instance for logging control operations.</param>
-	/// <param name="endpoint">The endpoint for electronic state API operations.</param>
+	/// <param name="endpoint">The endpoint for Electronic State API operations.</param>
 	public ElectronicStatesDeleteControl(ILogger<ElectronicStatesDeleteControl> logger, IElectronicStatesEndpoint endpoint)
 	{
 		_logger = logger;
@@ -48,7 +48,7 @@ public partial class ElectronicStatesDeleteControl : UserControl, INotifyPropert
 	public event EventHandler<ChildControlEventArgs<ElectronicStatesDeleteControl>>? ChildControlEvent;
 
 	/// <summary>
-	/// Gets or sets the electronic state view model being deleted.
+	/// Gets or sets the Electronic State view model being deleted.
 	/// </summary>
 	/// <remarks>
 	/// When this property is set, the control automatically populates the RTF content and updates the <see cref="ModelIsNotNull"/> property.
@@ -64,10 +64,10 @@ public partial class ElectronicStatesDeleteControl : UserControl, INotifyPropert
 	}
 
 	/// <summary>
-	/// Gets or sets the identifier of the electronic state to delete.
+	/// Gets or sets the identifier of the Electronic State to delete.
 	/// </summary>
 	/// <remarks>
-	/// When this property is set, the control automatically loads the electronic state data from the API.
+	/// When this property is set, the control automatically loads the Electronic State data from the API.
 	/// </remarks>
 	public int ElectronicStateId
 	{
@@ -80,7 +80,7 @@ public partial class ElectronicStatesDeleteControl : UserControl, INotifyPropert
 	}
 
 	/// <summary>
-	/// Gets or sets a value indicating whether a valid electronic state model is loaded.
+	/// Gets or sets a value indicating whether a valid Electronic State model is loaded.
 	/// </summary>
 	/// <remarks>
 	/// Setting this property also updates the <see cref="ModelIsNull"/> property.
@@ -97,7 +97,7 @@ public partial class ElectronicStatesDeleteControl : UserControl, INotifyPropert
 	}
 
 	/// <summary>
-	/// Gets a value indicating whether no electronic state model is loaded.
+	/// Gets a value indicating whether no Electronic State model is loaded.
 	/// </summary>
 	/// <remarks>
 	/// This property returns the inverse of <see cref="ModelIsNotNull"/>.

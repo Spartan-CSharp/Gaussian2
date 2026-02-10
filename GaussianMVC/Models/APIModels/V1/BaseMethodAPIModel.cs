@@ -5,8 +5,8 @@ using GaussianCommonLibrary.Models;
 namespace GaussianMVC.Models.APIModels.V1;
 
 /// <summary>
-/// API model representing a base method for REST API operations.
-/// Provides data transfer and validation for base method entities in API v1.
+/// API model representing a Base Method for REST API operations.
+/// Provides data transfer and validation for Base Method entities in API v1.
 /// </summary>
 public class BaseMethodAPIModel
 {
@@ -20,7 +20,7 @@ public class BaseMethodAPIModel
 	/// <summary>
 	/// Initializes a new instance of the <see cref="BaseMethodAPIModel"/> class from a full model.
 	/// </summary>
-	/// <param name="model">The base method full model containing the source data.</param>
+	/// <param name="model">The Base Method full model containing the source data.</param>
 	/// <exception cref="ArgumentNullException">Thrown when <paramref name="model"/> is null.</exception>
 	public BaseMethodAPIModel(BaseMethodFullModel model)
 	{
@@ -38,7 +38,7 @@ public class BaseMethodAPIModel
 	/// <summary>
 	/// Initializes a new instance of the <see cref="BaseMethodAPIModel"/> class from an intermediate model.
 	/// </summary>
-	/// <param name="model">The base method intermediate model containing the source data.</param>
+	/// <param name="model">The Base Method intermediate model containing the source data.</param>
 	/// <exception cref="ArgumentNullException">Thrown when <paramref name="model"/> is null.</exception>
 	public BaseMethodAPIModel(BaseMethodIntermediateModel model)
 	{
@@ -56,7 +56,7 @@ public class BaseMethodAPIModel
 	/// <summary>
 	/// Initializes a new instance of the <see cref="BaseMethodAPIModel"/> class from a simple model.
 	/// </summary>
-	/// <param name="model">The base method simple model containing the source data.</param>
+	/// <param name="model">The Base Method simple model containing the source data.</param>
 	/// <exception cref="ArgumentNullException">Thrown when <paramref name="model"/> is null.</exception>
 	public BaseMethodAPIModel(BaseMethodSimpleModel model)
 	{
@@ -72,14 +72,14 @@ public class BaseMethodAPIModel
 	}
 
 	/// <summary>
-	/// Gets or sets the unique identifier for the base method.
+	/// Gets or sets the unique identifier for the Base Method.
 	/// </summary>
 	[Display(Name = "Id")]
 	[Key]
 	public int Id { get; set; }
 
 	/// <summary>
-	/// Gets or sets the keyword that identifies the base method.
+	/// Gets or sets the keyword that identifies the Base Method.
 	/// </summary>
 	[DataType(DataType.Text)]
 	[Display(Name = "Keyword")]
@@ -88,7 +88,7 @@ public class BaseMethodAPIModel
 	public string Keyword { get; set; } = string.Empty;
 
 	/// <summary>
-	/// Gets or sets the method family identifier.
+	/// Gets or sets the Method Family identifier.
 	/// </summary>
 	[Display(Name = "Method Family Id")]
 	[Required]
@@ -110,21 +110,21 @@ public class BaseMethodAPIModel
 	public string? DescriptionText { get; set; }
 
 	/// <summary>
-	/// Gets or sets the date and time when the base method was created.
+	/// Gets or sets the date and time when the Base Method was created.
 	/// </summary>
 	[DataType(DataType.DateTime)]
 	[Display(Name = "Created Date")]
 	public DateTime CreatedDate { get; set; } = DateTime.Now;
 
 	/// <summary>
-	/// Gets or sets the date and time when the base method was last updated.
+	/// Gets or sets the date and time when the Base Method was last updated.
 	/// </summary>
 	[DataType(DataType.DateTime)]
 	[Display(Name = "Last Updated Date")]
 	public DateTime LastUpdatedDate { get; set; } = DateTime.Now;
 
 	/// <summary>
-	/// Gets or sets a value indicating whether the base method is archived.
+	/// Gets or sets a value indicating whether the Base Method is archived.
 	/// </summary>
 	[Display(Name = "Archived")]
 	public bool Archived { get; set; }
@@ -132,7 +132,7 @@ public class BaseMethodAPIModel
 	/// <summary>
 	/// Converts this API model to a <see cref="BaseMethodFullModel"/> instance.
 	/// </summary>
-	/// <param name="methodFamily">The method family full model to associate with the base method.</param>
+	/// <param name="methodFamily">The Method Family full model to associate with the Base Method.</param>
 	/// <returns>A new instance of <see cref="BaseMethodFullModel"/> populated with the API model data.</returns>
 	public BaseMethodFullModel ToFullModel(MethodFamilyFullModel methodFamily)
 	{
@@ -152,7 +152,7 @@ public class BaseMethodAPIModel
 	/// <summary>
 	/// Converts this API model to a <see cref="BaseMethodIntermediateModel"/> instance.
 	/// </summary>
-	/// <param name="methodFamily">The method family record to associate with the base method.</param>
+	/// <param name="methodFamily">The Method Family record to associate with the Base Method.</param>
 	/// <returns>A new instance of <see cref="BaseMethodIntermediateModel"/> populated with the API model data.</returns>
 	public BaseMethodIntermediateModel ToIntermediateModel(MethodFamilyRecord methodFamily)
 	{
@@ -189,9 +189,9 @@ public class BaseMethodAPIModel
 	}
 
 	/// <summary>
-	/// Returns a string representation of the base method API model.
+	/// Returns a string representation of the Base Method API model.
 	/// </summary>
-	/// <returns>The keyword of the base method.</returns>
+	/// <returns>The keyword of the Base Method.</returns>
 	public override string? ToString()
 	{
 		return $"{Keyword}";

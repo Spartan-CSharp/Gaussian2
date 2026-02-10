@@ -27,11 +27,11 @@ public partial class CalculationTypesControl : UserControl
 	/// Initializes a new instance of the <see cref="CalculationTypesControl"/> class with dependency injection.
 	/// </summary>
 	/// <param name="logger">The logger instance for logging control operations.</param>
-	/// <param name="calculationTypesIndexFactory">The factory for creating calculation types index controls.</param>
-	/// <param name="calculationTypesDetailsFactory">The factory for creating calculation types details controls.</param>
-	/// <param name="calculationTypesCreateFactory">The factory for creating calculation types create controls.</param>
-	/// <param name="calculationTypesEditFactory">The factory for creating calculation types edit controls.</param>
-	/// <param name="calculationTypesDeleteFactory">The factory for creating calculation types delete controls.</param>
+	/// <param name="calculationTypesIndexFactory">The factory for creating Calculation Types index controls.</param>
+	/// <param name="calculationTypesDetailsFactory">The factory for creating Calculation Types details controls.</param>
+	/// <param name="calculationTypesCreateFactory">The factory for creating Calculation Types create controls.</param>
+	/// <param name="calculationTypesEditFactory">The factory for creating Calculation Types edit controls.</param>
+	/// <param name="calculationTypesDeleteFactory">The factory for creating Calculation Types delete controls.</param>
 	public CalculationTypesControl(ILogger<CalculationTypesControl> logger, IAbstractFactory<CalculationTypesIndexControl> calculationTypesIndexFactory, IAbstractFactory<CalculationTypesDetailsControl> calculationTypesDetailsFactory, IAbstractFactory<CalculationTypesCreateControl> calculationTypesCreateFactory, IAbstractFactory<CalculationTypesEditControl> calculationTypesEditFactory, IAbstractFactory<CalculationTypesDeleteControl> calculationTypesDeleteFactory)
 	{
 		_logger = logger;
@@ -46,7 +46,7 @@ public partial class CalculationTypesControl : UserControl
 
 	/// <inheritdoc/>
 	/// <summary>
-	/// Raises the OnInitialized event and displays the calculation types index control as the initial content.
+	/// Raises the OnInitialized event and displays the Calculation Types index control as the initial content.
 	/// </summary>
 	protected override void OnInitialized(EventArgs e)
 	{

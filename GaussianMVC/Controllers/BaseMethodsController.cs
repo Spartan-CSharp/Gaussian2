@@ -13,12 +13,12 @@ using Microsoft.AspNetCore.Mvc;
 namespace GaussianMVC.Controllers;
 
 /// <summary>
-/// MVC controller for managing base methods.
-/// Provides CRUD operations for base method entities through a web interface.
+/// MVC controller for managing Base Methods.
+/// Provides CRUD operations for Base Method entities through a web interface.
 /// </summary>
 /// <param name="logger">The logger instance for logging controller operations.</param>
-/// <param name="bmCrud">The data access service for base methods CRUD operations.</param>
-/// <param name="mfCrud">The data access service for method families CRUD operations.</param>
+/// <param name="bmCrud">The data access service for Base Methods CRUD operations.</param>
+/// <param name="mfCrud">The data access service for Method Families CRUD operations.</param>
 public class BaseMethodsController(ILogger<BaseMethodsController> logger, IBaseMethodsCrud bmCrud, IMethodFamiliesCrud mfCrud) : Controller
 {
 	private readonly ILogger<BaseMethodsController> _logger = logger;
@@ -26,9 +26,9 @@ public class BaseMethodsController(ILogger<BaseMethodsController> logger, IBaseM
 	private readonly IMethodFamiliesCrud _mfCrud = mfCrud;
 
 	/// <summary>
-	/// Displays a list of all base methods.
+	/// Displays a list of all Base Methods.
 	/// </summary>
-	/// <returns>A view containing a list of <see cref="BaseMethodViewModel"/> objects representing all base methods.</returns>
+	/// <returns>A view containing a list of <see cref="BaseMethodViewModel"/> objects representing all Base Methods.</returns>
 	// GET: BaseMethods
 	[HttpGet]
 	public async Task<ActionResult<List<BaseMethodViewModel>>> IndexAsync()
@@ -80,10 +80,10 @@ public class BaseMethodsController(ILogger<BaseMethodsController> logger, IBaseM
 	}
 
 	/// <summary>
-	/// Displays detailed information for a specific base method.
+	/// Displays detailed information for a specific Base Method.
 	/// </summary>
-	/// <param name="id">The unique identifier of the base method to display.</param>
-	/// <returns>A view containing a <see cref="BaseMethodViewModel"/> with the details of the specified base method.</returns>
+	/// <param name="id">The unique identifier of the Base Method to display.</param>
+	/// <returns>A view containing a <see cref="BaseMethodViewModel"/> with the details of the specified Base Method.</returns>
 	// GET: BaseMethods/Details/5
 	[HttpGet]
 	public async Task<ActionResult<BaseMethodViewModel?>> DetailsAsync(int id)
@@ -129,9 +129,9 @@ public class BaseMethodsController(ILogger<BaseMethodsController> logger, IBaseM
 	}
 
 	/// <summary>
-	/// Displays the form for creating a new base method.
+	/// Displays the form for creating a new Base Method.
 	/// </summary>
-	/// <returns>A view containing an empty <see cref="BaseMethodViewModel"/> for creating a new base method.</returns>
+	/// <returns>A view containing an empty <see cref="BaseMethodViewModel"/> for creating a new Base Method.</returns>
 	// GET: BaseMethods/Create
 	[HttpGet]
 	public async Task<ActionResult<BaseMethodViewModel>> CreateAsync()
@@ -176,9 +176,9 @@ public class BaseMethodsController(ILogger<BaseMethodsController> logger, IBaseM
 	}
 
 	/// <summary>
-	/// Processes the form submission for creating a new base method.
+	/// Processes the form submission for creating a new Base Method.
 	/// </summary>
-	/// <param name="model">The <see cref="BaseMethodViewModel"/> containing the data for the new base method.</param>
+	/// <param name="model">The <see cref="BaseMethodViewModel"/> containing the data for the new Base Method.</param>
 	/// <returns>A redirect to the Index action if successful; otherwise, returns the Create view with validation errors.</returns>
 	// POST: BaseMethods/Create
 	[HttpPost]
@@ -253,10 +253,10 @@ public class BaseMethodsController(ILogger<BaseMethodsController> logger, IBaseM
 	}
 
 	/// <summary>
-	/// Displays the form for editing an existing base method.
+	/// Displays the form for editing an existing Base Method.
 	/// </summary>
-	/// <param name="id">The unique identifier of the base method to edit.</param>
-	/// <returns>A view containing a <see cref="BaseMethodViewModel"/> with the current data of the base method.</returns>
+	/// <param name="id">The unique identifier of the Base Method to edit.</param>
+	/// <returns>A view containing a <see cref="BaseMethodViewModel"/> with the current data of the Base Method.</returns>
 	// GET: BaseMethods/Edit/5
 	[HttpGet]
 	public async Task<ActionResult<BaseMethodViewModel?>> EditAsync(int id)
@@ -302,9 +302,9 @@ public class BaseMethodsController(ILogger<BaseMethodsController> logger, IBaseM
 	}
 
 	/// <summary>
-	/// Processes the form submission for editing an existing base method.
+	/// Processes the form submission for editing an existing Base Method.
 	/// </summary>
-	/// <param name="id">The unique identifier of the base method to update.</param>
+	/// <param name="id">The unique identifier of the Base Method to update.</param>
 	/// <param name="model">The <see cref="BaseMethodViewModel"/> containing the updated data.</param>
 	/// <returns>A redirect to the Index action if successful; otherwise, returns the Edit view with validation errors.</returns>
 	// POST: BaseMethods/Edit/5
@@ -391,10 +391,10 @@ public class BaseMethodsController(ILogger<BaseMethodsController> logger, IBaseM
 	}
 
 	/// <summary>
-	/// Displays the confirmation page for deleting a base method.
+	/// Displays the confirmation page for deleting a Base Method.
 	/// </summary>
-	/// <param name="id">The unique identifier of the base method to delete.</param>
-	/// <returns>A view containing a <see cref="BaseMethodViewModel"/> with the details of the base method to be deleted.</returns>
+	/// <param name="id">The unique identifier of the Base Method to delete.</param>
+	/// <returns>A view containing a <see cref="BaseMethodViewModel"/> with the details of the Base Method to be deleted.</returns>
 	// GET: BaseMethods/Delete/5
 	[HttpGet]
 	public async Task<ActionResult<BaseMethodViewModel?>> DeleteAsync(int id)
@@ -440,10 +440,10 @@ public class BaseMethodsController(ILogger<BaseMethodsController> logger, IBaseM
 	}
 
 	/// <summary>
-	/// Processes the deletion confirmation for a base method.
+	/// Processes the deletion confirmation for a Base Method.
 	/// </summary>
-	/// <param name="id">The unique identifier of the base method to delete.</param>
-	/// <param name="model">The <see cref="BaseMethodViewModel"/> containing the base method data for validation.</param>
+	/// <param name="id">The unique identifier of the Base Method to delete.</param>
+	/// <param name="model">The <see cref="BaseMethodViewModel"/> containing the Base Method data for validation.</param>
 	/// <returns>A redirect to the Index action if successful; otherwise, returns the Delete view if the ID does not match the model.</returns>
 	// POST: BaseMethods/Delete/5
 	[HttpPost]

@@ -28,7 +28,7 @@ public partial class ElectronicStatesDetailsControl : UserControl, INotifyProper
 	/// Initializes a new instance of the <see cref="ElectronicStatesDetailsControl"/> class with dependency injection.
 	/// </summary>
 	/// <param name="logger">The logger instance for logging control operations.</param>
-	/// <param name="endpoint">The endpoint for electronic state API operations.</param>
+	/// <param name="endpoint">The endpoint for Electronic State API operations.</param>
 	public ElectronicStatesDetailsControl(ILogger<ElectronicStatesDetailsControl> logger, IElectronicStatesEndpoint endpoint)
 	{
 		_logger = logger;
@@ -48,7 +48,7 @@ public partial class ElectronicStatesDetailsControl : UserControl, INotifyProper
 	public event EventHandler<ChildControlEventArgs<ElectronicStatesDetailsControl>>? ChildControlEvent;
 
 	/// <summary>
-	/// Gets or sets the electronic state view model being displayed.
+	/// Gets or sets the Electronic State view model being displayed.
 	/// </summary>
 	/// <remarks>
 	/// When this property is set, the control automatically populates the RTF content and updates the <see cref="ModelIsNotNull"/> property.
@@ -64,10 +64,10 @@ public partial class ElectronicStatesDetailsControl : UserControl, INotifyProper
 	}
 
 	/// <summary>
-	/// Gets or sets the identifier of the electronic state to display.
+	/// Gets or sets the identifier of the Electronic State to display.
 	/// </summary>
 	/// <remarks>
-	/// When this property is set, the control automatically loads the electronic state data from the API.
+	/// When this property is set, the control automatically loads the Electronic State data from the API.
 	/// </remarks>
 	public int ElectronicStateId
 	{
@@ -80,7 +80,7 @@ public partial class ElectronicStatesDetailsControl : UserControl, INotifyProper
 	}
 
 	/// <summary>
-	/// Gets or sets a value indicating whether a valid electronic state model is loaded.
+	/// Gets or sets a value indicating whether a valid Electronic State model is loaded.
 	/// </summary>
 	/// <remarks>
 	/// Setting this property also updates the <see cref="ModelIsNull"/> property.
@@ -97,7 +97,7 @@ public partial class ElectronicStatesDetailsControl : UserControl, INotifyProper
 	}
 
 	/// <summary>
-	/// Gets a value indicating whether no electronic state model is loaded.
+	/// Gets a value indicating whether no Electronic State model is loaded.
 	/// </summary>
 	/// <remarks>
 	/// This property returns the inverse of <see cref="ModelIsNotNull"/>.

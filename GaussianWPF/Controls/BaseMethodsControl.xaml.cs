@@ -27,11 +27,11 @@ public partial class BaseMethodsControl : UserControl
 	/// Initializes a new instance of the <see cref="BaseMethodsControl"/> class with dependency injection.
 	/// </summary>
 	/// <param name="logger">The logger instance for logging control operations.</param>
-	/// <param name="baseMethodsIndexFactory">The factory for creating base methods index controls.</param>
-	/// <param name="baseMethodsDetailsFactory">The factory for creating base methods details controls.</param>
-	/// <param name="baseMethodsCreateFactory">The factory for creating base methods create controls.</param>
-	/// <param name="baseMethodsEditFactory">The factory for creating base methods edit controls.</param>
-	/// <param name="baseMethodsDeleteFactory">The factory for creating base methods delete controls.</param>
+	/// <param name="baseMethodsIndexFactory">The factory for creating Base Methods index controls.</param>
+	/// <param name="baseMethodsDetailsFactory">The factory for creating Base Methods details controls.</param>
+	/// <param name="baseMethodsCreateFactory">The factory for creating Base Methods create controls.</param>
+	/// <param name="baseMethodsEditFactory">The factory for creating Base Methods edit controls.</param>
+	/// <param name="baseMethodsDeleteFactory">The factory for creating Base Methods delete controls.</param>
 	public BaseMethodsControl(ILogger<BaseMethodsControl> logger, IAbstractFactory<BaseMethodsIndexControl> baseMethodsIndexFactory, IAbstractFactory<BaseMethodsDetailsControl> baseMethodsDetailsFactory, IAbstractFactory<BaseMethodsCreateControl> baseMethodsCreateFactory, IAbstractFactory<BaseMethodsEditControl> baseMethodsEditFactory, IAbstractFactory<BaseMethodsDeleteControl> baseMethodsDeleteFactory)
 	{
 		_logger = logger;
@@ -46,7 +46,7 @@ public partial class BaseMethodsControl : UserControl
 
 	/// <inheritdoc/>
 	/// <summary>
-	/// Raises the OnInitialized event and displays the base methods index control as the initial content.
+	/// Raises the OnInitialized event and displays the Base Methods index control as the initial content.
 	/// </summary>
 	protected override void OnInitialized(EventArgs e)
 	{

@@ -36,7 +36,7 @@ public partial class MethodFamiliesCreateControl : UserControl, INotifyPropertyC
 	/// Initializes a new instance of the <see cref="MethodFamiliesCreateControl"/> class with dependency injection.
 	/// </summary>
 	/// <param name="logger">The logger instance for logging control operations.</param>
-	/// <param name="endpoint">The endpoint for method family API operations.</param>
+	/// <param name="endpoint">The endpoint for Method Family API operations.</param>
 	public MethodFamiliesCreateControl(ILogger<MethodFamiliesCreateControl> logger, IMethodFamiliesEndpoint endpoint)
 	{
 		_logger = logger;
@@ -56,7 +56,7 @@ public partial class MethodFamiliesCreateControl : UserControl, INotifyPropertyC
 	public event EventHandler<ChildControlEventArgs<MethodFamiliesCreateControl>>? ChildControlEvent;
 
 	/// <summary>
-	/// Gets or sets the method family view model being created.
+	/// Gets or sets the Method Family view model being created.
 	/// </summary>
 	public MethodFamilyViewModel MethodFamily
 	{
@@ -69,7 +69,7 @@ public partial class MethodFamiliesCreateControl : UserControl, INotifyPropertyC
 	} = new();
 
 	/// <summary>
-	/// Gets or sets the name of the method family.
+	/// Gets or sets the name of the Method Family.
 	/// </summary>
 	public string MethodFamilyName
 	{

@@ -1,5 +1,5 @@
 ﻿CREATE PROCEDURE [dbo].[spBaseMethods_GetByMethodFamilyId]
-	@MethodFamilyId int
+	@MethodFamilyId INT
 AS
 BEGIN
 	SET NOCOUNT ON;

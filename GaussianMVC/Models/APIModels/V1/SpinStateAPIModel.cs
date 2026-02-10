@@ -7,8 +7,8 @@ using GaussianMVC.ValidationAttributes;
 namespace GaussianMVC.Models.APIModels.V1;
 
 /// <summary>
-/// API model representing an spin state for REST API operations.
-/// Provides data validation and conversion for spin state entities in API v1.
+/// API model representing an Spin State for REST API operations.
+/// Provides data validation and conversion for Spin State entities in API v1.
 /// </summary>
 public class SpinStateAPIModel
 {
@@ -39,14 +39,14 @@ public class SpinStateAPIModel
 	}
 
 	/// <summary>
-	/// Gets or sets the unique identifier for the spin state.
+	/// Gets or sets the unique identifier for the Spin State.
 	/// </summary>
 	[Display(Name = "Id")]
 	[Key]
 	public int Id { get; set; }
 
 	/// <summary>
-	/// Gets or sets the name of the spin state.
+	/// Gets or sets the name of the Spin State.
 	/// </summary>
 	[DataType(DataType.Text)]
 	[Display(Name = "Name")]
@@ -55,7 +55,7 @@ public class SpinStateAPIModel
 	public string? Name { get; set; }
 
 	/// <summary>
-	/// Gets or sets the keyword associated with the spin state.
+	/// Gets or sets the keyword associated with the Spin State.
 	/// </summary>
 	[DataType(DataType.Text)]
 	[Display(Name = "Keyword")]
@@ -71,7 +71,7 @@ public class SpinStateAPIModel
 	public string? DescriptionRtf { get; set; }
 
 	/// <summary>
-	/// Gets or sets the plain text description of the spin state.
+	/// Gets or sets the plain text description of the Spin State.
 	/// </summary>
 	[DataType(DataType.MultilineText)]
 	[Display(Name = "Description (Text)")]
@@ -79,21 +79,21 @@ public class SpinStateAPIModel
 	public string? DescriptionText { get; set; }
 
 	/// <summary>
-	/// Gets or sets the date and time when the spin state was created.
+	/// Gets or sets the date and time when the Spin State was created.
 	/// </summary>
 	[DataType(DataType.DateTime)]
 	[Display(Name = "Created Date")]
 	public DateTime CreatedDate { get; set; }
 
 	/// <summary>
-	/// Gets or sets the date and time when the spin state was last updated.
+	/// Gets or sets the date and time when the Spin State was last updated.
 	/// </summary>
 	[DataType(DataType.DateTime)]
 	[Display(Name = "Last Updated Date")]
 	public DateTime LastUpdatedDate { get; set; }
 
 	/// <summary>
-	/// Gets or sets a value indicating whether the spin state is archived.
+	/// Gets or sets a value indicating whether the Spin State is archived.
 	/// </summary>
 	[Display(Name = "Archived")]
 	public bool Archived { get; set; }
@@ -118,7 +118,7 @@ public class SpinStateAPIModel
 	}
 
 	/// <summary>
-	/// Returns a string representation of the spin state.
+	/// Returns a string representation of the Spin State.
 	/// </summary>
 	/// <returns>The Name if available, otherwise the Keyword, or a combination of both in the format "Name/Keyword".</returns>
 	public override string? ToString()

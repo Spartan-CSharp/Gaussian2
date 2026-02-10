@@ -12,12 +12,12 @@ using Microsoft.Extensions.Logging;
 namespace GaussianMVCLibrary.DataAccess;
 
 /// <summary>
-/// Provides CRUD operations for managing base methods in the Gaussian application.
-/// Manages database interactions for base method entities including creation, retrieval, updates, and deletion.
+/// Provides CRUD operations for managing Base Methods in the Gaussian application.
+/// Manages database interactions for Base Method entities including creation, retrieval, updates, and deletion.
 /// </summary>
 /// <param name="dbData">The database data access service for executing queries.</param>
 /// <param name="logger">The logger instance for logging operations and errors.</param>
-/// <param name="methodFamiliesCrud">The CRUD service for method families used to validate and retrieve related method family data.</param>
+/// <param name="methodFamiliesCrud">The CRUD service for Method Families used to validate and retrieve related Method Family data.</param>
 public class BaseMethodsCrud(IDbData dbData, ILogger<BaseMethodsCrud> logger, IMethodFamiliesCrud methodFamiliesCrud) : IBaseMethodsCrud
 {
 	private readonly IDbData _dbData = dbData;
@@ -26,7 +26,7 @@ public class BaseMethodsCrud(IDbData dbData, ILogger<BaseMethodsCrud> logger, IM
 
 	/// <inheritdoc/>
 	/// <exception cref="ArgumentNullException">Thrown when the model parameter is null.</exception>
-	/// <exception cref="NullParameterException">Thrown when the associated method family with the specified ID does not exist.</exception>
+	/// <exception cref="NullParameterException">Thrown when the associated Method Family with the specified ID does not exist.</exception>
 	public async Task<BaseMethodFullModel> CreateNewBaseMethodAsync(BaseMethodSimpleModel model)
 	{
 		if (_logger.IsEnabled(LogLevel.Debug))
@@ -94,7 +94,7 @@ public class BaseMethodsCrud(IDbData dbData, ILogger<BaseMethodsCrud> logger, IM
 	}
 
 	/// <inheritdoc/>
-	/// <exception cref="InvalidOperationException">Thrown when a base method references a method family that does not exist in the retrieved method family list.</exception>
+	/// <exception cref="InvalidOperationException">Thrown when a Base Method references a Method Family that does not exist in the retrieved Method Family list.</exception>
 	public async Task<List<BaseMethodIntermediateModel>> GetAllIntermediateBaseMethodsAsync()
 	{
 		if (_logger.IsEnabled(LogLevel.Debug))
@@ -121,6 +121,7 @@ public class BaseMethodsCrud(IDbData dbData, ILogger<BaseMethodsCrud> logger, IM
 				LastUpdatedDate = item.LastUpdatedDate,
 				Archived = item.Archived
 			};
+
 			output.Add(model);
 		}
 
@@ -133,7 +134,7 @@ public class BaseMethodsCrud(IDbData dbData, ILogger<BaseMethodsCrud> logger, IM
 	}
 
 	/// <inheritdoc/>
-	/// <exception cref="NullParameterException">Thrown when a method family associated with a base method does not exist.</exception>
+	/// <exception cref="NullParameterException">Thrown when a Method Family associated with a Base Method does not exist.</exception>
 	public async Task<List<BaseMethodFullModel>> GetAllFullBaseMethodsAsync()
 	{
 		if (_logger.IsEnabled(LogLevel.Debug))
@@ -164,6 +165,7 @@ public class BaseMethodsCrud(IDbData dbData, ILogger<BaseMethodsCrud> logger, IM
 				LastUpdatedDate = item.LastUpdatedDate,
 				Archived = item.Archived
 			};
+
 			output.Add(model);
 		}
 
@@ -176,7 +178,7 @@ public class BaseMethodsCrud(IDbData dbData, ILogger<BaseMethodsCrud> logger, IM
 	}
 
 	/// <inheritdoc/>
-	/// <exception cref="NullParameterException">Thrown when the method family associated with the base method does not exist.</exception>
+	/// <exception cref="NullParameterException">Thrown when the Method Family associated with the Base Method does not exist.</exception>
 	public async Task<BaseMethodFullModel?> GetBaseMethodByIdAsync(int id)
 	{
 		if (_logger.IsEnabled(LogLevel.Debug))
@@ -221,7 +223,7 @@ public class BaseMethodsCrud(IDbData dbData, ILogger<BaseMethodsCrud> logger, IM
 	}
 
 	/// <inheritdoc/>
-	/// <exception cref="NullParameterException">Thrown when the specified method family does not exist.</exception>
+	/// <exception cref="NullParameterException">Thrown when the specified Method Family does not exist.</exception>
 	public async Task<List<BaseMethodFullModel>> GetBaseMethodsByMethodFamilyIdAsync(int methodFamilyId)
 	{
 		if (_logger.IsEnabled(LogLevel.Debug))
@@ -255,6 +257,7 @@ public class BaseMethodsCrud(IDbData dbData, ILogger<BaseMethodsCrud> logger, IM
 				LastUpdatedDate = item.LastUpdatedDate,
 				Archived = item.Archived
 			};
+
 			output.Add(model);
 		}
 
@@ -268,7 +271,7 @@ public class BaseMethodsCrud(IDbData dbData, ILogger<BaseMethodsCrud> logger, IM
 
 	/// <inheritdoc/>
 	/// <exception cref="ArgumentNullException">Thrown when the model parameter is null.</exception>
-	/// <exception cref="NullParameterException">Thrown when the associated method family with the specified ID does not exist.</exception>
+	/// <exception cref="NullParameterException">Thrown when the associated Method Family with the specified ID does not exist.</exception>
 	public async Task<BaseMethodFullModel> UpdateBaseMethodAsync(BaseMethodSimpleModel model)
 	{
 		if (_logger.IsEnabled(LogLevel.Debug))

@@ -6,8 +6,8 @@ using GaussianCommonLibrary.Models;
 namespace GaussianWPF.Models;
 
 /// <summary>
-/// View model representing a base method for the Gaussian WPF application.
-/// Provides data binding and validation for base method creation, editing, and display operations in the desktop client.
+/// View model representing a Base Method for the Gaussian WPF application.
+/// Provides data binding and validation for Base Method creation, editing, and display operations in the desktop client.
 /// </summary>
 public class BaseMethodViewModel
 {
@@ -21,8 +21,8 @@ public class BaseMethodViewModel
 	/// <summary>
 	/// Initializes a new instance of the <see cref="BaseMethodViewModel"/> class from a full model.
 	/// </summary>
-	/// <param name="model">The base method full model containing the source data.</param>
-	/// <param name="methodFamilies">The list of available method families for dropdown selection.</param>
+	/// <param name="model">The Base Method full model containing the source data.</param>
+	/// <param name="methodFamilies">The list of available Method Families for dropdown selection.</param>
 	/// <exception cref="ArgumentNullException">Thrown when <paramref name="model"/> or <paramref name="methodFamilies"/> is null.</exception>
 	public BaseMethodViewModel(BaseMethodFullModel model, IList<MethodFamilyRecord> methodFamilies)
 	{
@@ -46,8 +46,8 @@ public class BaseMethodViewModel
 	/// <summary>
 	/// Initializes a new instance of the <see cref="BaseMethodViewModel"/> class from an intermediate model.
 	/// </summary>
-	/// <param name="model">The base method intermediate model containing the source data.</param>
-	/// <param name="methodFamilies">The list of available method families for dropdown selection.</param>
+	/// <param name="model">The Base Method intermediate model containing the source data.</param>
+	/// <param name="methodFamilies">The list of available Method Families for dropdown selection.</param>
 	/// <exception cref="ArgumentNullException">Thrown when <paramref name="model"/> or <paramref name="methodFamilies"/> is null.</exception>
 	public BaseMethodViewModel(BaseMethodIntermediateModel model, IList<MethodFamilyRecord> methodFamilies)
 	{
@@ -71,8 +71,8 @@ public class BaseMethodViewModel
 	/// <summary>
 	/// Initializes a new instance of the <see cref="BaseMethodViewModel"/> class from a simple model.
 	/// </summary>
-	/// <param name="model">The base method simple model containing the source data.</param>
-	/// <param name="methodFamilies">The list of available method families for dropdown selection.</param>
+	/// <param name="model">The Base Method simple model containing the source data.</param>
+	/// <param name="methodFamilies">The list of available Method Families for dropdown selection.</param>
 	/// <exception cref="ArgumentNullException">Thrown when <paramref name="model"/> or <paramref name="methodFamilies"/> is null.</exception>
 	public BaseMethodViewModel(BaseMethodSimpleModel model, IList<MethodFamilyRecord> methodFamilies)
 	{
@@ -94,9 +94,9 @@ public class BaseMethodViewModel
 	}
 
 	/// <summary>
-	/// Initializes a new instance of the <see cref="BaseMethodViewModel"/> class with method families for new record creation.
+	/// Initializes a new instance of the <see cref="BaseMethodViewModel"/> class with Method Families for new record creation.
 	/// </summary>
-	/// <param name="methodFamilies">The list of available method families for dropdown selection.</param>
+	/// <param name="methodFamilies">The list of available Method Families for dropdown selection.</param>
 	/// <exception cref="ArgumentNullException">Thrown when <paramref name="methodFamilies"/> is null.</exception>
 	public BaseMethodViewModel(IList<MethodFamilyRecord> methodFamilies)
 	{
@@ -109,14 +109,14 @@ public class BaseMethodViewModel
 	}
 
 	/// <summary>
-	/// Gets or sets the unique identifier for the base method.
+	/// Gets or sets the unique identifier for the Base Method.
 	/// </summary>
 	[Display(Name = "Id")]
 	[Key]
 	public int Id { get; set; }
 
 	/// <summary>
-	/// Gets or sets the keyword that identifies the base method.
+	/// Gets or sets the keyword that identifies the Base Method.
 	/// </summary>
 	[DataType(DataType.Text)]
 	[Display(Name = "Keyword")]
@@ -125,14 +125,14 @@ public class BaseMethodViewModel
 	public string Keyword { get; set; } = string.Empty;
 
 	/// <summary>
-	/// Gets or sets the method family associated with this base method.
+	/// Gets or sets the Method Family associated with this Base Method.
 	/// </summary>
 	[Display(Name = "Method Family")]
 	[Required]
 	public MethodFamilyRecord? MethodFamily { get; set; }
 
 	/// <summary>
-	/// Gets or sets the observable collection of method families available for selection in the UI.
+	/// Gets or sets the observable collection of Method Families available for selection in the UI.
 	/// </summary>
 	/// <remarks>
 	/// This collection supports data binding for ComboBox or similar controls in WPF.
@@ -155,21 +155,21 @@ public class BaseMethodViewModel
 	public string? DescriptionText { get; set; }
 
 	/// <summary>
-	/// Gets or sets the date and time when the base method was created.
+	/// Gets or sets the date and time when the Base Method was created.
 	/// </summary>
 	[DataType(DataType.DateTime)]
 	[Display(Name = "Created Date")]
 	public DateTime CreatedDate { get; set; } = DateTime.Now;
 
 	/// <summary>
-	/// Gets or sets the date and time when the base method was last updated.
+	/// Gets or sets the date and time when the Base Method was last updated.
 	/// </summary>
 	[DataType(DataType.DateTime)]
 	[Display(Name = "Last Updated Date")]
 	public DateTime LastUpdatedDate { get; set; } = DateTime.Now;
 
 	/// <summary>
-	/// Gets or sets a value indicating whether the base method is archived.
+	/// Gets or sets a value indicating whether the Base Method is archived.
 	/// </summary>
 	[Display(Name = "Archived")]
 	public bool Archived { get; set; }
@@ -177,7 +177,7 @@ public class BaseMethodViewModel
 	/// <summary>
 	/// Converts this view model to a <see cref="BaseMethodFullModel"/> instance.
 	/// </summary>
-	/// <param name="methodFamily">The method family full model to associate with the base method.</param>
+	/// <param name="methodFamily">The Method Family full model to associate with the Base Method.</param>
 	/// <returns>A new instance of <see cref="BaseMethodFullModel"/> populated with the view model data.</returns>
 	public BaseMethodFullModel ToFullModel(MethodFamilyFullModel methodFamily)
 	{
@@ -197,7 +197,7 @@ public class BaseMethodViewModel
 	/// <summary>
 	/// Converts this view model to a <see cref="BaseMethodIntermediateModel"/> instance.
 	/// </summary>
-	/// <param name="methodFamily">The method family record to associate with the base method.</param>
+	/// <param name="methodFamily">The Method Family record to associate with the Base Method.</param>
 	/// <returns>A new instance of <see cref="BaseMethodIntermediateModel"/> populated with the view model data.</returns>
 	public BaseMethodIntermediateModel ToIntermediateModel(MethodFamilyRecord methodFamily)
 	{
@@ -234,9 +234,9 @@ public class BaseMethodViewModel
 	}
 
 	/// <summary>
-	/// Returns a string representation of the base method.
+	/// Returns a string representation of the Base Method.
 	/// </summary>
-	/// <returns>The keyword of the base method.</returns>
+	/// <returns>The keyword of the Base Method.</returns>
 	public override string? ToString()
 	{
 		return $"{Keyword}";

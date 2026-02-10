@@ -38,8 +38,8 @@ public partial class BaseMethodsCreateControl : UserControl, INotifyPropertyChan
 	/// Initializes a new instance of the <see cref="BaseMethodsCreateControl"/> class with dependency injection.
 	/// </summary>
 	/// <param name="logger">The logger instance for logging control operations.</param>
-	/// <param name="baseMethodsEndpoint">The endpoint for base method API operations.</param>
-	/// <param name="methodFamiliesEndpoint">The endpoint for method family API operations.</param>
+	/// <param name="baseMethodsEndpoint">The endpoint for Base Method API operations.</param>
+	/// <param name="methodFamiliesEndpoint">The endpoint for Method Family API operations.</param>
 	public BaseMethodsCreateControl(ILogger<BaseMethodsCreateControl> logger, IBaseMethodsEndpoint baseMethodsEndpoint, IMethodFamiliesEndpoint methodFamiliesEndpoint)
 	{
 		_logger = logger;
@@ -60,7 +60,7 @@ public partial class BaseMethodsCreateControl : UserControl, INotifyPropertyChan
 	public event EventHandler<ChildControlEventArgs<BaseMethodsCreateControl>>? ChildControlEvent;
 
 	/// <summary>
-	/// Gets or sets the base method view model being created.
+	/// Gets or sets the Base Method view model being created.
 	/// </summary>
 	public BaseMethodViewModel BaseMethod
 	{
@@ -73,7 +73,7 @@ public partial class BaseMethodsCreateControl : UserControl, INotifyPropertyChan
 	} = new();
 
 	/// <summary>
-	/// Gets or sets the keyword that identifies the base method.
+	/// Gets or sets the keyword that identifies the Base Method.
 	/// </summary>
 	public string Keyword
 	{
@@ -86,7 +86,7 @@ public partial class BaseMethodsCreateControl : UserControl, INotifyPropertyChan
 	} = string.Empty;
 
 	/// <summary>
-	/// Gets or sets the selected method family for the base method.
+	/// Gets or sets the selected Method Family for the Base Method.
 	/// </summary>
 	public MethodFamilyRecord? SelectedMethodFamily
 	{
@@ -99,7 +99,7 @@ public partial class BaseMethodsCreateControl : UserControl, INotifyPropertyChan
 	}
 
 	/// <summary>
-	/// Gets or sets the observable collection of method families available for selection.
+	/// Gets or sets the observable collection of Method Families available for selection.
 	/// </summary>
 	/// <remarks>
 	/// This collection supports data binding for ComboBox controls in WPF.
@@ -153,7 +153,7 @@ public partial class BaseMethodsCreateControl : UserControl, INotifyPropertyChan
 	/// Gets or sets a value indicating whether the create button should be enabled.
 	/// </summary>
 	/// <remarks>
-	/// This property is automatically set to <see langword="true"/> when the keyword and selected method family are valid.
+	/// This property is automatically set to <see langword="true"/> when the keyword and selected Method Family are valid.
 	/// </remarks>
 	public bool CanSave
 	{
@@ -190,7 +190,7 @@ public partial class BaseMethodsCreateControl : UserControl, INotifyPropertyChan
 
 	/// <inheritdoc/>
 	/// <summary>
-	/// Raises the OnInitialized event, sets up data binding, and loads the list of method families from the API.
+	/// Raises the OnInitialized event, sets up data binding, and loads the list of Method Families from the API.
 	/// </summary>
 	protected override void OnInitialized(EventArgs e)
 	{
@@ -238,6 +238,7 @@ public partial class BaseMethodsCreateControl : UserControl, INotifyPropertyChan
 			if (BaseMethod is not null)
 			{
 				Keyword = BaseMethod.Keyword;
+				SelectedMethodFamily = MethodFamilyList.First(x => x.Id == BaseMethod.MethodFamily?.Id);
 
 				// Populate the RichTextBox with RTF
 				DescriptionRichTextBox.SetRtfText(BaseMethod.DescriptionRtf);
@@ -246,6 +247,7 @@ public partial class BaseMethodsCreateControl : UserControl, INotifyPropertyChan
 			else
 			{
 				Keyword = string.Empty;
+				SelectedMethodFamily = null;
 				DescriptionRichTextBox.Document.Blocks.Clear();
 				CanSave = false;
 			}

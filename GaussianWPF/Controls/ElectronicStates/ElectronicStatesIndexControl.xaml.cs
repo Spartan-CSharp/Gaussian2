@@ -28,7 +28,7 @@ public partial class ElectronicStatesIndexControl : UserControl, INotifyProperty
 	/// Initializes a new instance of the <see cref="ElectronicStatesIndexControl"/> class with dependency injection.
 	/// </summary>
 	/// <param name="logger">The logger instance for logging control operations.</param>
-	/// <param name="endpoint">The endpoint for electronic state API operations.</param>
+	/// <param name="endpoint">The endpoint for Electronic State API operations.</param>
 	public ElectronicStatesIndexControl(ILogger<ElectronicStatesIndexControl> logger, IElectronicStatesEndpoint endpoint)
 	{
 		_logger = logger;
@@ -48,7 +48,7 @@ public partial class ElectronicStatesIndexControl : UserControl, INotifyProperty
 	public event EventHandler<ChildControlEventArgs<ElectronicStatesIndexControl>>? ChildControlEvent;
 
 	/// <summary>
-	/// Gets or sets the collection of electronic states to display in the list.
+	/// Gets or sets the collection of Electronic States to display in the list.
 	/// </summary>
 	public Collection<ElectronicStateViewModel> ElectronicStatesList
 	{
@@ -119,7 +119,7 @@ public partial class ElectronicStatesIndexControl : UserControl, INotifyProperty
 
 	/// <inheritdoc/>
 	/// <summary>
-	/// Raises the OnInitialized event, sets up data binding, and loads the list of electronic states from the API.
+	/// Raises the OnInitialized event, sets up data binding, and loads the list of Electronic States from the API.
 	/// </summary>
 	protected override void OnInitialized(EventArgs e)
 	{

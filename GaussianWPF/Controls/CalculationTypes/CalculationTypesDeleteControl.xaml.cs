@@ -28,7 +28,7 @@ public partial class CalculationTypesDeleteControl : UserControl, INotifyPropert
 	/// Initializes a new instance of the <see cref="CalculationTypesDeleteControl"/> class with dependency injection.
 	/// </summary>
 	/// <param name="logger">The logger instance for logging control operations.</param>
-	/// <param name="endpoint">The endpoint for calculation type API operations.</param>
+	/// <param name="endpoint">The endpoint for Calculation Type API operations.</param>
 	public CalculationTypesDeleteControl(ILogger<CalculationTypesDeleteControl> logger, ICalculationTypesEndpoint endpoint)
 	{
 		_logger = logger;
@@ -48,7 +48,7 @@ public partial class CalculationTypesDeleteControl : UserControl, INotifyPropert
 	public event EventHandler<ChildControlEventArgs<CalculationTypesDeleteControl>>? ChildControlEvent;
 
 	/// <summary>
-	/// Gets or sets the calculation type view model being deleted.
+	/// Gets or sets the Calculation Type view model being deleted.
 	/// </summary>
 	/// <remarks>
 	/// When this property is set, the control automatically populates the RTF content and updates the <see cref="ModelIsNotNull"/> property.
@@ -64,10 +64,10 @@ public partial class CalculationTypesDeleteControl : UserControl, INotifyPropert
 	}
 
 	/// <summary>
-	/// Gets or sets the identifier of the calculation type to delete.
+	/// Gets or sets the identifier of the Calculation Type to delete.
 	/// </summary>
 	/// <remarks>
-	/// When this property is set, the control automatically loads the calculation type data from the API.
+	/// When this property is set, the control automatically loads the Calculation Type data from the API.
 	/// </remarks>
 	public int CalculationTypeId
 	{
@@ -80,7 +80,7 @@ public partial class CalculationTypesDeleteControl : UserControl, INotifyPropert
 	}
 
 	/// <summary>
-	/// Gets or sets a value indicating whether a valid calculation type model is loaded.
+	/// Gets or sets a value indicating whether a valid Calculation Type model is loaded.
 	/// </summary>
 	/// <remarks>
 	/// Setting this property also updates the <see cref="ModelIsNull"/> property.
@@ -97,7 +97,7 @@ public partial class CalculationTypesDeleteControl : UserControl, INotifyPropert
 	}
 
 	/// <summary>
-	/// Gets a value indicating whether no calculation type model is loaded.
+	/// Gets a value indicating whether no Calculation Type model is loaded.
 	/// </summary>
 	/// <remarks>
 	/// This property returns the inverse of <see cref="ModelIsNotNull"/>.

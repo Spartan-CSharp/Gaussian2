@@ -27,11 +27,11 @@ public partial class SpinStatesControl : UserControl
 	/// Initializes a new instance of the <see cref="SpinStatesControl"/> class with dependency injection.
 	/// </summary>
 	/// <param name="logger">The logger instance for logging control operations.</param>
-	/// <param name="spinStatesIndexFactory">The factory for creating spin states index controls.</param>
-	/// <param name="spinStatesDetailsFactory">The factory for creating spin states details controls.</param>
-	/// <param name="spinStatesCreateFactory">The factory for creating spin states create controls.</param>
-	/// <param name="spinStatesEditFactory">The factory for creating spin states edit controls.</param>
-	/// <param name="spinStatesDeleteFactory">The factory for creating spin states delete controls.</param>
+	/// <param name="spinStatesIndexFactory">The factory for creating Spin States index controls.</param>
+	/// <param name="spinStatesDetailsFactory">The factory for creating Spin States details controls.</param>
+	/// <param name="spinStatesCreateFactory">The factory for creating Spin States create controls.</param>
+	/// <param name="spinStatesEditFactory">The factory for creating Spin States edit controls.</param>
+	/// <param name="spinStatesDeleteFactory">The factory for creating Spin States delete controls.</param>
 	public SpinStatesControl(ILogger<SpinStatesControl> logger, IAbstractFactory<SpinStatesIndexControl> spinStatesIndexFactory, IAbstractFactory<SpinStatesDetailsControl> spinStatesDetailsFactory, IAbstractFactory<SpinStatesCreateControl> spinStatesCreateFactory, IAbstractFactory<SpinStatesEditControl> spinStatesEditFactory, IAbstractFactory<SpinStatesDeleteControl> spinStatesDeleteFactory)
 	{
 		_logger = logger;
@@ -46,7 +46,7 @@ public partial class SpinStatesControl : UserControl
 
 	/// <inheritdoc/>
 	/// <summary>
-	/// Raises the OnInitialized event and displays the spin states index control as the initial content.
+	/// Raises the OnInitialized event and displays the Spin States index control as the initial content.
 	/// </summary>
 	protected override void OnInitialized(EventArgs e)
 	{

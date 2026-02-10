@@ -1,22 +1,22 @@
 ﻿namespace GaussianCommonLibrary.Models;
 
 /// <summary>
-/// Represents a spin state used in Gaussian calculations.
+/// Represents a Spin State used in Gaussian calculations.
 /// </summary>
 public class SpinStateFullModel
 {
 	/// <summary>
-	/// Gets or sets the unique identifier for the spin state.
+	/// Gets or sets the unique identifier for the Spin State.
 	/// </summary>
 	public int Id { get; set; }
 
 	/// <summary>
-	/// Gets or sets the display name of the spin state.
+	/// Gets or sets the display name of the Spin State.
 	/// </summary>
 	public string? Name { get; set; }
 
 	/// <summary>
-	/// Gets or sets the keyword used to reference this spin state in Gaussian input files.
+	/// Gets or sets the keyword used to reference this Spin State in Gaussian input files.
 	/// </summary>
 	public string? Keyword { get; set; }
 
@@ -41,15 +41,15 @@ public class SpinStateFullModel
 	public DateTime LastUpdatedDate { get; set; }
 
 	/// <summary>
-	/// Gets or sets a value indicating whether this electronic state is archived.
+	/// Gets or sets a value indicating whether this Electronic State is archived.
 	/// </summary>
 	public bool Archived { get; set; }
 
 	/// <summary>
-	/// Returns a string representation of the spin state.
+	/// Returns a string representation of the Spin State.
 	/// Returns the keyword if no name is specified, the name if no keyword is specified, or "Name/Keyword" if both are specified.
 	/// </summary>
-	/// <returns>A formatted string representing the spin state.</returns>
+	/// <returns>A formatted string representing the Spin State.</returns>
 	public override string? ToString()
 	{
 		return string.IsNullOrWhiteSpace(Name) ? $"{Keyword}" : string.IsNullOrWhiteSpace(Keyword) ? $"{Name}" : $"{Name}/{Keyword}";
