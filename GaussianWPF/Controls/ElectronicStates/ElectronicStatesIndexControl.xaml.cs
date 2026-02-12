@@ -193,7 +193,7 @@ public partial class ElectronicStatesIndexControl : UserControl, INotifyProperty
 			IsErrorVisible = ErrorMessage?.Length > 0;
 		}
 
-		// Nothing to do for change events of ElectronicStateList and IsErrorVisible.
+		// Nothing to do for change events of ElectronicStateMethodFamilyList and IsErrorVisible.
 
 		if (_logger.IsEnabled(LogLevel.Debug))
 		{

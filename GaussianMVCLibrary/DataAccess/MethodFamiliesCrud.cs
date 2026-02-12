@@ -153,6 +153,16 @@ public class MethodFamiliesCrud(IDbData dbData, ILogger<MethodFamiliesCrud> logg
 			throw new ValueInUseException(nameof(MethodFamilyFullModel), $"Cannot delete Method Family with Id {id} because it is in use by one or more Base Methods.");
 		}
 
+		// Second check if used in any Electronic State/Method Family Combinations
+		p = new();
+		p.Add("@MethodFamilyId", id);
+		List<ElectronicStateMethodFamilySimpleModel> electronicStateMethodFamilies = await _dbData.LoadDataAsync<ElectronicStateMethodFamilySimpleModel, dynamic>(Resources.ElectronicStatesMethodFamiliesGetByMethodFamilyId, p, Resources.DataDatabaseConnectionString).ConfigureAwait(false);
+
+		if (electronicStateMethodFamilies.Count > 0)
+		{
+			throw new ValueInUseException(nameof(MethodFamilyFullModel), $"Cannot delete Method Family with Id {id} because it is in use by one or more Electronic State/Method Family Combinations.");
+		}
+
 		p = new();
 		p.Add("@Id", id);
 		_ = await _dbData.SaveDataAsync(Resources.MethodFamiliesDelete, p, Resources.DataDatabaseConnectionString).ConfigureAwait(false);

@@ -35,6 +35,12 @@ public interface ISpinStatesEndpoint
 	Task<SpinStateFullModel?> GetByIdAsync(int id);
 
 	/// <summary>
+	/// Retrieves a simplified list of all Spin States as records.
+	/// </summary>
+	/// <returns>A list of all Spin States as records, or <see langword="null"/> if none exist.</returns>
+	Task<List<SpinStateRecord>?> GetListAsync();
+
+	/// <summary>
 	/// Updates an existing Spin State.
 	/// </summary>
 	/// <param name="id">The unique identifier of the Spin State to update.</param>

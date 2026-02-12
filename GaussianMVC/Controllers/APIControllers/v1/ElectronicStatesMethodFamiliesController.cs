@@ -148,9 +148,50 @@ public class ElectronicStatesMethodFamiliesController(ILogger<ElectronicStatesMe
 	}
 
 	/// <summary>
+	/// Retrieves a simplified list of Electronic State/Method Family Combinations.
+	/// </summary>
+	/// <returns>
+	/// An <see cref="ActionResult"/> containing a list of <see cref="ElectronicStateMethodFamilyRecord"/> objects.
+	/// Returns 200 OK with the list of Electronic State/Method Family Combination records on success.
+	/// Returns 500 Internal Server Error if an error occurs during retrieval.
+	/// </returns>
+	/// <response code="200">Returns the list of Electronic State/Method Family Combination records.</response>
+	/// <response code="500">If an internal server error occurs.</response>
+	// GET: api/v1/ElectronicStatesMethodFamilies/List
+	[HttpGet("List")]
+	public async Task<ActionResult<List<ElectronicStateMethodFamilyRecord>>> GetListAsync()
+	{
+		try
+		{
+			if (_logger.IsEnabled(LogLevel.Debug))
+			{
+				_logger.LogDebug("{Method} {Controller} {Action} called.", HttpContext.Request.Method, nameof(ElectronicStatesMethodFamiliesController), nameof(GetListAsync));
+			}
+
+			List<ElectronicStateMethodFamilyRecord> electronicStatesMethodFamilies = await _crud.GetElectronicStateMethodFamilyListAsync().ConfigureAwait(false);
+
+			if (_logger.IsEnabled(LogLevel.Debug))
+			{
+				_logger.LogDebug("{Method} {Controller} {Action} returning {ModelCount} {Model}", HttpContext.Request.Method, nameof(ElectronicStatesMethodFamiliesController), nameof(GetListAsync), electronicStatesMethodFamilies.Count, nameof(ElectronicStateMethodFamilyRecord));
+			}
+
+			return Ok(electronicStatesMethodFamilies);
+		}
+		catch (Exception ex)
+		{
+			if (_logger.IsEnabled(LogLevel.Error))
+			{
+				_logger.LogError(ex, "{Method} {Controller} {Action} had an error.", HttpContext.Request.Method, nameof(ElectronicStatesMethodFamiliesController), nameof(GetListAsync));
+			}
+
+			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
+		}
+	}
+
+	/// <summary>
 	/// Retrieves all Electronic State/Method Family Combinations belonging to a specific Electronic State.
 	/// </summary>
-	/// <param name="electronicStateId">The unique identifier of the Method Family.</param>
+	/// <param name="electronicStateId">The unique identifier of the Electronic State.</param>
 	/// <returns>A list of Electronic State/Method Family Combinations associated with the specified Electronic State.</returns>
 	/// <response code="200">Returns the list of Electronic State/Method Family Combinations successfully.</response>
 	/// <response code="500">An internal server error occurred while processing the request.</response>
@@ -224,11 +265,11 @@ public class ElectronicStatesMethodFamiliesController(ILogger<ElectronicStatesMe
 	}
 
 	/// <summary>
-	/// Retrieves all Electronic State/Method Family Combinations belonging to a specific Method Family.
+	/// Retrieves all Electronic State/Method Family Combinations belonging to a specific Method Family and a specific Electronic State.
 	/// </summary>
 	/// <param name="electronicStateId">The unique identifier of the Electronic State.</param>
 	/// <param name="methodFamilyId">The unique identifier of the Method Family.</param>
-	/// <returns>A list of Electronic State/Method Family Combinations associated with the specified Method Family.</returns>
+	/// <returns>A list of Electronic State/Method Family Combinations associated with the specified Method Family and Electronic State.</returns>
 	/// <response code="200">Returns the list of Electronic State/Method Family Combinations successfully.</response>
 	/// <response code="500">An internal server error occurred while processing the request.</response>
 	// GET: api/v1/ElectronicStatesMethodFamilies/ElectronicStateMethodFamily?electronicStateId=5&methodFamilyId=5

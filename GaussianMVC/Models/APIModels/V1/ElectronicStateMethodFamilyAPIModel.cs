@@ -220,6 +220,15 @@ public class ElectronicStateMethodFamilyAPIModel
 	}
 
 	/// <summary>
+	/// Converts this API model to a <see cref="ElectronicStateMethodFamilyRecord"/> instance.
+	/// </summary>
+	/// <returns>A new <see cref="ElectronicStateMethodFamilyRecord"/> containing the Id, Name, and Keyword properties.</returns>
+	public ElectronicStateMethodFamilyRecord ToRecord()
+	{
+		return new ElectronicStateMethodFamilyRecord(Id, Name, Keyword);
+	}
+
+	/// <summary>
 	/// Returns a string representation of the Electronic State/Method Family Combination API model.
 	/// </summary>
 	/// <returns>The Name if available, otherwise the Keyword, or a combination of both in the format "Name/Keyword".</returns>

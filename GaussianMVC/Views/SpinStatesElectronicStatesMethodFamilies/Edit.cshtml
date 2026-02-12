@@ -1,0 +1,84 @@
+﻿@model GaussianMVC.Models.SpinStateElectronicStateMethodFamilyViewModel
+
+@{
+	ViewData["Title"] = "Edit Spin State/Electronic State/Method Family Combination";
+}
+
+<h1>Edit</h1>
+
+<h4>Spin State/Electronic State/Method Family Combination</h4>
+<hr />
+
+@if (Model is not null)
+{
+	<div class="row">
+		<div class="col-md-12">
+			<form asp-action="Edit">
+				<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+				<input type="hidden" asp-for="Id" />
+				<input type="hidden" asp-for="CreatedDate" />
+				<input type="hidden" asp-for="LastUpdatedDate" />
+
+				<div class="form-group">
+					<label asp-for="Name" class="control-label"></label>
+					<input asp-for="Name" class="form-control" />
+					<span asp-validation-for="Name" class="text-danger"></span>
+				</div>
+
+				<div class="form-group">
+					<label asp-for="Keyword" class="control-label"></label>
+					<input asp-for="Keyword" class="form-control" />
+					<span asp-validation-for="Keyword" class="text-danger"></span>
+				</div>
+
+				<div class="form-group">
+					<label asp-for="ElectronicStateMethodFamilyId" class="control-label"></label>
+					<select asp-for="ElectronicStateMethodFamilyId" asp-items="Model.ElectronicStateMethodFamilyList" class="form-control">
+						<option value="">-- Select Electronic State/Method Family Combination --</option>
+					</select>
+					<span asp-validation-for="ElectronicStateMethodFamilyId" class="text-danger"></span>
+				</div>
+
+				<div class="form-group">
+					<label asp-for="SpinStateId" class="control-label"></label>
+					<select asp-for="SpinStateId" asp-items="Model.SpinStateList" class="form-control">
+						<option value="">-- Select Method Family --</option>
+					</select>
+					<span asp-validation-for="SpinStateId" class="text-danger"></span>
+				</div>
+
+				<div class="form-group">
+					<label asp-for="DescriptionHtml" class="control-label"></label>
+					<ejs-richtexteditor id="descriptionRTE" ejs-for="DescriptionHtml" value="@Model.DescriptionHtml" class="form-control">
+						<e-richtexteditor-toolbarsettings items="@Constants.SyncfusionToolbarItems"></e-richtexteditor-toolbarsettings>
+					</ejs-richtexteditor>
+					<span asp-validation-for="DescriptionHtml" class="text-danger"></span>
+				</div>
+
+				<div class="form-group form-check">
+					<label class="form-check-label">
+						<input class="form-check-input" asp-for="Archived" /> @Html.DisplayNameFor(model => model.Archived)
+					</label>
+				</div>
+
+				<div class="form-group">
+					<input type="submit" value="Save" class="btn btn-primary" />
+				</div>
+			</form>
+		</div>
+	</div>
+}
+else
+{
+	<p>No Spin State/Electronic State/Method Family Combination found with this Id.</p>
+}
+
+<div>
+	<a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}

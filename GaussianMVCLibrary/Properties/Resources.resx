@@ -189,33 +189,73 @@
     <value>spElectronicStatesMethodFamilies_Create</value>
     <comment>The Stored Procedure Name for Creating a new Electronic State/Method Family Combination</comment>
   </data>
+  <data name="SpinStatesElectronicStatesMethodFamiliesCreate" xml:space="preserve">
+    <value>spSpinStatesElectronicStatesMethodFamilies_Create</value>
+    <comment>The Stored Procedure Name for Creating a new Spin State/Electronic State/Method Family Combination</comment>
+  </data>
   <data name="ElectronicStatesMethodFamiliesDelete" xml:space="preserve">
     <value>spElectronicStatesMethodFamilies_Delete</value>
     <comment>The Stored Procedure Name for Deleting an Electronic State/Method Family Combination by Id</comment>
+  </data>
+  <data name="SpinStatesElectronicStatesMethodFamiliesDelete" xml:space="preserve">
+    <value>spSpinStatesElectronicStatesMethodFamilies_Delete</value>
+    <comment>The Stored Procedure Name for Deleting an Spin State/Electronic State/Method Family Combination by Id</comment>
   </data>
   <data name="ElectronicStatesMethodFamiliesGetAll" xml:space="preserve">
     <value>spElectronicStatesMethodFamilies_GetAll</value>
     <comment>The Stored Procedure Name for Getting All Electronic State/Method Family Combinations</comment>
   </data>
+  <data name="SpinStatesElectronicStatesMethodFamiliesGetAll" xml:space="preserve">
+    <value>spSpinStatesElectronicStatesMethodFamilies_GetAll</value>
+    <comment>The Stored Procedure Name for Getting All Spin State/Electronic State/Method Family Combinations</comment>
+  </data>
   <data name="ElectronicStatesMethodFamiliesGetByElectronicStateId" xml:space="preserve">
     <value>spElectronicStatesMethodFamilies_GetByElectronicStateId</value>
     <comment>The Stored Procedure Name for Getting Electronic State/Method Family Combinations by their Electronic State Id</comment>
+  </data>
+  <data name="SpinStatesElectronicStatesMethodFamiliesGetByElectronicStateMethodFamilyId" xml:space="preserve">
+    <value>spSpinStatesElectronicStatesMethodFamilies_GetByElectronicStateMethodFamilyId</value>
+    <comment>The Stored Procedure Name for Getting Spin State/Electronic State/Method Family Combinations by their Electronic State/Method Family Combination Id</comment>
   </data>
   <data name="ElectronicStatesMethodFamiliesGetByElectronicStateIdAndMethodFamilyId" xml:space="preserve">
     <value>spElectronicStatesMethodFamilies_GetByElectronicStateIdAndMethodFamilyId</value>
     <comment>The Stored Procedure Name for Getting Electronic State/Method Family Combinations by their Electronic State Id and their Method Family Id</comment>
   </data>
+  <data name="SpinStatesElectronicStatesMethodFamiliesGetByElectronicStateMethodFamilyIdAndSpinStateId" xml:space="preserve">
+    <value>spSpinStatesElectronicStatesMethodFamilies_GetByElectronicStateIdMethodFamilyIdAndSpinStateId</value>
+    <comment>The Stored Procedure Name for Getting Spin State/Electronic State/Method Family Combinations by their Electronic State/Method Family Combination Id and their Spin State Id</comment>
+  </data>
   <data name="ElectronicStatesMethodFamiliesGetById" xml:space="preserve">
     <value>spElectronicStatesMethodFamilies_GetById</value>
     <comment>The Stored Procedure Name for Getting an Electronic State/Method Family Combination by Id</comment>
+  </data>
+  <data name="SpinStatesElectronicStatesMethodFamiliesGetById" xml:space="preserve">
+    <value>spSpinStatesElectronicStatesMethodFamilies_GetById</value>
+    <comment>The Stored Procedure Name for Getting an Spin State/Electronic State/Method Family Combination by Id</comment>
   </data>
   <data name="ElectronicStatesMethodFamiliesGetByMethodFamilyId" xml:space="preserve">
     <value>spElectronicStatesMethodFamilies_GetByMethodFamilyId</value>
     <comment>The Stored Procedure Name for Getting Electronic State/Method Family Combinations by their Method Family Id</comment>
   </data>
+  <data name="SpinStatesElectronicStatesMethodFamiliesGetBySpinStateId" xml:space="preserve">
+    <value>spSpinStatesElectronicStatesMethodFamilies_GetBySpinStateId</value>
+    <comment>The Stored Procedure Name for Getting Spin State/Electronic State/Method Family Combinations by their Spin State Id</comment>
+  </data>
+  <data name="ElectronicStatesMethodFamiliesGetList" xml:space="preserve">
+    <value>spElectronicStatesMethodFamilies_GetList</value>
+    <comment>The Stored Procedure Name for Getting a List of Electronic State/Method Family Combination Ids, Names, and Keywords</comment>
+  </data>
+  <data name="SpinStatesElectronicStatesMethodFamiliesGetList" xml:space="preserve">
+    <value>spSpinStatesElectronicStatesMethodFamilies_GetList</value>
+    <comment>The Stored Procedure Name for Getting a List of Spin State/Electronic State/Method Family Combination Ids, Names, and Keywords</comment>
+  </data>
   <data name="ElectronicStatesMethodFamiliesUpdate" xml:space="preserve">
     <value>spElectronicStatesMethodFamilies_Update</value>
     <comment>The Stored Procedure Name for Updating an Electronic State/Method Family Combination by Id</comment>
+  </data>
+  <data name="SpinStatesElectronicStatesMethodFamiliesUpdate" xml:space="preserve">
+    <value>spSpinStatesElectronicStatesMethodFamilies_Update</value>
+    <comment>The Stored Procedure Name for Updating an Spin State/Electronic State/Method Family Combination by Id</comment>
   </data>
   <data name="ElectronicStatesUpdate" xml:space="preserve">
     <value>spElectronicStates_Update</value>
@@ -260,6 +300,10 @@
   <data name="SpinStatesGetById" xml:space="preserve">
     <value>spSpinStates_GetById</value>
     <comment>The Stored Procedure Name for Getting a Spin State by Id</comment>
+  </data>
+  <data name="SpinStatesGetList" xml:space="preserve">
+    <value>spSpinStates_GetList</value>
+    <comment>The Stored Procedure Name for Getting a List of Spin State Ids, Names, and Keywords</comment>
   </data>
   <data name="SpinStatesUpdate" xml:space="preserve">
     <value>spSpinStates_Update</value>

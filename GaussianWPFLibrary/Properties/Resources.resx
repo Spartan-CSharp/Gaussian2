@@ -137,6 +137,10 @@
     <value>api/v1/ElectronicStatesMethodFamilies</value>
     <comment>The API Endpoint for Electronic State/Method Family Combinations</comment>
   </data>
+  <data name="SpinStatesElectronicStatesMethodFamiliesEndpoint" xml:space="preserve">
+    <value>api/v1/SpinStatesElectronicStatesMethodFamilies</value>
+    <comment>The API Endpoint for Spin State/Electronic State/Method Family Combinations</comment>
+  </data>
   <data name="HomeEndpoint" xml:space="preserve">
     <value>api/v1/Home</value>
     <comment>The API Endpoint for Home</comment>

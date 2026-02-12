@@ -118,6 +118,15 @@ public class SpinStateAPIModel
 	}
 
 	/// <summary>
+	/// Converts this API model to a <see cref="SpinStateRecord"/> instance.
+	/// </summary>
+	/// <returns>A new <see cref="SpinStateRecord"/> containing the Id, Name, and Keyword properties.</returns>
+	public SpinStateRecord ToRecord()
+	{
+		return new SpinStateRecord(Id, Name, Keyword);
+	}
+
+	/// <summary>
 	/// Returns a string representation of the Spin State.
 	/// </summary>
 	/// <returns>The Name if available, otherwise the Keyword, or a combination of both in the format "Name/Keyword".</returns>

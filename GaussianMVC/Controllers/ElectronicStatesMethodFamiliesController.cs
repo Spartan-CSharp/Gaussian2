@@ -13,11 +13,11 @@ using Microsoft.AspNetCore.Mvc;
 namespace GaussianMVC.Controllers;
 
 /// <summary>
-/// MVC controller for managing Electronic State/MethodFamily Combinations.
-/// Provides CRUD operations for Electronic State/MethodFamily Combination entities through a web interface.
+/// MVC controller for managing Electronic State/Method Family Combinations.
+/// Provides CRUD operations for Electronic State/Method Family Combination entities through a web interface.
 /// </summary>
 /// <param name="logger">The logger instance for logging controller operations.</param>
-/// <param name="esmfCrud">The data access service for Electronic State/MethodFamily Combinations CRUD operations.</param>
+/// <param name="esmfCrud">The data access service for Electronic State/Method Family Combinations CRUD operations.</param>
 /// <param name="esCrud">The data access service for Electronic States CRUD operations.</param>
 /// <param name="mfCrud">The data access service for Method Families CRUD operations.</param>
 public class ElectronicStatesMethodFamiliesController(ILogger<ElectronicStatesMethodFamiliesController> logger, IElectronicStatesMethodFamiliesCrud esmfCrud, IElectronicStatesCrud esCrud, IMethodFamiliesCrud mfCrud) : Controller
@@ -28,9 +28,9 @@ public class ElectronicStatesMethodFamiliesController(ILogger<ElectronicStatesMe
 	private readonly IMethodFamiliesCrud _mfCrud = mfCrud;
 
 	/// <summary>
-	/// Displays a list of all Electronic State/MethodFamily Combinations.
+	/// Displays a list of all Electronic State/Method Family Combinations.
 	/// </summary>
-	/// <returns>A view containing a list of <see cref="ElectronicStateMethodFamilyViewModel"/> objects representing all Electronic State/MethodFamily Combinations.</returns>
+	/// <returns>A view containing a list of <see cref="ElectronicStateMethodFamilyViewModel"/> objects representing all Electronic State/Method Family Combinations.</returns>
 	// GET: ElectronicStatesMethodFamilies
 	[HttpGet]
 	public async Task<ActionResult<List<ElectronicStateMethodFamilyViewModel>>> IndexAsync()
@@ -83,10 +83,10 @@ public class ElectronicStatesMethodFamiliesController(ILogger<ElectronicStatesMe
 	}
 
 	/// <summary>
-	/// Displays detailed information for a specific Electronic State/MethodFamily Combination.
+	/// Displays detailed information for a specific Electronic State/Method Family Combination.
 	/// </summary>
-	/// <param name="id">The unique identifier of the Electronic State/MethodFamily Combination to display.</param>
-	/// <returns>A view containing a <see cref="ElectronicStateMethodFamilyViewModel"/> with the details of the specified Electronic State/MethodFamily Combination.</returns>
+	/// <param name="id">The unique identifier of the Electronic State/Method Family Combination to display.</param>
+	/// <returns>A view containing a <see cref="ElectronicStateMethodFamilyViewModel"/> with the details of the specified Electronic State/Method Family Combination.</returns>
 	// GET: ElectronicStatesMethodFamilies/Details/5
 	[HttpGet]
 	public async Task<ActionResult<ElectronicStateMethodFamilyViewModel?>> DetailsAsync(int id)
@@ -133,9 +133,9 @@ public class ElectronicStatesMethodFamiliesController(ILogger<ElectronicStatesMe
 	}
 
 	/// <summary>
-	/// Displays the form for creating a new Electronic State/MethodFamily Combination.
+	/// Displays the form for creating a new Electronic State/Method Family Combination.
 	/// </summary>
-	/// <returns>A view containing an empty <see cref="ElectronicStateMethodFamilyViewModel"/> for creating a new Electronic State/MethodFamily Combination.</returns>
+	/// <returns>A view containing an empty <see cref="ElectronicStateMethodFamilyViewModel"/> for creating a new Electronic State/Method Family Combination.</returns>
 	// GET: ElectronicStatesMethodFamilies/Create
 	[HttpGet]
 	public async Task<ActionResult<ElectronicStateMethodFamilyViewModel>> CreateAsync()
@@ -181,9 +181,9 @@ public class ElectronicStatesMethodFamiliesController(ILogger<ElectronicStatesMe
 	}
 
 	/// <summary>
-	/// Processes the form submission for creating a new Electronic State/MethodFamily Combination.
+	/// Processes the form submission for creating a new Electronic State/Method Family Combination.
 	/// </summary>
-	/// <param name="model">The <see cref="ElectronicStateMethodFamilyViewModel"/> containing the data for the new Electronic State/MethodFamily Combination.</param>
+	/// <param name="model">The <see cref="ElectronicStateMethodFamilyViewModel"/> containing the data for the new Electronic State/Method Family Combination.</param>
 	/// <returns>A redirect to the Index action if successful; otherwise, returns the Create view with validation errors.</returns>
 	// POST: ElectronicStatesMethodFamilies/Create
 	[HttpPost]
@@ -258,10 +258,10 @@ public class ElectronicStatesMethodFamiliesController(ILogger<ElectronicStatesMe
 	}
 
 	/// <summary>
-	/// Displays the form for editing an existing Electronic State/MethodFamily Combination.
+	/// Displays the form for editing an existing Electronic State/Method Family Combination.
 	/// </summary>
-	/// <param name="id">The unique identifier of the Electronic State/MethodFamily Combination to edit.</param>
-	/// <returns>A view containing a <see cref="ElectronicStateMethodFamilyViewModel"/> with the current data of the Electronic State/MethodFamily Combination.</returns>
+	/// <param name="id">The unique identifier of the Electronic State/Method Family Combination to edit.</param>
+	/// <returns>A view containing a <see cref="ElectronicStateMethodFamilyViewModel"/> with the current data of the Electronic State/Method Family Combination.</returns>
 	// GET: ElectronicStatesMethodFamilies/Edit/5
 	[HttpGet]
 	public async Task<ActionResult<ElectronicStateMethodFamilyViewModel?>> EditAsync(int id)
@@ -308,9 +308,9 @@ public class ElectronicStatesMethodFamiliesController(ILogger<ElectronicStatesMe
 	}
 
 	/// <summary>
-	/// Processes the form submission for editing an existing Electronic State/MethodFamily Combination.
+	/// Processes the form submission for editing an existing Electronic State/Method Family Combination.
 	/// </summary>
-	/// <param name="id">The unique identifier of the Electronic State/MethodFamily Combination to update.</param>
+	/// <param name="id">The unique identifier of the Electronic State/Method Family Combination to update.</param>
 	/// <param name="model">The <see cref="ElectronicStateMethodFamilyViewModel"/> containing the updated data.</param>
 	/// <returns>A redirect to the Index action if successful; otherwise, returns the Edit view with validation errors.</returns>
 	// POST: ElectronicStatesMethodFamilies/Edit/5
@@ -398,10 +398,10 @@ public class ElectronicStatesMethodFamiliesController(ILogger<ElectronicStatesMe
 	}
 
 	/// <summary>
-	/// Displays the confirmation page for deleting a Electronic State/MethodFamily Combination.
+	/// Displays the confirmation page for deleting a Electronic State/Method Family Combination.
 	/// </summary>
-	/// <param name="id">The unique identifier of the Electronic State/MethodFamily Combination to delete.</param>
-	/// <returns>A view containing a <see cref="ElectronicStateMethodFamilyViewModel"/> with the details of the Electronic State/MethodFamily Combination to be deleted.</returns>
+	/// <param name="id">The unique identifier of the Electronic State/Method Family Combination to delete.</param>
+	/// <returns>A view containing a <see cref="ElectronicStateMethodFamilyViewModel"/> with the details of the Electronic State/Method Family Combination to be deleted.</returns>
 	// GET: ElectronicStatesMethodFamilies/Delete/5
 	[HttpGet]
 	public async Task<ActionResult<ElectronicStateMethodFamilyViewModel?>> DeleteAsync(int id)
@@ -448,10 +448,10 @@ public class ElectronicStatesMethodFamiliesController(ILogger<ElectronicStatesMe
 	}
 
 	/// <summary>
-	/// Processes the deletion confirmation for a Electronic State/MethodFamily Combination.
+	/// Processes the deletion confirmation for a Electronic State/Method Family Combination.
 	/// </summary>
-	/// <param name="id">The unique identifier of the Electronic State/MethodFamily Combination to delete.</param>
-	/// <param name="model">The <see cref="ElectronicStateMethodFamilyViewModel"/> containing the Electronic State/MethodFamily Combination data for validation.</param>
+	/// <param name="id">The unique identifier of the Electronic State/Method Family Combination to delete.</param>
+	/// <param name="model">The <see cref="ElectronicStateMethodFamilyViewModel"/> containing the Electronic State/Method Family Combination data for validation.</param>
 	/// <returns>A redirect to the Index action if successful; otherwise, returns the Delete view if the ID does not match the model.</returns>
 	// POST: ElectronicStatesMethodFamilies/Delete/5
 	[HttpPost]

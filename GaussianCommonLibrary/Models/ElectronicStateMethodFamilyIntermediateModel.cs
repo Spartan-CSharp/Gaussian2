@@ -108,7 +108,7 @@ public class ElectronicStateMethodFamilyIntermediateModel
 	/// <summary>
 	/// Converts this model to a <see cref="ElectronicStateMethodFamilySimpleModel"/>.
 	/// </summary>
-	/// <returns>A simple model representation of this Base Method.</returns>
+	/// <returns>A simple model representation of this Electronic State/Method Family Combination.</returns>
 	public ElectronicStateMethodFamilySimpleModel ToSimpleModel()
 	{
 		return new ElectronicStateMethodFamilySimpleModel
@@ -150,6 +150,16 @@ public class ElectronicStateMethodFamilyIntermediateModel
 			Archived = Archived
 		};
 	}
+
+	/// <summary>
+	/// Converts this model to a <see cref="ElectronicStateMethodFamilyRecord"/>.
+	/// </summary>
+	/// <returns>A record containing the identifier and name of this Electronic State/Method Family Combination.</returns>
+	public ElectronicStateMethodFamilyRecord ToRecord()
+	{
+		return new ElectronicStateMethodFamilyRecord(Id, Name, Keyword);
+	}
+
 	/// <summary>
 	/// Returns a string representation of the Electronic State/Method Family Combination.
 	/// Returns the keyword if no name is specified, the name if no keyword is specified, or "Name/Keyword" if both are specified.

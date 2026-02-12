@@ -46,6 +46,15 @@ public class SpinStateFullModel
 	public bool Archived { get; set; }
 
 	/// <summary>
+	/// Converts this model to a <see cref="SpinStateRecord"/>.
+	/// </summary>
+	/// <returns>A record containing the identifier and name of this Spin State.</returns>
+	public SpinStateRecord ToRecord()
+	{
+		return new SpinStateRecord(Id, Name, Keyword);
+	}
+
+	/// <summary>
 	/// Returns a string representation of the Spin State.
 	/// Returns the keyword if no name is specified, the name if no keyword is specified, or "Name/Keyword" if both are specified.
 	/// </summary>

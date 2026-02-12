@@ -69,6 +69,25 @@ public class SpinStatesCrud(IDbData dbData, ILogger<SpinStatesCrud> logger) : IS
 	}
 
 	/// <inheritdoc/>
+	public async Task<List<SpinStateRecord>> GetSpinStateListAsync()
+	{
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{Class} {Method} called.", nameof(SpinStatesCrud), nameof(GetSpinStateListAsync));
+		}
+
+		DynamicParameters p = new();
+		List<SpinStateRecord> output = await _dbData.LoadDataAsync<SpinStateRecord, dynamic>(Resources.SpinStatesGetList, p, Resources.DataDatabaseConnectionString).ConfigureAwait(false);
+
+		if (_logger.IsEnabled(LogLevel.Trace))
+		{
+			_logger.LogTrace("{Class} {Method} returning {ModelCount} {ModelName}.", nameof(SpinStatesCrud), nameof(GetSpinStateListAsync), output.Count, nameof(SpinStateRecord));
+		}
+
+		return output;
+	}
+
+	/// <inheritdoc/>
 	public async Task<SpinStateFullModel?> GetSpinStateByIdAsync(int id)
 	{
 		if (_logger.IsEnabled(LogLevel.Debug))

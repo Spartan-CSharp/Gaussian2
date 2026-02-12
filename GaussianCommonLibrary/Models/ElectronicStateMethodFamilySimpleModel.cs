@@ -107,7 +107,7 @@ public class ElectronicStateMethodFamilySimpleModel
 	/// </summary>
 	/// <param name="electronicState">The Electronic State record to include in the intermediate model.</param>
 	/// <param name="methodFamily">The Method Family record to include in the intermediate model.</param>
-	/// <returns>An intermediate model representation of this Base Method.</returns>
+	/// <returns>An intermediate model representation of this Electronic State.</returns>
 	public ElectronicStateMethodFamilyIntermediateModel ToIntermediateModel(ElectronicStateRecord electronicState, MethodFamilyRecord? methodFamily = null)
 	{
 		ArgumentNullException.ThrowIfNull(electronicState, nameof(electronicState));
@@ -128,7 +128,7 @@ public class ElectronicStateMethodFamilySimpleModel
 	}
 
 	/// <summary>
-	/// Converts this model to a <see cref="ElectronicStateMethodFamilyFullModel"/> using the specified Electronic State and Method Family.
+	/// Converts this model to a <see cref="ElectronicStateMethodFamilyFullModel"/> using the specified Electronic State and Method Family, the second of which may be null.
 	/// </summary>
 	/// <param name="electronicState">The Electronic State full model to associate with the resulting full model.</param>
 	/// <param name="methodFamily">The Method Family full model to associate with the resulting full model.</param>
@@ -150,6 +150,15 @@ public class ElectronicStateMethodFamilySimpleModel
 			LastUpdatedDate = LastUpdatedDate,
 			Archived = Archived
 		};
+	}
+
+	/// <summary>
+	/// Converts this model to a <see cref="ElectronicStateMethodFamilyRecord"/>.
+	/// </summary>
+	/// <returns>A record containing the identifier and name of this Electronic State/Method Family Combination.</returns>
+	public ElectronicStateMethodFamilyRecord ToRecord()
+	{
+		return new ElectronicStateMethodFamilyRecord(Id, Name, Keyword);
 	}
 
 	/// <summary>

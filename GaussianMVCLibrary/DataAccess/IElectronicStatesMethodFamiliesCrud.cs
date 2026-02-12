@@ -69,6 +69,12 @@ public interface IElectronicStatesMethodFamiliesCrud
 	Task<List<ElectronicStateMethodFamilyFullModel>> GetElectronicStatesMethodFamiliesByMethodFamilyIdAsync(int? methodFamilyId = null);
 
 	/// <summary>
+	/// Retrieves a simplified list of Electronic State/Method Family Combinations from the database.
+	/// </summary>
+	/// <returns>A task that represents the asynchronous operation. The task result contains a list of Electronic State/Method Family Combination records with basic identifying information.</returns>
+	Task<List<ElectronicStateMethodFamilyRecord>> GetElectronicStateMethodFamilyListAsync();
+
+	/// <summary>
 	/// Updates an existing Electronic State/Method Family Combination asynchronously.
 	/// </summary>
 	/// <param name="model">The simple model containing the updated Electronic State/Method Family Combination data.</param>

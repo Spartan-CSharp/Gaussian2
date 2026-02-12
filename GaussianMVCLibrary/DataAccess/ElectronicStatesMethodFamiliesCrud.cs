@@ -210,6 +210,25 @@ public class ElectronicStatesMethodFamiliesCrud(IDbData dbData, ILogger<Electron
 	}
 
 	/// <inheritdoc/>
+	public async Task<List<ElectronicStateMethodFamilyRecord>> GetElectronicStateMethodFamilyListAsync()
+	{
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{Class} {Method} called.", nameof(ElectronicStatesMethodFamiliesCrud), nameof(GetElectronicStateMethodFamilyListAsync));
+		}
+
+		DynamicParameters p = new();
+		List<ElectronicStateMethodFamilyRecord> output = await _dbData.LoadDataAsync<ElectronicStateMethodFamilyRecord, dynamic>(Resources.ElectronicStatesMethodFamiliesGetList, p, Resources.DataDatabaseConnectionString).ConfigureAwait(false);
+
+		if (_logger.IsEnabled(LogLevel.Trace))
+		{
+			_logger.LogTrace("{Class} {Method} returning {ModelCount} {ModelName}.", nameof(ElectronicStatesMethodFamiliesCrud), nameof(GetElectronicStateMethodFamilyListAsync), output.Count, nameof(ElectronicStateMethodFamilyRecord));
+		}
+
+		return output;
+	}
+
+	/// <inheritdoc/>
 	/// <exception cref="NullParameterException">Thrown when the Method Family associated with the Electronic State/Method Family Combination does not exist.</exception>
 	public async Task<ElectronicStateMethodFamilyFullModel?> GetElectronicStateMethodFamilyByIdAsync(int id)
 	{
@@ -500,7 +519,17 @@ public class ElectronicStatesMethodFamiliesCrud(IDbData dbData, ILogger<Electron
 			_logger.LogDebug("{Class} {Method} called with Id = {Id}.", nameof(ElectronicStatesMethodFamiliesCrud), nameof(DeleteElectronicStateMethodFamilyAsync), id);
 		}
 
+		// First check if used in any Spin State/Electronic State/Method Family Combinations
 		DynamicParameters p = new();
+		p.Add("@ElectronicStateMethodFamilyId", id);
+		List<SpinStateElectronicStateMethodFamilySimpleModel> spinStateElectronicStateMethodFamilies = await _dbData.LoadDataAsync<SpinStateElectronicStateMethodFamilySimpleModel, dynamic>(Resources.SpinStatesElectronicStatesMethodFamiliesGetByElectronicStateMethodFamilyId, p, Resources.DataDatabaseConnectionString).ConfigureAwait(false);
+
+		if (spinStateElectronicStateMethodFamilies.Count > 0)
+		{
+			throw new ValueInUseException(nameof(MethodFamilyFullModel), $"Cannot delete Electronic State/Method Family Combination with Id {id} because it is in use by one or more Spin State/Electronic State/Method Family Combinations.");
+		}
+
+		p = new();
 		p.Add("@Id", id);
 		_ = await _dbData.SaveDataAsync(Resources.ElectronicStatesMethodFamiliesDelete, p, Resources.DataDatabaseConnectionString).ConfigureAwait(false);
 

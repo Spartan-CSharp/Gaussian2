@@ -35,6 +35,12 @@ public interface ISpinStatesCrud
 	Task<SpinStateFullModel?> GetSpinStateByIdAsync(int id);
 
 	/// <summary>
+	/// Retrieves a simplified list of Spin States from the database.
+	/// </summary>
+	/// <returns>A task that represents the asynchronous operation. The task result contains a list of Spin State records with basic identifying information.</returns>
+	Task<List<SpinStateRecord>> GetSpinStateListAsync();
+
+	/// <summary>
 	/// Updates an existing Spin State in the data store.
 	/// </summary>
 	/// <param name="model">The Spin State model containing updated values.</param>

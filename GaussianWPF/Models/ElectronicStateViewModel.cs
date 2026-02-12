@@ -114,6 +114,15 @@ public class ElectronicStateViewModel
 	}
 
 	/// <summary>
+	/// Converts this view model to a <see cref="ElectronicStateRecord"/> instance.
+	/// </summary>
+	/// <returns>A new <see cref="ElectronicStateRecord"/> containing the Id, Name, and Keyword properties.</returns>
+	public ElectronicStateRecord ToRecord()
+	{
+		return new ElectronicStateRecord(Id, Name, Keyword);
+	}
+
+	/// <summary>
 	/// Returns a string representation of the Electronic State.
 	/// </summary>
 	/// <returns>The Name if available, otherwise the Keyword, or a combination of both in the format "Name/Keyword".</returns>

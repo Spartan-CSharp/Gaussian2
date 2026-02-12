@@ -193,7 +193,7 @@ public partial class MethodFamiliesIndexControl : UserControl, INotifyPropertyCh
 			IsErrorVisible = ErrorMessage?.Length > 0;
 		}
 
-		// Nothing to do for change events of MethodFamilyList and IsErrorVisible.
+		// Nothing to do for change events of SpinStateList and IsErrorVisible.
 
 		if (_logger.IsEnabled(LogLevel.Debug))
 		{

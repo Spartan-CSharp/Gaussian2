@@ -480,10 +480,11 @@ CreatedDate
 LastUpdatedDate
 Archived
 
-### SpinStateElectronicStateMethodFamilies Table
+### SpinStatesElectronicStatesMethodFamilies Table
 Id
-ElectronicStateMethodFamilyId -- Links to ElectronicStateMethodFamilies.Id
+ElectronicStateMethodFamilyId -- Links to ElectronicStatesMethodFamilies.Id
 SpinStateId -- Links to SpinStates.Id
+Name
 Keyword
 DescriptionRtf
 DescriptionText
@@ -491,7 +492,7 @@ CreatedDate
 LastUpdatedDate
 Archived
 
-### ElectronicStateMethodFamilies Table
+### ElectronicStatesMethodFamilies Table
 Id
 ElectronicStateId -- Links to ElectronicStates.Id
 MethodFamilyId -- Links to MethodFamilies.Id

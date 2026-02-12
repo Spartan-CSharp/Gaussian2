@@ -114,6 +114,18 @@
     <Build Include="dbo\Programmability\Stored Procedures\spElectronicStatesMethodFamilies_Update.sql" />
     <Build Include="dbo\Programmability\Stored Procedures\spElectronicStatesMethodFamilies_GetByElectronicStateIdAndMethodFamilyId.sql" />
     <Build Include="dbo\Programmability\Stored Procedures\spElectronicStates_GetList.sql" />
+    <Build Include="dbo\Tables\SpinStatesElectronicStatesMethodFamilies.sql" />
+    <Build Include="dbo\Programmability\Stored Procedures\spElectronicStatesMethodFamilies_GetList.sql" />
+    <Build Include="dbo\Programmability\Stored Procedures\spSpinStates_GetList.sql" />
+    <Build Include="dbo\Programmability\Stored Procedures\spSpinStatesElectronicStatesMethodFamilies_Create.sql" />
+    <Build Include="dbo\Programmability\Stored Procedures\spSpinStatesElectronicStatesMethodFamilies_Delete.sql" />
+    <Build Include="dbo\Programmability\Stored Procedures\spSpinStatesElectronicStatesMethodFamilies_GetAll.sql" />
+    <Build Include="dbo\Programmability\Stored Procedures\spSpinStatesElectronicStatesMethodFamilies_GetByElectronicStateMethodFamilyId.sql" />
+    <Build Include="dbo\Programmability\Stored Procedures\spSpinStatesElectronicStatesMethodFamilies_GetBySpinStateIdAndElectronicStateMethodFamilyId.sql" />
+    <Build Include="dbo\Programmability\Stored Procedures\spSpinStatesElectronicStatesMethodFamilies_GetById.sql" />
+    <Build Include="dbo\Programmability\Stored Procedures\spSpinStatesElectronicStatesMethodFamilies_GetBySpinStateId.sql" />
+    <Build Include="dbo\Programmability\Stored Procedures\spSpinStatesElectronicStatesMethodFamilies_GetList.sql" />
+    <Build Include="dbo\Programmability\Stored Procedures\spSpinStatesElectronicStatesMethodFamilies_Update.sql" />
   </ItemGroup>
   <ItemGroup>
     <PreDeploy Include="PreScripts\Script.PreDeployment.sql" />

@@ -69,6 +69,12 @@ public interface IElectronicStatesMethodFamiliesEndpoint
 	Task<ElectronicStateMethodFamilyFullModel?> GetByIdAsync(int id);
 
 	/// <summary>
+	/// Retrieves a simplified list of all Electronic State/Method Family Combinations as records.
+	/// </summary>
+	/// <returns>A list of all Electronic State/MethodFamily Combinations as records, or <see langword="null"/> if none exist.</returns>
+	Task<List<ElectronicStateMethodFamilyRecord>?> GetListAsync();
+
+	/// <summary>
 	/// Updates an existing Electronic State/Method Family Combination.
 	/// </summary>
 	/// <param name="id">The unique identifier of the Electronic State/Method Family Combination to update.</param>

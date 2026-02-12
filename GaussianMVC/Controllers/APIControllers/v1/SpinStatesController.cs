@@ -68,6 +68,47 @@ public class SpinStatesController(ILogger<SpinStatesController> logger, ISpinSta
 	}
 
 	/// <summary>
+	/// Retrieves a simplified list of Spin States.
+	/// </summary>
+	/// <returns>
+	/// An <see cref="ActionResult"/> containing a list of <see cref="ElectronicStateRecord"/> objects.
+	/// Returns 200 OK with the list of Spin State records on success.
+	/// Returns 500 Internal Server Error if an error occurs during retrieval.
+	/// </returns>
+	/// <response code="200">Returns the list of Spin State records.</response>
+	/// <response code="500">If an internal server error occurs.</response>
+	// GET: api/v1/SpinStates/List
+	[HttpGet("List")]
+	public async Task<ActionResult<List<SpinStateRecord>>> GetListAsync()
+	{
+		try
+		{
+			if (_logger.IsEnabled(LogLevel.Debug))
+			{
+				_logger.LogDebug("{Method} {Controller} {Action} called.", HttpContext.Request.Method, nameof(SpinStatesController), nameof(GetListAsync));
+			}
+
+			List<SpinStateRecord> spinStates = await _crud.GetSpinStateListAsync().ConfigureAwait(false);
+
+			if (_logger.IsEnabled(LogLevel.Debug))
+			{
+				_logger.LogDebug("{Method} {Controller} {Action} returning {ModelCount} {Model}", HttpContext.Request.Method, nameof(SpinStatesController), nameof(GetListAsync), spinStates.Count, nameof(SpinStateRecord));
+			}
+
+			return Ok(spinStates);
+		}
+		catch (Exception ex)
+		{
+			if (_logger.IsEnabled(LogLevel.Error))
+			{
+				_logger.LogError(ex, "{Method} {Controller} {Action} had an error.", HttpContext.Request.Method, nameof(SpinStatesController), nameof(GetListAsync));
+			}
+
+			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
+		}
+	}
+
+	/// <summary>
 	/// Retrieves a specific Spin State by its unique identifier.
 	/// </summary>
 	/// <param name="id">The unique identifier of the Spin State to retrieve.</param>

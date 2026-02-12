@@ -2,6 +2,7 @@
 
 using Dapper;
 
+using GaussianCommonLibrary.ErrorModels;
 using GaussianCommonLibrary.Models;
 
 using GaussianMVCLibrary.Properties;
@@ -143,7 +144,17 @@ public class ElectronicStatesCrud(IDbData dbData, ILogger<ElectronicStatesCrud> 
 			_logger.LogDebug("{Class} {Method} called with Id = {Id}.", nameof(ElectronicStatesCrud), nameof(DeleteElectronicStateAsync), id);
 		}
 
+		// First check if used in any Electronic State/Method Family Combinations
 		DynamicParameters p = new();
+		p.Add("@ElectronicStateId", id);
+		List<ElectronicStateMethodFamilySimpleModel> electronicStateMethodFamilies = await _dbData.LoadDataAsync<ElectronicStateMethodFamilySimpleModel, dynamic>(Resources.ElectronicStatesMethodFamiliesGetByElectronicStateId, p, Resources.DataDatabaseConnectionString).ConfigureAwait(false);
+
+		if (electronicStateMethodFamilies.Count > 0)
+		{
+			throw new ValueInUseException(nameof(MethodFamilyFullModel), $"Cannot delete Electronic State with Id {id} because it is in use by one or more Electronic State/Method Family Combinations.");
+		}
+
+		p = new();
 		p.Add("@Id", id);
 		_ = await _dbData.SaveDataAsync(Resources.ElectronicStatesDelete, p, Resources.DataDatabaseConnectionString).ConfigureAwait(false);
 
