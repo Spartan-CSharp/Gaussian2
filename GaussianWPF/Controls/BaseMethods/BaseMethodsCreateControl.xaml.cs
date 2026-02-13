@@ -467,7 +467,7 @@ public partial class BaseMethodsCreateControl : UserControl, INotifyPropertyChan
 			_logger.LogDebug("{UserControl} {EventHandler} called with {Sender} and {EventArgs}.", nameof(BaseMethodsCreateControl), nameof(DescriptionRichTextBox_TextChanged), sender, e);
 		}
 
-		CanSave = SelectedMethodFamily is not null && Keyword?.Length is > 0 and <= 50 && (DescriptionRichTextBox.GetPlainText()?.Length is <= 4000 || string.IsNullOrEmpty(DescriptionRichTextBox.GetPlainText()));
+		CanSave = Keyword?.Length is > 0 and <= 50 && (DescriptionRichTextBox.GetPlainText()?.Length is <= 4000 || string.IsNullOrEmpty(DescriptionRichTextBox.GetPlainText()));
 
 		if (_logger.IsEnabled(LogLevel.Debug))
 		{

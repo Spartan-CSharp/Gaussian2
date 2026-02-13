@@ -19,7 +19,7 @@ BEGIN
 		[dbo].[ElectronicStatesMethodFamilies]
 	WHERE
 		[ElectronicStateId] = @ElectronicStateId AND
-		[MethodFamilyId] = @MethodFamilyId AND
+		ISNULL([MethodFamilyId],0) = @MethodFamilyId AND
 		[Archived] = 0
 	ORDER BY
 		[Name] ASC, [Keyword] ASC;

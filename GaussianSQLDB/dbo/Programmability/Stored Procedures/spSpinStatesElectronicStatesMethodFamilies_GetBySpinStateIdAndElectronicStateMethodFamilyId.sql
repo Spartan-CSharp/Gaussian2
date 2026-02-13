@@ -19,7 +19,7 @@ BEGIN
 		[dbo].[SpinStatesElectronicStatesMethodFamilies]
 	WHERE
 		[ElectronicStateMethodFamilyId] = @ElectronicStateMethodFamilyId AND
-		[SpinStateId] = @SpinStateId AND
+		ISNULL([SpinStateId],0) = @SpinStateId AND
 		[Archived] = 0
 	ORDER BY
 		[Name] ASC, [Keyword] ASC;

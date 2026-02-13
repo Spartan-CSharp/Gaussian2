@@ -15,7 +15,7 @@ BEGIN
 	FROM 
 		[dbo].[BaseMethods]
 	WHERE
-		[MethodFamilyId] = @MethodFamilyId AND
+		ISNULL([MethodFamilyId],0) = @MethodFamilyId AND
 		[Archived] = 0
 	ORDER BY
 		[Keyword] ASC;

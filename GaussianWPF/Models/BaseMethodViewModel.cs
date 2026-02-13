@@ -223,7 +223,7 @@ public class BaseMethodViewModel
 		{
 			Id = Id,
 			Keyword = Keyword,
-			MethodFamilyId = MethodFamily!.Id,
+			MethodFamilyId = MethodFamily?.Id,
 			DescriptionRtf = DescriptionRtf,
 			DescriptionText = DescriptionText,
 			CreatedDate = CreatedDate,
