@@ -106,6 +106,15 @@ namespace GaussianMVCLibrary.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to spBaseMethods_GetList.
+        /// </summary>
+        internal static string BaseMethodsGetList {
+            get {
+                return ResourceManager.GetString("BaseMethodsGetList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to spBaseMethods_Update.
         /// </summary>
         internal static string BaseMethodsUpdate {

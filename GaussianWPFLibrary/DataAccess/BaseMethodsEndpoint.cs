@@ -111,6 +111,36 @@ public class BaseMethodsEndpoint(ILogger<BaseMethodsEndpoint> logger, IApiHelper
 
 	/// <inheritdoc/>
 	/// <exception cref="HttpIOException">Thrown when the API request fails or returns an unsuccessful status code.</exception>
+	public async Task<List<BaseMethodRecord>?> GetListAsync()
+	{
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{Class} {Method} called.", nameof(BaseMethodsEndpoint), nameof(GetListAsync));
+		}
+
+		_apiHelper.ApiClient.DefaultRequestHeaders.Date = DateTimeOffset.UtcNow;
+		Uri apiEndpoint = new($"{Resources.BaseMethodsEndpoint}/List", UriKind.Relative);
+		using HttpResponseMessage response = await _apiHelper.ApiClient.GetAsync(apiEndpoint).ConfigureAwait(false);
+
+		if (response.IsSuccessStatusCode)
+		{
+			List<BaseMethodRecord>? result = await response.Content.ReadFromJsonAsync<List<BaseMethodRecord>>().ConfigureAwait(false);
+
+			if (_logger.IsEnabled(LogLevel.Trace))
+			{
+				_logger.LogTrace("{Class} {Method} returning {ModelCount} {ModelName}.", nameof(BaseMethodsEndpoint), nameof(GetListAsync), result?.Count, nameof(BaseMethodRecord));
+			}
+
+			return result;
+		}
+		else
+		{
+			throw new HttpIOException(HttpRequestError.InvalidResponse, response.ReasonPhrase);
+		}
+	}
+
+	/// <inheritdoc/>
+	/// <exception cref="HttpIOException">Thrown when the API request fails or returns an unsuccessful status code.</exception>
 	public async Task<List<BaseMethodFullModel>?> GetByMethodFamilyAsync(int methodFamilyId)
 	{
 		if (_logger.IsEnabled(LogLevel.Debug))

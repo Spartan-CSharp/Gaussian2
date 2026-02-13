@@ -1,4 +1,6 @@
-﻿namespace GaussianCommonLibrary.Models;
+﻿using System.Xml.Linq;
+
+namespace GaussianCommonLibrary.Models;
 
 /// <summary>
 /// Represents a Base Method with full details including its associated Method Family.
@@ -65,7 +67,7 @@ public class BaseMethodFullModel
 	/// <summary>
 	/// Gets or sets the Method Family to which this Base Method belongs.
 	/// </summary>
-	public required MethodFamilyFullModel MethodFamily { get; set; }
+	public MethodFamilyFullModel? MethodFamily { get; set; }
 
 	/// <summary>
 	/// Gets or sets the description in Rich Text Format.
@@ -102,7 +104,7 @@ public class BaseMethodFullModel
 		{
 			Id = Id,
 			Keyword = Keyword,
-			MethodFamilyId = MethodFamily.Id,
+			MethodFamilyId = MethodFamily?.Id,
 			DescriptionRtf = DescriptionRtf,
 			DescriptionText = DescriptionText,
 			CreatedDate = CreatedDate,
@@ -121,13 +123,22 @@ public class BaseMethodFullModel
 		{
 			Id = Id,
 			Keyword = Keyword,
-			MethodFamily = MethodFamily.ToRecord(),
+			MethodFamily = MethodFamily?.ToRecord(),
 			DescriptionRtf = DescriptionRtf,
 			DescriptionText = DescriptionText,
 			CreatedDate = CreatedDate,
 			LastUpdatedDate = LastUpdatedDate,
 			Archived = Archived
 		};
+	}
+
+	/// <summary>
+	/// Converts this model to a <see cref="BaseMethodRecord"/>.
+	/// </summary>
+	/// <returns>A record containing the identifier and name of this Base Method.</returns>
+	public BaseMethodRecord ToRecord()
+	{
+		return new BaseMethodRecord(Id, Keyword);
 	}
 
 	/// <summary>

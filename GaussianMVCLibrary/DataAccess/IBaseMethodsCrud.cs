@@ -54,6 +54,12 @@ public interface IBaseMethodsCrud
 	Task<List<BaseMethodFullModel>> GetBaseMethodsByMethodFamilyIdAsync(int methodFamilyId);
 
 	/// <summary>
+	/// Retrieves a simplified list of Base Methods from the database.
+	/// </summary>
+	/// <returns>A task that represents the asynchronous operation. The task result contains a list of Base Method records with basic identifying information.</returns>
+	Task<List<BaseMethodRecord>> GetBaseMethodListAsync();
+
+	/// <summary>
 	/// Updates an existing Base Method asynchronously.
 	/// </summary>
 	/// <param name="model">The simple model containing the updated Base Method data.</param>

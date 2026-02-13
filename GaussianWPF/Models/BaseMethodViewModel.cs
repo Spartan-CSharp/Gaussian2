@@ -30,7 +30,7 @@ public class BaseMethodViewModel
 		ArgumentNullException.ThrowIfNull(methodFamilies, nameof(methodFamilies));
 		Id = model.Id;
 		Keyword = model.Keyword;
-		MethodFamily = methodFamilies.First(x => x.Id == model.MethodFamily.Id);
+		MethodFamily = model.MethodFamily is null ? null : methodFamilies.FirstOrDefault(x => x.Id == model.MethodFamily.Id);
 		DescriptionRtf = model.DescriptionRtf;
 		DescriptionText = model.DescriptionText;
 		CreatedDate = model.CreatedDate;
@@ -80,7 +80,7 @@ public class BaseMethodViewModel
 		ArgumentNullException.ThrowIfNull(methodFamilies, nameof(methodFamilies));
 		Id = model.Id;
 		Keyword = model.Keyword;
-		MethodFamily = methodFamilies.First(x => x.Id == model.MethodFamilyId);
+		MethodFamily = model.MethodFamilyId is null ? null : methodFamilies.FirstOrDefault(x => x.Id == model.MethodFamilyId);
 		DescriptionRtf = model.DescriptionRtf;
 		DescriptionText = model.DescriptionText;
 		CreatedDate = model.CreatedDate;
@@ -128,7 +128,6 @@ public class BaseMethodViewModel
 	/// Gets or sets the Method Family associated with this Base Method.
 	/// </summary>
 	[Display(Name = "Method Family")]
-	[Required]
 	public MethodFamilyRecord? MethodFamily { get; set; }
 
 	/// <summary>
@@ -179,7 +178,7 @@ public class BaseMethodViewModel
 	/// </summary>
 	/// <param name="methodFamily">The Method Family full model to associate with the Base Method.</param>
 	/// <returns>A new instance of <see cref="BaseMethodFullModel"/> populated with the view model data.</returns>
-	public BaseMethodFullModel ToFullModel(MethodFamilyFullModel methodFamily)
+	public BaseMethodFullModel ToFullModel(MethodFamilyFullModel? methodFamily = null)
 	{
 		return new BaseMethodFullModel
 		{
@@ -199,7 +198,7 @@ public class BaseMethodViewModel
 	/// </summary>
 	/// <param name="methodFamily">The Method Family record to associate with the Base Method.</param>
 	/// <returns>A new instance of <see cref="BaseMethodIntermediateModel"/> populated with the view model data.</returns>
-	public BaseMethodIntermediateModel ToIntermediateModel(MethodFamilyRecord methodFamily)
+	public BaseMethodIntermediateModel ToIntermediateModel(MethodFamilyRecord? methodFamily = null)
 	{
 		return new BaseMethodIntermediateModel
 		{
@@ -231,6 +230,15 @@ public class BaseMethodViewModel
 			LastUpdatedDate = LastUpdatedDate,
 			Archived = Archived
 		};
+	}
+
+	/// <summary>
+	/// Converts this model to a <see cref="BaseMethodRecord"/>.
+	/// </summary>
+	/// <returns>A record containing the identifier and name of this Base Method.</returns>
+	public BaseMethodRecord ToRecord()
+	{
+		return new BaseMethodRecord(Id, Keyword);
 	}
 
 	/// <summary>

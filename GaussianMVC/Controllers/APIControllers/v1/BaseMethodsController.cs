@@ -148,6 +148,47 @@ public class BaseMethodsController(ILogger<BaseMethodsController> logger, IBaseM
 	}
 
 	/// <summary>
+	/// Retrieves a simplified list of Base Methods.
+	/// </summary>
+	/// <returns>
+	/// An <see cref="ActionResult"/> containing a list of <see cref="BaseMethodRecord"/> objects.
+	/// Returns 200 OK with the list of Base Method records on success.
+	/// Returns 500 Internal Server Error if an error occurs during retrieval.
+	/// </returns>
+	/// <response code="200">Returns the list of Base Method records.</response>
+	/// <response code="500">If an internal server error occurs.</response>
+	// GET: api/v1/BaseMethods/List
+	[HttpGet("List")]
+	public async Task<ActionResult<List<BaseMethodRecord>>> GetListAsync()
+	{
+		try
+		{
+			if (_logger.IsEnabled(LogLevel.Debug))
+			{
+				_logger.LogDebug("{Method} {Controller} {Action} called.", HttpContext.Request.Method, nameof(BaseMethodsController), nameof(GetListAsync));
+			}
+
+			List<BaseMethodRecord> baseMethods = await _crud.GetBaseMethodListAsync().ConfigureAwait(false);
+
+			if (_logger.IsEnabled(LogLevel.Debug))
+			{
+				_logger.LogDebug("{Method} {Controller} {Action} returning {ModelCount} {Model}", HttpContext.Request.Method, nameof(BaseMethodsController), nameof(GetListAsync), baseMethods.Count, nameof(BaseMethodRecord));
+			}
+
+			return Ok(baseMethods);
+		}
+		catch (Exception ex)
+		{
+			if (_logger.IsEnabled(LogLevel.Error))
+			{
+				_logger.LogError(ex, "{Method} {Controller} {Action} had an error.", HttpContext.Request.Method, nameof(MethodFamiliesController), nameof(GetListAsync));
+			}
+
+			return Problem(statusCode: StatusCodes.Status500InternalServerError, detail: ex.Message);
+		}
+	}
+
+	/// <summary>
 	/// Retrieves all Base Methods belonging to a specific Method Family.
 	/// </summary>
 	/// <param name="methodFamilyId">The unique identifier of the Method Family.</param>

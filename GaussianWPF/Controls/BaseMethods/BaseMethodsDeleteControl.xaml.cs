@@ -229,7 +229,7 @@ public partial class BaseMethodsDeleteControl : UserControl, INotifyPropertyChan
 						{
 							Id = results.Id,
 							Keyword = results.Keyword,
-							MethodFamily = results.MethodFamily.ToRecord(),
+							MethodFamily = results.MethodFamily?.ToRecord(),
 							DescriptionRtf = results.DescriptionRtf,
 							DescriptionText = results.DescriptionText,
 							CreatedDate = results.CreatedDate,

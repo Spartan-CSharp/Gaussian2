@@ -229,7 +229,7 @@ public partial class BaseMethodsDetailsControl : UserControl, INotifyPropertyCha
 						{
 							Id = results.Id,
 							Keyword = results.Keyword,
-							MethodFamily = results.MethodFamily.ToRecord(),
+							MethodFamily = results.MethodFamily?.ToRecord(),
 							DescriptionRtf = results.DescriptionRtf,
 							DescriptionText = results.DescriptionText,
 							CreatedDate = results.CreatedDate,

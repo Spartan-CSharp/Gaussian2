@@ -54,6 +54,12 @@ public interface IBaseMethodsEndpoint
 	Task<BaseMethodFullModel?> GetByIdAsync(int id);
 
 	/// <summary>
+	/// Retrieves a simplified list of all Base Methods as records.
+	/// </summary>
+	/// <returns>A list of all Base Methods as records, or <see langword="null"/> if none exist.</returns>
+	Task<List<BaseMethodRecord>?> GetListAsync();
+
+	/// <summary>
 	/// Updates an existing Base Method.
 	/// </summary>
 	/// <param name="id">The unique identifier of the Base Method to update.</param>

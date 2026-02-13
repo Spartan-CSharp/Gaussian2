@@ -27,7 +27,7 @@ public class BaseMethodAPIModel
 		ArgumentNullException.ThrowIfNull(model, nameof(model));
 		Id = model.Id;
 		Keyword = model.Keyword;
-		MethodFamilyId = model.MethodFamily.Id;
+		MethodFamilyId = model.MethodFamily?.Id;
 		DescriptionRtf = model.DescriptionRtf;
 		DescriptionText = model.DescriptionText;
 		CreatedDate = model.CreatedDate;
@@ -45,7 +45,7 @@ public class BaseMethodAPIModel
 		ArgumentNullException.ThrowIfNull(model, nameof(model));
 		Id = model.Id;
 		Keyword = model.Keyword;
-		MethodFamilyId = model.MethodFamily.Id;
+		MethodFamilyId = model.MethodFamily?.Id;
 		DescriptionRtf = model.DescriptionRtf;
 		DescriptionText = model.DescriptionText;
 		CreatedDate = model.CreatedDate;
@@ -91,8 +91,7 @@ public class BaseMethodAPIModel
 	/// Gets or sets the Method Family identifier.
 	/// </summary>
 	[Display(Name = "Method Family Id")]
-	[Required]
-	public int MethodFamilyId { get; set; }
+	public int? MethodFamilyId { get; set; }
 
 	/// <summary>
 	/// Gets or sets the description in Rich Text Format (RTF).
@@ -134,7 +133,7 @@ public class BaseMethodAPIModel
 	/// </summary>
 	/// <param name="methodFamily">The Method Family full model to associate with the Base Method.</param>
 	/// <returns>A new instance of <see cref="BaseMethodFullModel"/> populated with the API model data.</returns>
-	public BaseMethodFullModel ToFullModel(MethodFamilyFullModel methodFamily)
+	public BaseMethodFullModel ToFullModel(MethodFamilyFullModel? methodFamily = null)
 	{
 		return new BaseMethodFullModel
 		{
@@ -154,7 +153,7 @@ public class BaseMethodAPIModel
 	/// </summary>
 	/// <param name="methodFamily">The Method Family record to associate with the Base Method.</param>
 	/// <returns>A new instance of <see cref="BaseMethodIntermediateModel"/> populated with the API model data.</returns>
-	public BaseMethodIntermediateModel ToIntermediateModel(MethodFamilyRecord methodFamily)
+	public BaseMethodIntermediateModel ToIntermediateModel(MethodFamilyRecord? methodFamily = null)
 	{
 		return new BaseMethodIntermediateModel
 		{
@@ -186,6 +185,15 @@ public class BaseMethodAPIModel
 			LastUpdatedDate = LastUpdatedDate,
 			Archived = Archived
 		};
+	}
+
+	/// <summary>
+	/// Converts this model to a <see cref="BaseMethodRecord"/>.
+	/// </summary>
+	/// <returns>A record containing the identifier and name of this Base Method.</returns>
+	public BaseMethodRecord ToRecord()
+	{
+		return new BaseMethodRecord(Id, Keyword);
 	}
 
 	/// <summary>

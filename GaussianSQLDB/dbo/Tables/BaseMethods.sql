@@ -2,7 +2,7 @@
 (
 	[Id] INT NOT NULL IDENTITY(1,1),
 	[Keyword] NVARCHAR(50) NOT NULL,
-	[MethodFamilyId] INT NOT NULL,
+	[MethodFamilyId] INT NULL,
 	[DescriptionRtf] NVARCHAR(MAX) NULL,
 	[DescriptionText] NVARCHAR(4000) NULL,
 	[CreatedDate] DATETIME2(7) NOT NULL DEFAULT (GETUTCDATE()),

@@ -280,7 +280,7 @@ public partial class BaseMethodsEditControl : UserControl, INotifyPropertyChange
 				// Populate the RichTextBox with RTF
 				DescriptionRichTextBox.SetRtfText(BaseMethod.DescriptionRtf);
 				ModelIsNotNull = true;
-				CanSave = BaseMethod.MethodFamily is not null && BaseMethod.Keyword?.Length is > 0 and <= 50 && (BaseMethod.DescriptionText?.Length is <= 4000 || string.IsNullOrEmpty(BaseMethod.DescriptionText));
+				CanSave = BaseMethod.Keyword?.Length is > 0 and <= 50 && (BaseMethod.DescriptionText?.Length is <= 4000 || string.IsNullOrEmpty(BaseMethod.DescriptionText));
 			}
 			else
 			{
@@ -310,14 +310,14 @@ public partial class BaseMethodsEditControl : UserControl, INotifyPropertyChange
 							MethodFamilyList.Add(item);
 						}
 
-						SelectedMethodFamily = MethodFamilyList.FirstOrDefault(mf => mf.Id == results.MethodFamily.Id);
+						SelectedMethodFamily = MethodFamilyList.FirstOrDefault(mf => mf.Id == results.MethodFamily?.Id);
 						BaseMethod = new BaseMethodViewModel(results, methodFamilies);
 						Keyword = BaseMethod.Keyword;
 
 						// Populate the RichTextBox with RTF
 						DescriptionRichTextBox.SetRtfText(BaseMethod.DescriptionRtf);
 						ModelIsNotNull = true;
-						CanSave = BaseMethod.MethodFamily is not null && BaseMethod.Keyword?.Length is > 0 and <= 50 && (BaseMethod.DescriptionText?.Length is <= 4000 || string.IsNullOrEmpty(BaseMethod.DescriptionText));
+						CanSave = BaseMethod.Keyword?.Length is > 0 and <= 50 && (BaseMethod.DescriptionText?.Length is <= 4000 || string.IsNullOrEmpty(BaseMethod.DescriptionText));
 					}
 					else if (results is not null)
 					{
@@ -339,7 +339,7 @@ public partial class BaseMethodsEditControl : UserControl, INotifyPropertyChange
 						// Populate the RichTextBox with RTF
 						DescriptionRichTextBox.SetRtfText(BaseMethod.DescriptionRtf);
 						ModelIsNotNull = true;
-						CanSave = BaseMethod.MethodFamily is not null && BaseMethod.Keyword?.Length is > 0 and <= 50 && (BaseMethod.DescriptionText?.Length is <= 4000 || string.IsNullOrEmpty(BaseMethod.DescriptionText));
+						CanSave = BaseMethod.Keyword?.Length is > 0 and <= 50 && (BaseMethod.DescriptionText?.Length is <= 4000 || string.IsNullOrEmpty(BaseMethod.DescriptionText));
 					}
 					else if (methodFamilies is not null && methodFamilies.Count > 0)
 					{
@@ -410,7 +410,7 @@ public partial class BaseMethodsEditControl : UserControl, INotifyPropertyChange
 
 		if (e.PropertyName is nameof(Keyword) or nameof(SelectedMethodFamily))
 		{
-			CanSave = SelectedMethodFamily is not null && Keyword?.Length is > 0 and <= 50 && (DescriptionRichTextBox.GetPlainText()?.Length is <= 4000 || string.IsNullOrEmpty(DescriptionRichTextBox.GetPlainText()));
+			CanSave = Keyword?.Length is > 0 and <= 50 && (DescriptionRichTextBox.GetPlainText()?.Length is <= 4000 || string.IsNullOrEmpty(DescriptionRichTextBox.GetPlainText()));
 		}
 
 		if (e.PropertyName is nameof(MethodFamilyList))

@@ -1,6 +1,13 @@
 ﻿namespace GaussianCommonLibrary.Models;
 
 /// <summary>
+/// Represents a lightweight reference to a Base Method containing only its identifier and keyword.
+/// </summary>
+/// <param name="Id">The unique identifier for the Base Method.</param>
+/// <param name="Keyword">The keyword of the Base Method.</param>
+public record BaseMethodRecord(int Id, string Keyword);
+
+/// <summary>
 /// Represents a lightweight reference to a Electronic State/Method Family Combination containing only its identifier and name.
 /// </summary>
 /// <param name="Id">The unique identifier for the Electronic State/Method Family Combination.</param>

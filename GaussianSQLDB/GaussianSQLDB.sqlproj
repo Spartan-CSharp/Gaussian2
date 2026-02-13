@@ -126,6 +126,7 @@
     <Build Include="dbo\Programmability\Stored Procedures\spSpinStatesElectronicStatesMethodFamilies_GetBySpinStateId.sql" />
     <Build Include="dbo\Programmability\Stored Procedures\spSpinStatesElectronicStatesMethodFamilies_GetList.sql" />
     <Build Include="dbo\Programmability\Stored Procedures\spSpinStatesElectronicStatesMethodFamilies_Update.sql" />
+    <Build Include="dbo\Programmability\Stored Procedures\spBaseMethods_GetList.sql" />
   </ItemGroup>
   <ItemGroup>
     <PreDeploy Include="PreScripts\Script.PreDeployment.sql" />

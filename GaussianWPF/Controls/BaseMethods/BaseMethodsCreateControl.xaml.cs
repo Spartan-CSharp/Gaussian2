@@ -242,7 +242,7 @@ public partial class BaseMethodsCreateControl : UserControl, INotifyPropertyChan
 
 				// Populate the RichTextBox with RTF
 				DescriptionRichTextBox.SetRtfText(BaseMethod.DescriptionRtf);
-				CanSave = BaseMethod.MethodFamily is not null && BaseMethod.Keyword?.Length is > 0 and <= 50 && (BaseMethod.DescriptionText?.Length is <= 4000 || string.IsNullOrEmpty(BaseMethod.DescriptionText));
+				CanSave = BaseMethod.Keyword?.Length is > 0 and <= 50 && (BaseMethod.DescriptionText?.Length is <= 4000 || string.IsNullOrEmpty(BaseMethod.DescriptionText));
 			}
 			else
 			{
@@ -255,7 +255,7 @@ public partial class BaseMethodsCreateControl : UserControl, INotifyPropertyChan
 
 		if (e.PropertyName is nameof(Keyword) or nameof(SelectedMethodFamily))
 		{
-			CanSave = SelectedMethodFamily is not null && Keyword?.Length is > 0 and <= 50 && (DescriptionRichTextBox.GetPlainText()?.Length is <= 4000 || string.IsNullOrEmpty(DescriptionRichTextBox.GetPlainText()));
+			CanSave = Keyword?.Length is > 0 and <= 50 && (DescriptionRichTextBox.GetPlainText()?.Length is <= 4000 || string.IsNullOrEmpty(DescriptionRichTextBox.GetPlainText()));
 		}
 
 		if (e.PropertyName is nameof(MethodFamilyList))

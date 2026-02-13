@@ -22,7 +22,7 @@ public class BaseMethodSimpleModel
 		ArgumentNullException.ThrowIfNull(intermediateModel, nameof(intermediateModel));
 		Id = intermediateModel.Id;
 		Keyword = intermediateModel.Keyword;
-		MethodFamilyId = intermediateModel.MethodFamily.Id;
+		MethodFamilyId = intermediateModel.MethodFamily?.Id;
 		DescriptionRtf = intermediateModel.DescriptionRtf;
 		DescriptionText = intermediateModel.DescriptionText;
 		CreatedDate = intermediateModel.CreatedDate;
@@ -40,7 +40,7 @@ public class BaseMethodSimpleModel
 		ArgumentNullException.ThrowIfNull(fullModel, nameof(fullModel));
 		Id = fullModel.Id;
 		Keyword = fullModel.Keyword;
-		MethodFamilyId = fullModel.MethodFamily.Id;
+		MethodFamilyId = fullModel.MethodFamily?.Id;
 		DescriptionRtf = fullModel.DescriptionRtf;
 		DescriptionText = fullModel.DescriptionText;
 		CreatedDate = fullModel.CreatedDate;
@@ -61,7 +61,7 @@ public class BaseMethodSimpleModel
 	/// <summary>
 	/// Gets or sets the identifier of the Method Family to which this Base Method belongs.
 	/// </summary>
-	public int MethodFamilyId { get; set; }
+	public int? MethodFamilyId { get; set; }
 
 	/// <summary>
 	/// Gets or sets the description in Rich Text Format.
@@ -130,6 +130,15 @@ public class BaseMethodSimpleModel
 			LastUpdatedDate = LastUpdatedDate,
 			Archived = Archived
 		};
+	}
+
+	/// <summary>
+	/// Converts this model to a <see cref="BaseMethodRecord"/>.
+	/// </summary>
+	/// <returns>A record containing the identifier and name of this Base Method.</returns>
+	public BaseMethodRecord ToRecord()
+	{
+		return new BaseMethodRecord(Id, Keyword);
 	}
 
 	/// <summary>

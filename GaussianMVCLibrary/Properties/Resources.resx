@@ -281,6 +281,10 @@
     <value>spMethodFamilies_GetList</value>
     <comment>The Stored Procedure Name for Getting a List of Method Family Ids and Names</comment>
   </data>
+  <data name="BaseMethodsGetList" xml:space="preserve">
+    <value>spBaseMethods_GetList</value>
+    <comment>The Stored Procedure Name for Getting a List of Base Methods Ids and Keywords</comment>
+  </data>
   <data name="MethodFamiliesUpdate" xml:space="preserve">
     <value>spMethodFamilies_Update</value>
     <comment>The Stored Procedure Name for Updating a Method Family by Id</comment>

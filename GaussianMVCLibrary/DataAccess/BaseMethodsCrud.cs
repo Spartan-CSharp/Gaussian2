@@ -36,11 +36,11 @@ public class BaseMethodsCrud(IDbData dbData, ILogger<BaseMethodsCrud> logger, IM
 
 		ArgumentNullException.ThrowIfNull(model, nameof(model));
 		// This is done first, to ensure the Method Family exists first, before trying to create the Base Method linked to it.
-		MethodFamilyFullModel? methodFamily = await _methodFamiliesCrud.GetMethodFamilyByIdAsync(model.MethodFamilyId).ConfigureAwait(false);
+		MethodFamilyFullModel? methodFamily = null;
 
-		if (methodFamily is null)
+		if (model.MethodFamilyId is not null and > 0)
 		{
-			throw new NullParameterException(nameof(methodFamily), $"The {nameof(methodFamily)} with ID = {model.MethodFamilyId} is null (does not exist).");
+			methodFamily = await _methodFamiliesCrud.GetMethodFamilyByIdAsync((int)model.MethodFamilyId).ConfigureAwait(false) ?? throw new NullParameterException(nameof(methodFamily), $"The {nameof(methodFamily)} with ID = {model.MethodFamilyId} is null (does not exist).");
 		}
 
 		DynamicParameters p = new();
@@ -147,11 +147,11 @@ public class BaseMethodsCrud(IDbData dbData, ILogger<BaseMethodsCrud> logger, IM
 
 		foreach (BaseMethodSimpleModel item in simpleModels)
 		{
-			MethodFamilyFullModel? methodFamily = await _methodFamiliesCrud.GetMethodFamilyByIdAsync(item.MethodFamilyId).ConfigureAwait(false);
+			MethodFamilyFullModel? methodFamily = null;
 
-			if (methodFamily is null)
+			if (item.MethodFamilyId is not null and > 0)
 			{
-				throw new NullParameterException(nameof(methodFamily), $"The {nameof(methodFamily)} with ID = {item.MethodFamilyId} is null (does not exist).");
+				methodFamily = await _methodFamiliesCrud.GetMethodFamilyByIdAsync((int)item.MethodFamilyId).ConfigureAwait(false) ?? throw new NullParameterException(nameof(methodFamily), $"The {nameof(methodFamily)} with ID = {item.MethodFamilyId} is null (does not exist).");
 			}
 
 			BaseMethodFullModel model = new()
@@ -178,6 +178,25 @@ public class BaseMethodsCrud(IDbData dbData, ILogger<BaseMethodsCrud> logger, IM
 	}
 
 	/// <inheritdoc/>
+	public async Task<List<BaseMethodRecord>> GetBaseMethodListAsync()
+	{
+		if (_logger.IsEnabled(LogLevel.Debug))
+		{
+			_logger.LogDebug("{Class} {Method} called.", nameof(BaseMethodsCrud), nameof(GetBaseMethodListAsync));
+		}
+
+		DynamicParameters p = new();
+		List<BaseMethodRecord> output = await _dbData.LoadDataAsync<BaseMethodRecord, dynamic>(Resources.BaseMethodsGetList, p, Resources.DataDatabaseConnectionString).ConfigureAwait(false);
+
+		if (_logger.IsEnabled(LogLevel.Trace))
+		{
+			_logger.LogTrace("{Class} {Method} returning {ModelCount} {ModelName}.", nameof(BaseMethodsCrud), nameof(GetBaseMethodListAsync), output.Count, nameof(BaseMethodRecord));
+		}
+
+		return output;
+	}
+
+	/// <inheritdoc/>
 	/// <exception cref="NullParameterException">Thrown when the Method Family associated with the Base Method does not exist.</exception>
 	public async Task<BaseMethodFullModel?> GetBaseMethodByIdAsync(int id)
 	{
@@ -194,11 +213,11 @@ public class BaseMethodsCrud(IDbData dbData, ILogger<BaseMethodsCrud> logger, IM
 		if (simpleModels.Count > 0)
 		{
 			BaseMethodSimpleModel simpleModel = simpleModels.First()!;
-			MethodFamilyFullModel? methodFamily = await _methodFamiliesCrud.GetMethodFamilyByIdAsync(simpleModel.MethodFamilyId).ConfigureAwait(false);
+			MethodFamilyFullModel? methodFamily = null;
 
-			if (methodFamily is null)
+			if (simpleModel.MethodFamilyId is not null and > 0)
 			{
-				throw new NullParameterException(nameof(methodFamily), $"The {nameof(methodFamily)} with ID = {simpleModel.MethodFamilyId} is null (does not exist).");
+				methodFamily = await _methodFamiliesCrud.GetMethodFamilyByIdAsync((int)simpleModel.MethodFamilyId).ConfigureAwait(false) ?? throw new NullParameterException(nameof(methodFamily), $"The {nameof(methodFamily)} with ID = {simpleModel.MethodFamilyId} is null (does not exist).");
 			}
 
 			output = new()
@@ -281,11 +300,11 @@ public class BaseMethodsCrud(IDbData dbData, ILogger<BaseMethodsCrud> logger, IM
 
 		ArgumentNullException.ThrowIfNull(model, nameof(model));
 		// This is done first, to ensure the Method Family exists first, before trying to create the Base Method linked to it.
-		MethodFamilyFullModel? methodFamily = await _methodFamiliesCrud.GetMethodFamilyByIdAsync(model.MethodFamilyId).ConfigureAwait(false);
+		MethodFamilyFullModel? methodFamily = null;
 
-		if (methodFamily is null)
+		if (model.MethodFamilyId is not null and > 0)
 		{
-			throw new NullParameterException(nameof(methodFamily), $"The {nameof(methodFamily)} with ID = {model.MethodFamilyId} is null (does not exist).");
+			methodFamily = await _methodFamiliesCrud.GetMethodFamilyByIdAsync((int)model.MethodFamilyId).ConfigureAwait(false) ?? throw new NullParameterException(nameof(methodFamily), $"The {nameof(methodFamily)} with ID = {model.MethodFamilyId} is null (does not exist).");
 		}
 
 		DynamicParameters p = new();

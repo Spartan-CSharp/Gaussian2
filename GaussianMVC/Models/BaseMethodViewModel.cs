@@ -34,7 +34,7 @@ public class BaseMethodViewModel
 		ArgumentNullException.ThrowIfNull(methodFamilies, nameof(methodFamilies));
 		Id = model.Id;
 		Keyword = model.Keyword;
-		MethodFamilyId = model.MethodFamily.Id.ToString(CultureInfo.InvariantCulture);
+		MethodFamilyId = model.MethodFamily?.Id.ToString(CultureInfo.InvariantCulture);
 		DescriptionHtml = RtfConverter.RtfToHtmlConverter(model.DescriptionRtf);
 		CreatedDate = model.CreatedDate;
 		LastUpdatedDate = model.LastUpdatedDate;
@@ -49,7 +49,7 @@ public class BaseMethodViewModel
 				Disabled = false
 			};
 
-			if (item.Id == model.MethodFamily.Id)
+			if (item.Id == model.MethodFamily?.Id)
 			{
 				listItem.Selected = true;
 			}
@@ -70,7 +70,7 @@ public class BaseMethodViewModel
 		ArgumentNullException.ThrowIfNull(methodFamilies, nameof(methodFamilies));
 		Id = model.Id;
 		Keyword = model.Keyword;
-		MethodFamilyId = model.MethodFamily.Id.ToString(CultureInfo.InvariantCulture);
+		MethodFamilyId = model.MethodFamily?.Id.ToString(CultureInfo.InvariantCulture);
 		DescriptionHtml = RtfConverter.RtfToHtmlConverter(model.DescriptionRtf);
 		CreatedDate = model.CreatedDate;
 		LastUpdatedDate = model.LastUpdatedDate;
@@ -85,7 +85,7 @@ public class BaseMethodViewModel
 				Disabled = false
 			};
 
-			if (item.Id == model.MethodFamily.Id)
+			if (item.Id == model.MethodFamily?.Id)
 			{
 				listItem.Selected = true;
 			}
@@ -106,7 +106,7 @@ public class BaseMethodViewModel
 		ArgumentNullException.ThrowIfNull(methodFamilies, nameof(methodFamilies));
 		Id = model.Id;
 		Keyword = model.Keyword;
-		MethodFamilyId = model.MethodFamilyId.ToString(CultureInfo.InvariantCulture);
+		MethodFamilyId = model.MethodFamilyId?.ToString(CultureInfo.InvariantCulture);
 		DescriptionHtml = RtfConverter.RtfToHtmlConverter(model.DescriptionRtf);
 		CreatedDate = model.CreatedDate;
 		LastUpdatedDate = model.LastUpdatedDate;
@@ -173,15 +173,14 @@ public class BaseMethodViewModel
 	/// </summary>
 	[DataType(DataType.Text)]
 	[Display(Name = "Method Family")]
-	[Required]
-	public string MethodFamilyId { get; set; } = string.Empty;
+	public string? MethodFamilyId { get; set; } = string.Empty;
 
 	/// <summary>
 	/// Gets the Method Family name from the selected item in the Method Family list.
 	/// </summary>
 	[DataType(DataType.Text)]
 	[Display(Name = "Method Family")]
-	public string MethodFamilyName
+	public string? MethodFamilyName
 	{
 		get 
 		{
@@ -227,7 +226,7 @@ public class BaseMethodViewModel
 	/// </summary>
 	/// <param name="methodFamily">The Method Family full model to associate with the Base Method.</param>
 	/// <returns>A new instance of <see cref="BaseMethodFullModel"/> populated with the view model data.</returns>
-	public BaseMethodFullModel ToFullModel(MethodFamilyFullModel methodFamily)
+	public BaseMethodFullModel ToFullModel(MethodFamilyFullModel? methodFamily = null)
 	{
 		return new BaseMethodFullModel
 		{
@@ -247,7 +246,7 @@ public class BaseMethodViewModel
 	/// </summary>
 	/// <param name="methodFamily">The Method Family record to associate with the Base Method.</param>
 	/// <returns>A new instance of <see cref="BaseMethodIntermediateModel"/> populated with the view model data.</returns>
-	public BaseMethodIntermediateModel ToIntermediateModel(MethodFamilyRecord methodFamily)
+	public BaseMethodIntermediateModel ToIntermediateModel(MethodFamilyRecord? methodFamily = null)
 	{
 		return new BaseMethodIntermediateModel
 		{
@@ -272,13 +271,22 @@ public class BaseMethodViewModel
 		{
 			Id = Id,
 			Keyword = Keyword,
-			MethodFamilyId = int.Parse(MethodFamilyId, CultureInfo.InvariantCulture),
+			MethodFamilyId = string.IsNullOrWhiteSpace(MethodFamilyId) ? null : int.Parse(MethodFamilyId, CultureInfo.InvariantCulture),
 			DescriptionRtf = RtfConverter.HtmlToRtfConverter(DescriptionHtml),
 			DescriptionText = RtfConverter.HtmlToTextConverter(DescriptionHtml),
 			CreatedDate = CreatedDate,
 			LastUpdatedDate = LastUpdatedDate,
 			Archived = Archived
 		};
+	}
+
+	/// <summary>
+	/// Converts this model to a <see cref="BaseMethodRecord"/>.
+	/// </summary>
+	/// <returns>A record containing the identifier and name of this Base Method.</returns>
+	public BaseMethodRecord ToRecord()
+	{
+		return new BaseMethodRecord(Id, Keyword);
 	}
 
 	/// <summary>
