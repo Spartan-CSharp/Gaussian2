@@ -155,6 +155,24 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<Compile Update="Controls\FullMethodsControl.xaml.cs">
+		  <SubType>Code</SubType>
+		</Compile>
+		<Compile Update="Controls\FullMethods\FullMethodsCreateControl.xaml.cs">
+		  <SubType>Code</SubType>
+		</Compile>
+		<Compile Update="Controls\FullMethods\FullMethodsDeleteControl.xaml.cs">
+		  <SubType>Code</SubType>
+		</Compile>
+		<Compile Update="Controls\FullMethods\FullMethodsDetailsControl.xaml.cs">
+		  <SubType>Code</SubType>
+		</Compile>
+		<Compile Update="Controls\FullMethods\FullMethodsEditControl.xaml.cs">
+		  <SubType>Code</SubType>
+		</Compile>
+		<Compile Update="Controls\FullMethods\FullMethodsIndexControl.xaml.cs">
+		  <SubType>Code</SubType>
+		</Compile>
 		<Compile Update="Controls\SpinStatesElectronicStatesMethodFamiliesControl.xaml.cs">
 		  <SubType>Code</SubType>
 		</Compile>

@@ -46,6 +46,13 @@ public record ElectronicStateRecord(int Id, string? Name, string? Keyword)
 }
 
 /// <summary>
+/// Represents a lightweight reference to a Full Method containing only its identifier and keyword.
+/// </summary>
+/// <param name="Id">The unique identifier for the Full Method.</param>
+/// <param name="Keyword">The keyword of the Full Method.</param>
+public record FullMethodRecord(int Id, string Keyword);
+
+/// <summary>
 /// Represents a lightweight reference to a Method Family containing only its identifier and name.
 /// </summary>
 /// <param name="Id">The unique identifier for the Method Family.</param>

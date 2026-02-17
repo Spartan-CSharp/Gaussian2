@@ -313,6 +313,87 @@ namespace GaussianMVCLibrary.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to spFullMethods_Create.
+        /// </summary>
+        internal static string FullMethodsCreate {
+            get {
+                return ResourceManager.GetString("FullMethodsCreate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to spFullMethods_Delete.
+        /// </summary>
+        internal static string FullMethodsDelete {
+            get {
+                return ResourceManager.GetString("FullMethodsDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to spFullMethods_GetAll.
+        /// </summary>
+        internal static string FullMethodsGetAll {
+            get {
+                return ResourceManager.GetString("FullMethodsGetAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to spFullMethods_GetByBaseMethodId.
+        /// </summary>
+        internal static string FullMethodsGetByBaseMethodId {
+            get {
+                return ResourceManager.GetString("FullMethodsGetByBaseMethodId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to spFullMethods_GetById.
+        /// </summary>
+        internal static string FullMethodsGetById {
+            get {
+                return ResourceManager.GetString("FullMethodsGetById", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to spFullMethods_GetBySpinStateElectronicStateMethodFamilyId.
+        /// </summary>
+        internal static string FullMethodsGetBySpinStateElectronicStateMethodFamilyId {
+            get {
+                return ResourceManager.GetString("FullMethodsGetBySpinStateElectronicStateMethodFamilyId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to spFullMethods_GetBySpinStateElectronicStateMethodFamilyIdAndBaseMethodId.
+        /// </summary>
+        internal static string FullMethodsGetBySpinStateElectronicStateMethodFamilyIdAndBaseMethodId {
+            get {
+                return ResourceManager.GetString("FullMethodsGetBySpinStateElectronicStateMethodFamilyIdAndBaseMethodId", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to spFullMethods_GetList.
+        /// </summary>
+        internal static string FullMethodsGetList {
+            get {
+                return ResourceManager.GetString("FullMethodsGetList", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to spFullMethods_Update.
+        /// </summary>
+        internal static string FullMethodsUpdate {
+            get {
+                return ResourceManager.GetString("FullMethodsUpdate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to spMethodFamilies_Create.
         /// </summary>
         internal static string MethodFamiliesCreate {

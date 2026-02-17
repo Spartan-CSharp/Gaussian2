@@ -5,6 +5,7 @@ using GaussianWPF.Controls.BaseMethods;
 using GaussianWPF.Controls.CalculationTypes;
 using GaussianWPF.Controls.ElectronicStates;
 using GaussianWPF.Controls.ElectronicStatesMethodFamilies;
+using GaussianWPF.Controls.FullMethods;
 using GaussianWPF.Controls.MethodFamilies;
 using GaussianWPF.Controls.SpinStates;
 using GaussianWPF.Controls.SpinStatesElectronicStatesMethodFamilies;
@@ -101,6 +102,7 @@ public partial class App : Application
 		_ = services.AddSingleton<ISpinStatesEndpoint, SpinStatesEndpoint>();
 		_ = services.AddSingleton<ILoggedInUserModel, LoggedInUserModel>();
 		_ = services.AddSingleton<ISpinStatesElectronicStatesMethodFamiliesEndpoint, SpinStatesElectronicStatesMethodFamiliesEndpoint>();
+		_ = services.AddSingleton<IFullMethodsEndpoint, FullMethodsEndpoint>();
 
 		// Register your Views and ViewModels
 		_ = services.AddSingleton<MainWindow>();
@@ -113,6 +115,7 @@ public partial class App : Application
 		_ = services.AddFormFactory<ElectronicStatesMethodFamiliesControl>();
 		_ = services.AddFormFactory<SpinStatesControl>();
 		_ = services.AddFormFactory<SpinStatesElectronicStatesMethodFamiliesControl>();
+		_ = services.AddFormFactory<FullMethodsControl>();
 		_ = services.AddFormFactory<AboutControl>();
 		_ = services.AddFormFactory<PrivacyControl>();
 		_ = services.AddFormFactory<ContactControl>();
@@ -154,5 +157,10 @@ public partial class App : Application
 		_ = services.AddFormFactory<SpinStatesElectronicStatesMethodFamiliesCreateControl>();
 		_ = services.AddFormFactory<SpinStatesElectronicStatesMethodFamiliesEditControl>();
 		_ = services.AddFormFactory<SpinStatesElectronicStatesMethodFamiliesDeleteControl>();
+		_ = services.AddFormFactory<FullMethodsIndexControl>();
+		_ = services.AddFormFactory<FullMethodsDetailsControl>();
+		_ = services.AddFormFactory<FullMethodsCreateControl>();
+		_ = services.AddFormFactory<FullMethodsEditControl>();
+		_ = services.AddFormFactory<FullMethodsDeleteControl>();
 	}
 }

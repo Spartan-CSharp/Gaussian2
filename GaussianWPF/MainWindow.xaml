@@ -22,6 +22,7 @@
 				<MenuItem Name="ElectronicStatesMethodFamilies" Header="E_lectronic State/Method Family Combinations" Click="ElectronicStatesMethodFamilies_Click" />
 				<MenuItem Name="SpinStates" Header="_Spin States" Click="SpinStates_Click" />
 				<MenuItem Name="SpinStatesElectronicStatesMethodFamilies" Header="S_pin State/Electronic State/Method Family Combinations" Click="SpinStatesElectronicStatesMethodFamilies_Click" />
+				<MenuItem Name="FullMethods" Header="F_ull Methods" Click="FullMethods_Click" />
 			</MenuItem>
 			<MenuItem Name="HelpMenu" Header="_Help">
 				<MenuItem Name="About" Header="_About" Click="About_Click" />

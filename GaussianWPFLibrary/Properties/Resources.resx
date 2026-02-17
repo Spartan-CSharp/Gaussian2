@@ -125,6 +125,10 @@
     <value>api/v1/BaseMethods</value>
     <comment>The API Endpoint for Base Methods</comment>
   </data>
+  <data name="FullMethodsEndpoint" xml:space="preserve">
+    <value>api/v1/FullMethods</value>
+    <comment>The API Endpoint for Full Methods</comment>
+  </data>
   <data name="CalculationTypesEndpoint" xml:space="preserve">
     <value>api/v1/CalculationTypes</value>
     <comment>The API Endpoint for Calculation Types</comment>

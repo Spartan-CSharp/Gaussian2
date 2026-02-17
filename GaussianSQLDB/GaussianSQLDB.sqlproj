@@ -127,6 +127,16 @@
     <Build Include="dbo\Programmability\Stored Procedures\spSpinStatesElectronicStatesMethodFamilies_GetList.sql" />
     <Build Include="dbo\Programmability\Stored Procedures\spSpinStatesElectronicStatesMethodFamilies_Update.sql" />
     <Build Include="dbo\Programmability\Stored Procedures\spBaseMethods_GetList.sql" />
+    <Build Include="dbo\Tables\FullMethods.sql" />
+    <Build Include="dbo\Programmability\Stored Procedures\spFullMethods_Create.sql" />
+    <Build Include="dbo\Programmability\Stored Procedures\spFullMethods_Delete.sql" />
+    <Build Include="dbo\Programmability\Stored Procedures\spFullMethods_GetAll.sql" />
+    <Build Include="dbo\Programmability\Stored Procedures\spFullMethods_GetById.sql" />
+    <Build Include="dbo\Programmability\Stored Procedures\spFullMethods_GetByBaseMethodId.sql" />
+    <Build Include="dbo\Programmability\Stored Procedures\spFullMethods_GetList.sql" />
+    <Build Include="dbo\Programmability\Stored Procedures\spFullMethods_Update.sql" />
+    <Build Include="dbo\Programmability\Stored Procedures\spFullMethods_GetBySpinStateElectronicStateMethodFamilyId.sql" />
+    <Build Include="dbo\Programmability\Stored Procedures\spFullMethods_GetBySpinStateElectronicStateMethodFamilyIdAndBaseMethodId.sql" />
   </ItemGroup>
   <ItemGroup>
     <PreDeploy Include="PreScripts\Script.PreDeployment.sql" />

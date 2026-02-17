@@ -344,7 +344,17 @@ public class BaseMethodsCrud(IDbData dbData, ILogger<BaseMethodsCrud> logger, IM
 			_logger.LogDebug("{Class} {Method} called with Id = {Id}.", nameof(BaseMethodsCrud), nameof(DeleteBaseMethodAsync), id);
 		}
 
+		// First check if used in any Full Methods
 		DynamicParameters p = new();
+		p.Add("@BaseMethodId", id);
+		List<FullMethodSimpleModel> fullMethods = await _dbData.LoadDataAsync<FullMethodSimpleModel, dynamic>(Resources.FullMethodsGetByBaseMethodId, p, Resources.DataDatabaseConnectionString).ConfigureAwait(false);
+
+		if (fullMethods.Count > 0)
+		{
+			throw new ValueInUseException(nameof(BaseMethodFullModel), $"Cannot delete Base Method with Id {id} because it is in use by one or more Full Methods.");
+		}
+
+		p = new();
 		p.Add("@Id", id);
 		_ = await _dbData.SaveDataAsync(Resources.BaseMethodsDelete, p, Resources.DataDatabaseConnectionString).ConfigureAwait(false);
 

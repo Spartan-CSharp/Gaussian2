@@ -106,6 +106,15 @@ namespace GaussianWPFLibrary.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to api/v1/FullMethods.
+        /// </summary>
+        internal static string FullMethodsEndpoint {
+            get {
+                return ResourceManager.GetString("FullMethodsEndpoint", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to api/v1/Home.
         /// </summary>
         internal static string HomeEndpoint {

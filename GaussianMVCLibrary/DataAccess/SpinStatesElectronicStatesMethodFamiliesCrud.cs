@@ -519,7 +519,17 @@ public class SpinStatesElectronicStatesMethodFamiliesCrud(IDbData dbData, ILogge
 			_logger.LogDebug("{Class} {Method} called with Id = {Id}.", nameof(SpinStatesElectronicStatesMethodFamiliesCrud), nameof(DeleteSpinStateElectronicStateMethodFamilyAsync), id);
 		}
 
+		// First check if used in any Full Methods
 		DynamicParameters p = new();
+		p.Add("@SpinStateElectronicStateMethodFamilyId", id);
+		List<FullMethodSimpleModel> fullMethods = await _dbData.LoadDataAsync<FullMethodSimpleModel, dynamic>(Resources.FullMethodsGetBySpinStateElectronicStateMethodFamilyId, p, Resources.DataDatabaseConnectionString).ConfigureAwait(false);
+
+		if (fullMethods.Count > 0)
+		{
+			throw new ValueInUseException(nameof(SpinStateElectronicStateMethodFamilyFullModel), $"Cannot delete Spin State/Electronic State/Method Family Combination with Id {id} because it is in use by one or more Full Methods.");
+		}
+
+		p = new();
 		p.Add("@Id", id);
 		_ = await _dbData.SaveDataAsync(Resources.SpinStatesElectronicStatesMethodFamiliesDelete, p, Resources.DataDatabaseConnectionString).ConfigureAwait(false);
 

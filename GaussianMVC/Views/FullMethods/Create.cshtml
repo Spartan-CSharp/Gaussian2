@@ -1,0 +1,70 @@
+﻿@model GaussianMVC.Models.FullMethodViewModel
+
+@{
+	ViewData["Title"] = "Create Full Method";
+}
+
+<h1>Create</h1>
+
+<h4>Full Method</h4>
+<hr />
+<div class="row">
+	<div class="col-md-12">
+		<form asp-action="Create">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<input type="hidden" asp-for="Id" />
+			<input type="hidden" asp-for="CreatedDate" />
+			<input type="hidden" asp-for="LastUpdatedDate" />
+
+			<div class="form-group">
+				<label asp-for="Keyword" class="control-label"></label>
+				<input asp-for="Keyword" class="form-control" />
+				<span asp-validation-for="Keyword" class="text-danger"></span>
+			</div>
+
+			<div class="form-group">
+				<label asp-for="SpinStateElectronicStateMethodFamilyId" class="control-label"></label>
+				<select asp-for="SpinStateElectronicStateMethodFamilyId" asp-items="Model.SpinStateElectronicStateMethodFamilyList" class="form-control">
+					<option value="">-- Select Spin State/Electronic State/Method Family Combination --</option>
+				</select>
+				<span asp-validation-for="SpinStateElectronicStateMethodFamilyId" class="text-danger"></span>
+			</div>
+
+			<div class="form-group">
+				<label asp-for="BaseMethodId" class="control-label"></label>
+				<select asp-for="BaseMethodId" asp-items="Model.BaseMethodList" class="form-control">
+					<option value="">-- Select Base Method --</option>
+				</select>
+				<span asp-validation-for="BaseMethodId" class="text-danger"></span>
+			</div>
+
+			<div class="form-group">
+				<label asp-for="DescriptionHtml" class="control-label"></label>
+				<ejs-richtexteditor id="descriptionRTE" ejs-for="DescriptionHtml" value="@Model.DescriptionHtml" class="form-control">
+					<e-richtexteditor-toolbarsettings items="@Constants.SyncfusionToolbarItems"></e-richtexteditor-toolbarsettings>
+				</ejs-richtexteditor>
+				<span asp-validation-for="DescriptionHtml" class="text-danger"></span>
+			</div>
+
+			<div class="form-group form-check">
+				<label class="form-check-label">
+					<input class="form-check-input" asp-for="Archived" /> @Html.DisplayNameFor(model => model.Archived)
+				</label>
+			</div>
+
+			<div class="form-group">
+				<input type="submit" value="Create" class="btn btn-primary" />
+			</div>
+		</form>
+	</div>
+</div>
+
+<div>
+	<a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+	@{
+		await Html.RenderPartialAsync("_ValidationScriptsPartial");
+	}
+}

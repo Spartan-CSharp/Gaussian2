@@ -121,25 +121,57 @@
     <value>spBaseMethods_Create</value>
     <comment>The Stored Procedure Name for Creating a new Base Method</comment>
   </data>
+  <data name="FullMethodsCreate" xml:space="preserve">
+    <value>spFullMethods_Create</value>
+    <comment>The Stored Procedure Name for Creating a new Full Method</comment>
+  </data>
   <data name="BaseMethodsDelete" xml:space="preserve">
     <value>spBaseMethods_Delete</value>
     <comment>The Stored Procedure Name for Deleting a Base Method by Id</comment>
+  </data>
+  <data name="FullMethodsDelete" xml:space="preserve">
+    <value>spFullMethods_Delete</value>
+    <comment>The Stored Procedure Name for Deleting a Full Method by Id</comment>
   </data>
   <data name="BaseMethodsGetAll" xml:space="preserve">
     <value>spBaseMethods_GetAll</value>
     <comment>The Stored Procedure Name for Getting All Base Methods</comment>
   </data>
+  <data name="FullMethodsGetAll" xml:space="preserve">
+    <value>spFullMethods_GetAll</value>
+    <comment>The Stored Procedure Name for Getting All Full Methods</comment>
+  </data>
   <data name="BaseMethodsGetById" xml:space="preserve">
     <value>spBaseMethods_GetById</value>
     <comment>The Stored Procedure Name for Getting a Base Method by Id</comment>
+  </data>
+  <data name="FullMethodsGetById" xml:space="preserve">
+    <value>spFullMethods_GetById</value>
+    <comment>The Stored Procedure Name for Getting a Full Method by Id</comment>
   </data>
   <data name="BaseMethodsGetByMethodFamilyId" xml:space="preserve">
     <value>spBaseMethods_GetByMethodFamilyId</value>
     <comment>The Stored Procedure Name for Getting Base Methods by their Method Family Id</comment>
   </data>
+  <data name="FullMethodsGetBySpinStateElectronicStateMethodFamilyId" xml:space="preserve">
+    <value>spFullMethods_GetBySpinStateElectronicStateMethodFamilyId</value>
+    <comment>The Stored Procedure Name for Getting Full Methods by their Spin State/Electronic State/Method Family Id</comment>
+  </data>
+  <data name="FullMethodsGetBySpinStateElectronicStateMethodFamilyIdAndBaseMethodId" xml:space="preserve">
+    <value>spFullMethods_GetBySpinStateElectronicStateMethodFamilyIdAndBaseMethodId</value>
+    <comment>The Stored Procedure Name for Getting Full Methods by their Spin State/Electronic State/Method Family Id and their Base Method Id</comment>
+  </data>
+  <data name="FullMethodsGetByBaseMethodId" xml:space="preserve">
+    <value>spFullMethods_GetByBaseMethodId</value>
+    <comment>The Stored Procedure Name for Getting Full Methods by their Base Method Id</comment>
+  </data>
   <data name="BaseMethodsUpdate" xml:space="preserve">
     <value>spBaseMethods_Update</value>
     <comment>The Stored Procedure Name for Updating a Base Method by Id</comment>
+  </data>
+  <data name="FullMethodsUpdate" xml:space="preserve">
+    <value>spFullMethods_Update</value>
+    <comment>The Stored Procedure Name for Updating a Full Method by Id</comment>
   </data>
   <data name="CalculationTypesCreate" xml:space="preserve">
     <value>spCalculationTypes_Create</value>
@@ -284,6 +316,10 @@
   <data name="BaseMethodsGetList" xml:space="preserve">
     <value>spBaseMethods_GetList</value>
     <comment>The Stored Procedure Name for Getting a List of Base Methods Ids and Keywords</comment>
+  </data>
+  <data name="FullMethodsGetList" xml:space="preserve">
+    <value>spFullMethods_GetList</value>
+    <comment>The Stored Procedure Name for Getting a List of Full Methods Ids and Keywords</comment>
   </data>
   <data name="MethodFamiliesUpdate" xml:space="preserve">
     <value>spMethodFamilies_Update</value>

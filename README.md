@@ -196,7 +196,7 @@ _For more examples, please refer to the [Documentation](https://example.com)_
 	- [x] Spin States
 	- [x] Electronic State/Method Families
 	- [x] Spin State/Electronic State/Method Families
-	- [ ] Full Methods
+	- [x] Full Methods
 	- [ ] Basis Sets
 	- [ ] Density Fitting Sets
 	- [ ] Model Chemistries
